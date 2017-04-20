@@ -1,0 +1,18 @@
+{% extends "CoreBundle::coreLayout.html.twig" %}
+
+{% set menu_selected = '1' %}
+
+{% block content %}
+<ul class="breadcrumb">
+    <li><a href="{{ path('_project_list') }}">Liste des projets</a></li>
+    <li>Supprimer le projet {{ project.projectName }}</li>
+</ul>
+<h1>Projet {{ project.projectName }} supprim&eacute;</h1>
+
+<div class="formcontainer">
+<a href="{{ path('_project_list') }}"><input type="button" name="OK" value="OK" class="btn btn-primary"/></a>
+</div>
+{% endblock %}
+
+{% block appfooter %}
+{% endblock %}

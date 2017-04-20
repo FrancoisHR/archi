@@ -1,0 +1,14 @@
+1. Remove all dump() from php code
+2. Dump assetic assets
+    sudo rm -rf var/cache/prod/*
+    sudo rm web/js/* web/assetic/*
+    sudo php bin/console assetic:dump --env=prod --no-debug
+3. Backup remote files
+4. Backup remote database
+5. If major update : rename current client folder as client-old, create a new client folder
+    Move Project folder from client-old/web to client/web
+6. Upload code to client folder
+    Use version diff to get list of all files if making partial upload
+7. Apply any database changes if required
+8. Clear caches var/cache/prod & var/cache/debug
+8. Test...

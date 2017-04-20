@@ -1,0 +1,62 @@
+ChatCreeSoftware\BordereauxBundle\Entity\Ligne:
+  type: entity
+  table: BordereauxLigne
+  repositoryClass: ChatCreeSoftware\BordereauxBundle\Repository\LigneRepository
+  id:
+    id:
+      type: integer
+      generator:
+         strategy: AUTO  
+  fields:
+    numero:         { type: integer }
+    titre:          { type: string(250), nullable: true }
+    description:    { type: text, nullable: true }
+    quantite:       { type: float, nullable: true }
+    unite:          { type: string(10), nullable: true }
+    photo:          { type: string(255), nullable: true }
+    rapportPhoto:   { type: float, options: { default: 1.0 } }
+    legende:        { type: string(255), nullable: true }
+    optionel:       { type: boolean, nullable: true }
+  manyToOne:
+    bordereau:
+      targetEntity: Bordereau
+      inversedBy:   lignes
+    parente:
+      targetEntity: Ligne
+      inversedBy:   filles
+    prestation:
+      targetEntity: Prestation
+      inversedBy:   lignes
+    alternativede:
+      targetEntity: Ligne
+      inversedBy:   alternatives
+  oneToMany:
+    filles:
+      targetEntity: Ligne
+      mappedBy:     parente
+      orderBy:      { 'numero': 'ASC' }
+      cascade:
+        - remove
+    alternatives:
+      targetEntity: Ligne
+      mappedBy:     alternativede
+      orderBy:      { 'numero': 'ASC' }
+      cascade:
+        - remove
+    lignesDevis:
+      targetEntity: LigneDevis
+      mappedBy:     ligne
+      cascade:
+        - remove
+  manyToMany:
+    parametres:
+      targetEntity: Parametre
+      joinTable:
+        name:       BordereauxLignesParametres
+        joinColumns:
+          ligne_id:
+            referencedColumnName: id
+        inverseJoinColumns:
+          parametre_id:
+            referencedColumnName: id
+lifecycleCallbacks: {  }

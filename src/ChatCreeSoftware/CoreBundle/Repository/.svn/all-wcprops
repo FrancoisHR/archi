@@ -1,0 +1,29 @@
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/repo/!svn/ver/33/ProjectManager/src/ChatCreeSoftware/CoreBundle/Repository
+END
+UserRepository.php
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/repo/!svn/ver/52/ProjectManager/src/ChatCreeSoftware/CoreBundle/Repository/UserRepository.php
+END
+ConfigDataRepository.php
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/repo/!svn/ver/33/ProjectManager/src/ChatCreeSoftware/CoreBundle/Repository/ConfigDataRepository.php
+END
+LogRepository.php
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/repo/!svn/ver/27/ProjectManager/src/ChatCreeSoftware/CoreBundle/Repository/LogRepository.php
+END
+ProjectRepository.php
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/repo/!svn/ver/51/ProjectManager/src/ChatCreeSoftware/CoreBundle/Repository/ProjectRepository.php
+END

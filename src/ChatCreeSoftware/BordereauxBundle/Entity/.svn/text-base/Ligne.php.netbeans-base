@@ -1,0 +1,773 @@
+<?php
+
+namespace ChatCreeSoftware\BordereauxBundle\Entity;
+
+/**
+ * Ligne
+ */
+class Ligne
+{
+    /**
+     * @var integer
+     */
+    private $id;
+
+    /**
+     * @var integer
+     */
+    private $numero;
+
+    /**
+     * @var string
+     */
+    private $titre;
+
+    /**
+     * @var string
+     */
+    private $description;
+
+    /**
+     * @var float
+     */
+    private $quantite;
+
+    /**
+     * @var string
+     */
+    private $unite;
+
+    /**
+     * @var string
+     */
+    private $photo;
+
+    /**
+     * @var string
+     */
+    private $legende;
+
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    private $filles;
+
+    /**
+     * @var \ChatCreeSoftware\BordereauxBundle\Entity\Bordereau
+     */
+    private $bordereau;
+
+    /**
+     * @var \ChatCreeSoftware\BordereauxBundle\Entity\Ligne
+     */
+    private $parente;
+
+    /**
+     * @var \ChatCreeSoftware\BordereauxBundle\Entity\Prestation
+     */
+    private $prestation;
+
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    private $parametres;
+
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    private $alternatives;
+
+    /**
+     * @var \ChatCreeSoftware\BordereauxBundle\Entity\Ligne
+     */
+    private $alternativede;
+
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->filles = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->parametres = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+
+    /**
+     * Get id
+     *
+     * @return integer
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * Set numero
+     *
+     * @param integer $numero
+     *
+     * @return Ligne
+     */
+    public function setNumero($numero)
+    {
+        $this->numero = $numero;
+
+        return $this;
+    }
+
+    /**
+     * Get numero
+     *
+     * @return integer
+     */
+    public function getNumero()
+    {
+        return $this->numero;
+    }
+
+    /**
+     * Set titre
+     *
+     * @param string $titre
+     *
+     * @return Ligne
+     */
+    public function setTitre($titre)
+    {
+        $this->titre = $titre;
+
+        return $this;
+    }
+
+    /**
+     * Get titre
+     *
+     * @return string
+     */
+    public function getTitre()
+    {
+        return $this->titre;
+    }
+
+    /**
+     * Set description
+     *
+     * @param string $description
+     *
+     * @return Ligne
+     */
+    public function setDescription($description)
+    {
+        $this->description = $description;
+
+        return $this;
+    }
+
+    /**
+     * Get description
+     *
+     * @return string
+     */
+    public function getDescription()
+    {
+        return $this->description;
+    }
+
+    /**
+     * Set quantite
+     *
+     * @param float $quantite
+     *
+     * @return Ligne
+     */
+    public function setQuantite($quantite)
+    {
+        $this->quantite = $quantite;
+
+        return $this;
+    }
+
+    /**
+     * Get quantite
+     *
+     * @return float
+     */
+    public function getQuantite()
+    {
+        return $this->quantite;
+    }
+
+    /**
+     * Set unite
+     *
+     * @param string $unite
+     *
+     * @return Ligne
+     */
+    public function setUnite($unite)
+    {
+        $this->unite = $unite;
+
+        return $this;
+    }
+
+    /**
+     * Get unite
+     *
+     * @return string
+     */
+    public function getUnite()
+    {
+        return $this->unite;
+    }
+
+    /**
+     * Set photo
+     *
+     * @param string $photo
+     *
+     * @return Ligne
+     */
+    public function setPhoto($photo)
+    {
+        $this->photo = $photo;
+
+        return $this;
+    }
+
+    /**
+     * Get photo
+     *
+     * @return string
+     */
+    public function getPhoto()
+    {
+        return $this->photo;
+    }
+
+    /**
+     * Set legende
+     *
+     * @param string $legende
+     *
+     * @return Ligne
+     */
+    public function setLegende($legende)
+    {
+        $this->legende = $legende;
+
+        return $this;
+    }
+
+    /**
+     * Get legende
+     *
+     * @return string
+     */
+    public function getLegende()
+    {
+        return $this->legende;
+    }
+
+    /**
+     * Add fille
+     *
+     * @param \ChatCreeSoftware\BordereauxBundle\Entity\Ligne $fille
+     *
+     * @return Ligne
+     */
+    public function addFille(\ChatCreeSoftware\BordereauxBundle\Entity\Ligne $fille)
+    {
+        $this->filles[] = $fille;
+
+        return $this;
+    }
+
+    /**
+     * Remove fille
+     *
+     * @param \ChatCreeSoftware\BordereauxBundle\Entity\Ligne $fille
+     */
+    public function removeFille(\ChatCreeSoftware\BordereauxBundle\Entity\Ligne $fille)
+    {
+        $this->filles->removeElement($fille);
+    }
+
+    /**
+     * Get filles
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getFilles()
+    {
+        return $this->filles;
+    }
+
+    /**
+     * Set bordereau
+     *
+     * @param \ChatCreeSoftware\BordereauxBundle\Entity\Bordereau $bordereau
+     *
+     * @return Ligne
+     */
+    public function setBordereau(\ChatCreeSoftware\BordereauxBundle\Entity\Bordereau $bordereau = null)
+    {
+        if( $this->getNumero() ){
+            foreach( $bordereau->getLignes() as $mLigne ){
+                if( $mLigne->getNumero() >= $this->getNumero() ){
+                        $mLigne->setNumero( $mLigne->getNumero()+1 );
+                }
+            }
+        } else {
+            $maxNumero = 0;
+            foreach( $bordereau->getLignes() as $mLigne ){
+                if( $mLigne->getNumero() > $maxNumero ){
+                    $maxNumero = $mLigne->getNumero();
+                }
+            }
+        
+            $this->setNumero( $maxNumero + 1 );
+        }        
+        $this->bordereau = $bordereau;
+
+        return $this;
+    }
+
+    /**
+     * Get bordereau
+     *
+     * @return \ChatCreeSoftware\BordereauxBundle\Entity\Bordereau
+     */
+    public function getBordereau()
+    {
+        return $this->bordereau;
+    }
+
+    /**
+     * Set parente
+     *
+     * @param \ChatCreeSoftware\BordereauxBundle\Entity\Ligne $parente
+     *
+     * @return Ligne
+     */
+    public function setParente(\ChatCreeSoftware\BordereauxBundle\Entity\Ligne $parente = null)
+    {
+        if( $this->getNumero() ){
+            foreach( $parente->getFilles() as $mLigne ){
+                if( $mLigne->getNumero() >= $this->getNumero() ){
+                    $mLigne->setNumero( $mLigne->getNumero()+1 );
+                }
+            }
+        } else {
+            $maxNumero = 0;
+            foreach( $parente->getFilles() as $mLigne ){
+                if( $mLigne->getNumero() > $maxNumero ){
+                    $maxNumero = $mLigne->getNumero();
+                }
+            }
+        
+            $this->setNumero( $maxNumero + 1 );
+        }            
+        
+        $this->parente = $parente;
+
+        return $this;
+    }
+
+    public function setSimpleParente(\ChatCreeSoftware\BordereauxBundle\Entity\Ligne $parente = null)
+    {
+        $this->parente = $parente;
+
+        return $this;
+    }
+    
+    
+    /**
+     * Get parente
+     *
+     * @return \ChatCreeSoftware\BordereauxBundle\Entity\Ligne
+     */
+    public function getParente()
+    {
+        return $this->parente;
+    }
+
+    /**
+     * Set prestation
+     *
+     * @param \ChatCreeSoftware\BordereauxBundle\Entity\Prestation $prestation
+     *
+     * @return Ligne
+     */
+    public function setPrestation(\ChatCreeSoftware\BordereauxBundle\Entity\Prestation $prestation = null)
+    {
+        $this->prestation = $prestation;
+
+        return $this;
+    }
+
+    /**
+     * Get prestation
+     *
+     * @return \ChatCreeSoftware\BordereauxBundle\Entity\Prestation
+     */
+    public function getPrestation()
+    {
+        return $this->prestation;
+    }
+
+    /**
+     * Add parametre
+     *
+     * @param \ChatCreeSoftware\BordereauxBundle\Entity\Parametre $parametre
+     *
+     * @return Ligne
+     */
+    public function addParametre(\ChatCreeSoftware\BordereauxBundle\Entity\Parametre $parametre)
+    {
+        $this->parametres[] = $parametre;
+        
+        return $this;
+    }
+
+    /**
+     * Remove parametre
+     *
+     * @param \ChatCreeSoftware\BordereauxBundle\Entity\Parametre $parametre
+     */
+    public function removeParametre(\ChatCreeSoftware\BordereauxBundle\Entity\Parametre $parametre)
+    {
+        $this->parametres->removeElement($parametre);
+    }
+
+    /**
+     * Get parametres
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getParametres()
+    {
+        return $this->parametres;
+    }
+    
+    public function getPosition() {
+        
+        if( $this->getParente() ){
+            return $this->getParente()->getPosition() . "." . $this->getNumero();
+        } else if ( $this->getAlternativede () ) {
+            return $this->getAlternativede()->getPosition();
+        } else {
+            return $this->getNumero();
+        }
+    }
+    
+    public function getType() {
+        $type = "";
+        if( $this->getOptionel() ){
+            $type = "Option";
+        } else if ( $this->getAlternativede() ) {
+            $type = "Alternative";
+        }
+        return $type;
+    }
+    
+    public function getLigneAsArray( Devis $devis = null ){
+        
+        $effectiveTitre="";
+        $effectiveDescription="";
+        $effectiveUnite="";
+        $effectiveQuantite="";
+        
+        if( $this->prestation ){
+            $effectiveTitre = $this->prestation->getTitre();
+            $effectiveDescription = $this->prestation->getDescription();
+            $effectiveUnite = $this->prestation->getUnite();
+        } else {
+            $effectiveTitre = $this->titre;
+            $effectiveDescription = nl2br($this->description);
+            $effectiveUnite = $this->unite;
+        }
+
+        if( count( $this->filles ) > 0 ){
+            $effectiveUnite = "";
+        } else {
+            $effectiveQuantite = $this->quantite;
+        }
+        $option = false;
+        if( $this->getOptionel() || $this->alternativede ){
+            $option = true;
+        }
+                
+        $ligneObject = array(
+            "id" => $this->id,
+            "numero" => $this->getPosition(),
+            "type" => $this->getType(),
+            "photo" => $this->getPhoto(),
+            "titre" => $effectiveTitre,
+            "description" => $effectiveDescription,
+            "unite" => $effectiveUnite,
+            "quantite" => $effectiveQuantite,
+            "option" => $option );
+                
+        $n=0;
+        foreach( $this->parametres as $parametre ) {
+            $ligneObject[ 'parametre' . $n++ ] = $parametre->getTitre();
+        }
+        if( $this->prestation ){
+            $n=0;
+            foreach( $this->prestation->getQuestions() as $question ) {
+                $ligneObject[ 'question' . $n++ ] = $question->getQuestion();
+            }
+        }
+        if( $devis ){
+            foreach( $this->getLignesDevis() as $ligneDevis ){
+                if( $ligneDevis->getDevis() == $devis ){
+                    $ligneObject["ligneDevisId"] = $ligneDevis->getId();
+                    $ligneObject["prixUnitaire"]=$ligneDevis->getPrixUnitaire();
+                    $ligneObject["commentaire"]=$ligneDevis->getCommentaire();
+                }
+            }
+        }
+        
+        return $ligneObject;
+    }
+    
+    public function getLigneAndChildAsArray( Devis $devis = null){
+        
+        $return = array();
+        
+        $return[] = $this->getLigneAsArray( $devis );
+        
+        foreach( $this->filles as $ligne ){
+            $return = array_merge( $return,$ligne->getLigneAndChildAsArray( $devis ) );
+        }
+        foreach( $this->alternatives as $alternate ) {
+            $return = array_merge( $return, $alternate->getLigneAndChildAsArray( $devis ) );
+        }
+        
+        return $return;
+    }
+
+    /**
+     * Add alternative
+     *
+     * @param \ChatCreeSoftware\BordereauxBundle\Entity\Ligne $alternative
+     *
+     * @return Ligne
+     */
+    public function addAlternative(\ChatCreeSoftware\BordereauxBundle\Entity\Ligne $alternative)
+    {
+        $this->alternatives[] = $alternative;
+
+        return $this;
+    }
+
+    /**
+     * Remove alternative
+     *
+     * @param \ChatCreeSoftware\BordereauxBundle\Entity\Ligne $alternative
+     */
+    public function removeAlternative(\ChatCreeSoftware\BordereauxBundle\Entity\Ligne $alternative)
+    {
+        $this->alternatives->removeElement($alternative);
+    }
+
+    /**
+     * Get alternatives
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getAlternatives()
+    {
+        return $this->alternatives;
+    }
+
+    /**
+     * Set alternativede
+     *
+     * @param \ChatCreeSoftware\BordereauxBundle\Entity\Ligne $alternativede
+     *
+     * @return Ligne
+     */
+    public function setAlternativede(\ChatCreeSoftware\BordereauxBundle\Entity\Ligne $alternativede = null)
+    {
+        $this->alternativede = $alternativede;
+
+        return $this;
+    }
+
+    /**
+     * Get alternativede
+     *
+     * @return \ChatCreeSoftware\BordereauxBundle\Entity\Ligne
+     */
+    public function getAlternativede()
+    {
+        return $this->alternativede;
+    }
+    /**
+     * @var boolean
+     */
+    private $optionel;
+
+
+    /**
+     * Set optionel
+     *
+     * @param boolean $optionel
+     *
+     * @return Ligne
+     */
+    public function setOptionel($optionel)
+    {
+        $this->optionel = $optionel;
+
+        return $this;
+    }
+
+    /**
+     * Get optionel
+     *
+     * @return boolean
+     */
+    public function getOptionel()
+    {
+        return $this->optionel;
+    }
+    
+    public function getParentBordereau(){
+        if( $this->bordereau ){
+            $bordereau = $this->bordereau;
+        } else {
+            if( $this->parente ){
+                $bordereau = $this->parente->getParentBordereau();
+            }
+            if( $this->alternativede ){
+                $bordereau = $this->alternativede->getParentBordereau();
+            }
+        }
+        return $bordereau;
+    }
+    /**
+     * @var float
+     */
+    private $rapportPhoto = 1;
+
+
+    /**
+     * Set rapportPhoto
+     *
+     * @param float $rapportPhoto
+     *
+     * @return Ligne
+     */
+    public function setRapportPhoto($rapportPhoto)
+    {
+        $this->rapportPhoto = $rapportPhoto;
+
+        return $this;
+    }
+
+    /**
+     * Get rapportPhoto
+     *
+     * @return float
+     */
+    public function getRapportPhoto()
+    {
+        return $this->rapportPhoto;
+    }
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    private $lignesDevis;
+
+
+    /**
+     * Add lignesDevis
+     *
+     * @param \ChatCreeSoftware\BordereauxBundle\Entity\LigneDevis $lignesDevis
+     *
+     * @return Ligne
+     */
+    public function addLignesDevis(\ChatCreeSoftware\BordereauxBundle\Entity\LigneDevis $lignesDevis)
+    {
+        $this->lignesDevis[] = $lignesDevis;
+
+        return $this;
+    }
+
+    /**
+     * Remove lignesDevis
+     *
+     * @param \ChatCreeSoftware\BordereauxBundle\Entity\LigneDevis $lignesDevis
+     */
+    public function removeLignesDevis(\ChatCreeSoftware\BordereauxBundle\Entity\LigneDevis $lignesDevis)
+    {
+        $this->lignesDevis->removeElement($lignesDevis);
+    }
+
+    /**
+     * Get lignesDevis
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getLignesDevis()
+    {
+        return $this->lignesDevis;
+    }
+    
+    public function getLigneDevis( $option ){
+        $devis = [];
+        foreach( $this->getLignesDevis() as $ligneDevis ){
+            if( $option && $this->getOptionel() ){
+                $devis[]=0;
+            } else {
+                $devis[] = $this->getQuantite() * $ligneDevis->getPrixunitaire();
+            }
+        }
+        return $devis;
+    }
+    
+    public function totalDevis( $option ){
+        $total = [];
+        if( $this->getFilles()->count() > 0 ) {
+            foreach( $this->getFilles() as $ligne ) {
+                $totalFille = $ligne->totalDevis( $option );
+                for( $n=0; $n<count($totalFille); $n++){
+                    if( !isset($total[$n])) {
+                        $total[$n] = 0;
+                    }
+                    $total[$n] += $totalFille[$n];
+                }
+            }
+        } else {
+            $total = $this->getLigneDevis( $option );
+        }
+        return $total;
+    }
+
+    /**
+     * Add lignesDevi
+     *
+     * @param \ChatCreeSoftware\BordereauxBundle\Entity\LigneDevis $lignesDevi
+     *
+     * @return Ligne
+     */
+    public function addLignesDevi(\ChatCreeSoftware\BordereauxBundle\Entity\LigneDevis $lignesDevi)
+    {
+        $this->lignesDevis[] = $lignesDevi;
+
+        return $this;
+    }
+
+    /**
+     * Remove lignesDevi
+     *
+     * @param \ChatCreeSoftware\BordereauxBundle\Entity\LigneDevis $lignesDevi
+     */
+    public function removeLignesDevi(\ChatCreeSoftware\BordereauxBundle\Entity\LigneDevis $lignesDevi)
+    {
+        $this->lignesDevis->removeElement($lignesDevi);
+    }
+}

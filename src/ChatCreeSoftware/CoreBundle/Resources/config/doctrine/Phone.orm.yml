@@ -1,0 +1,18 @@
+ChatCreeSoftware\CoreBundle\Entity\Phone:
+  type: entity
+  table: CorePhone
+  id:
+    id:
+      type: integer
+      generator:
+         strategy: AUTO  
+  fields:
+    number:   { type: string(15), nullable: true }
+  manyToOne:
+    phoneType:
+      targetEntity: ChatCreeSoftware\CoreBundle\Entity\Flags
+    country:
+      targetEntity: ChatCreeSoftware\CoreBundle\Entity\Country
+      inversedBy: phoneNumbers
+    
+  lifecycleCallbacks: {  }

@@ -1,0 +1,10 @@
+parameters:
+    security.exception_listener.class: ChatCreeSoftware\CoreBundle\Listener\FirewallExceptionListener
+services:
+    ChatCreeSoftware.core.exception_listener:
+        class: ChatCreeSoftware\CoreBundle\Listener\ExceptionListener
+        arguments: ["@templating", "@kernel"]
+        tags:
+            - { name: kernel.event_listener, event: kernel.exception, method: onKernelException }
+    ChatCreeSoftware.Core.user_checker:
+        class: ChatCreeSoftware\CoreBundle\Security\Authorization\UserChecker

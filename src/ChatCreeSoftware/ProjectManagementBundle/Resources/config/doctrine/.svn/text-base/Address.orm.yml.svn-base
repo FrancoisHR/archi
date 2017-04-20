@@ -1,0 +1,32 @@
+ChatCreeSoftware\ProjectManagementBundle\Entity\Address:
+  type: entity
+  table: Address
+  id:
+    id:
+      type: integer
+      generator:
+         strategy: AUTO  
+  fields:
+    company:   { type: string(255), nullable: true }
+    vatNumber: { type: string(15), nullable: true }
+    title:     { type: string(50), nullable: true }   
+    firstname: { type: string(255), nullable: true }
+    lastname:  { type: string(255), nullable: true }
+    street1:   { type: string(255), nullable: true }
+    street2:   { type: string(255), nullable: true }
+    street3:   { type: string(255), nullable: true }
+    city:      { type: string(255), nullable: true }
+    zipCode:   { type: string(255), nullable: true }
+    country:   { type: string(255), nullable: true }
+  manyToOne:
+    project:
+      targetEntity: ChatCreeSoftware\CoreBundle\Entity\Project
+      inversedBy: addresses
+    addressType:
+      targetEntity: ChatCreeSoftware\CoreBundle\Entity\Flags
+  oneToMany:
+    invoices:
+      targetEntity: ChatCreeSoftware\ProjectManagementBundle\Entity\Invoice
+      mappedBy: address
+    
+  lifecycleCallbacks: {  }

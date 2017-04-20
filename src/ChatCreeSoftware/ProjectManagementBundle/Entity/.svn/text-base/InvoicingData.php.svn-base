@@ -1,0 +1,229 @@
+<?php
+
+namespace ChatCreeSoftware\ProjectManagementBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * ChatCreeSoftware\ProjectManagementBundle\Entity\InvoicingData
+ */
+class InvoicingData
+{
+    /**
+     * @var integer $id
+     */
+    private $id;
+
+    /**
+     * @var integer $numberingType
+     */
+    private $numberingType;
+
+    /**
+     * @var string $numberingFormat
+     */
+    private $numberingFormat;
+
+    /**
+     * @var string $footerFormat
+     */
+    private $footerFormat;
+
+    /**
+     * @var string $invoiceLogo
+     */
+    private $invoiceLogo;
+
+    /**
+     * @var text $conditions
+     */
+    private $conditions;
+
+    /**
+     * @var text $specialConditions
+     */
+    private $specialConditions;
+
+    /**
+     * @var text $reminderText
+     */
+    private $reminderText;
+
+    /**
+     * @var ChatCreeSoftware\CoreBundle\Entity\User
+     */
+    private $user;
+
+
+    /**
+     * Get id
+     *
+     * @return integer 
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * Set numberingType
+     *
+     * @param integer $numberingType
+     */
+    public function setNumberingType($numberingType)
+    {
+        $this->numberingType = $numberingType;
+    }
+
+    /**
+     * Get numberingType
+     *
+     * @return integer 
+     */
+    public function getNumberingType()
+    {
+        return $this->numberingType;
+    }
+    
+    
+    /**
+     * Set numberingFormat
+     *
+     * @param string $numberingFormat
+     */
+    public function setNumberingFormat($numberingFormat)
+    {
+        $this->numberingFormat = $numberingFormat;
+    }
+
+    /**
+     * Get numberingFormat
+     *
+     * @return string 
+     */
+    public function getNumberingFormat()
+    {
+        return $this->numberingFormat;
+    }
+
+    /**
+     * Set footerFormat
+     *
+     * @param string $footerFormat
+     */
+    public function setFooterFormat($footerFormat)
+    {
+        $this->footerFormat = $footerFormat;
+    }
+
+    /**
+     * Get footerFormat
+     *
+     * @return string 
+     */
+    public function getFooterFormat()
+    {
+        return $this->footerFormat;
+    }
+
+    /**
+     * Set invoiceLogo
+     *
+     * @param string $invoiceLogo
+     */
+    public function setInvoiceLogo($invoiceLogo)
+    {
+        $this->invoiceLogo = $invoiceLogo;
+    }
+
+    /**
+     * Get invoiceLogo
+     *
+     * @return string 
+     */
+    public function getInvoiceLogo()
+    {
+        return $this->invoiceLogo;
+    }
+
+    /**
+     * Set conditions
+     *
+     * @param text $conditions
+     */
+    public function setConditions($conditions)
+    {
+        $this->conditions = $conditions;
+    }
+
+    /**
+     * Get conditions
+     *
+     * @return text 
+     */
+    public function getConditions()
+    {
+        return $this->conditions;
+    }
+
+    /**
+     * Set specialConditions
+     *
+     * @param text $specialConditions
+     */
+    public function setSpecialConditions($specialConditions)
+    {
+        $this->specialConditions = $specialConditions;
+    }
+
+    /**
+     * Get specialConditions
+     *
+     * @return text 
+     */
+    public function getSpecialConditions()
+    {
+        return $this->specialConditions;
+    }
+
+    /**
+     * Set reminderText
+     *
+     * @param text $reminderText
+     */
+    public function setReminderText($reminderText)
+    {
+        $this->reminderText = $reminderText;
+    }
+
+    /**
+     * Get reminderText
+     *
+     * @return text 
+     */
+    public function getReminderText()
+    {
+        return $this->reminderText;
+    }
+
+    /**
+     * Set user
+     *
+     * @param ChatCreeSoftware\CoreBundle\Entity\User $user
+     */
+    public function setUser(\ChatCreeSoftware\CoreBundle\Entity\User $user)
+    {
+        $this->user = $user;
+    }
+
+    /**
+     * Get user
+     *
+     * @return ChatCreeSoftware\CoreBundle\Entity\User 
+     */
+    public function getUser()
+    {
+        return $this->user;
+    }
+
+}

@@ -1,0 +1,24 @@
+{% extends "CoreBundle::layout.html.twig" %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-sm-4 col-sm-offset-4">
+            {% if success %}
+                <h3>Mot de passe changé</h3>
+            {% else %}
+                <h3>Mot de passe inchangé</h3>                
+            {% endif %}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-4 col-sm-offset-4">
+        {% if success %}
+            <p class="text-justify">Votre mot de passe à été changé avec succès. Un mail de confirmation à été envoyé sur votre adresse mail.</p>
+            <p class="text-justify">Vous pouvez maintenant vous <a href="{{path('_login')}}">connecter</a> en utilisant votre nouveau mot de passe.</p>
+        {% else %}
+            <p class="text-justify">Une erreur est survenue et votre mot de passe n'a pu être changé.</p>
+            <p class="text-justify">Veuillez contacter les administrateurs pour changer votre mot de passe.</p>
+        {% endif %}
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <title>{% block title %}Core{% endblock %}</title>
+        {% block stylesheet %}
+            {% stylesheets 
+                'bundles/ChatCreeSoftware/Core/bootstrap/css/bootstrap.css'
+                'bundles/ChatCreeSoftware/Core/css/login.css'
+                filter='?uglifycss' filter='cssrewrite' output='bundles/ChatCreeSoftware/Core/css/core.css' %}
+                <link href="{{ asset_url }}" rel="stylesheet"/>
+            {% endstylesheets %}
+        {% endblock %}
+        {% block includes %}
+            {% javascripts
+                '@jquery_and_ui' %}
+                <script src="{{ asset_url }}" type="text/javascript"></script>
+            {% endjavascripts %}
+        {% endblock %}  
+        <script>{% block javascript %}{% endblock %}</script>
+    </head>
+    <body>
+        <div class="auth-header">
+        </div>
+
+        <div id="container" class="container-fluid">
+            <div id="content">
+                {% block content %}{% endblock %}
+            </div>
+            {% block appfooter %}{% endblock %}
+        </div>
+    </body>
+</html>

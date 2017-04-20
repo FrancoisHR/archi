@@ -1,0 +1,41 @@
+ChatCreeSoftware\BordereauxBundle\Entity\Bordereau:
+  type: entity
+  table: BordereauxBordereau
+  entityListeners:
+    ChatCreeSoftware\BordereauxBundle\Listener\BordereauListener:
+  id:
+    id:
+      type: integer
+      generator:
+         strategy: AUTO  
+  fields:
+    type:           { type: string(120) }
+    titre:          { type: string(250), nullable: true }
+    indice:         { type: integer, nullable: true }
+    referenceLot:   { type: string(120), nullable: true }
+    date:           { type: date }
+    description:    { type: text, nullable: true }
+    logo:           { type: string(255), nullable: true }
+  manyToOne:
+    project:
+      targetEntity: ChatCreeSoftware\CoreBundle\Entity\Project
+      inversedBy: bordereaux
+  oneToMany:
+    lignes:
+      targetEntity: Ligne
+      mappedBy:     bordereau
+      cascade:
+        - remove
+    devis:
+      targetEntity: Devis
+      mappedBy:     bordereau
+  manyToMany:
+    fichiers:
+      targetEntity: Fichier
+      inversedBy:   bordereaux
+      joinTable:
+        name:       BordereauxBordereauxFichiers
+      cascade:
+        - persist
+        - remove
+lifecycleCallbacks: {  }

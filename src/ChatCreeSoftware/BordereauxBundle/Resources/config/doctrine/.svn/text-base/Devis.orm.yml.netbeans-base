@@ -1,0 +1,30 @@
+ChatCreeSoftware\BordereauxBundle\Entity\Devis:
+  type: entity
+  table: BordereauxDevis
+  entityListeners:
+    ChatCreeSoftware\BordereauxBundle\Listener\DevisListener:
+  id:
+    id:
+      type: integer
+      generator:
+         strategy: AUTO  
+  fields:
+    version:        { type: integer, nullable: true }
+    ouverture:      { type: date }
+    depot:          { type: date, nullable: true  }
+    cloture:        { type: date, nullable: true  }
+    commentaire:    { type: text, nullable: true }
+  manyToOne:
+    bordereau:
+      targetEntity: Bordereau
+      inversedBy:   devis
+    soumissionnaire:
+      targetEntity: ChatCreeSoftware\CoreBundle\Entity\User
+      inversedBy:   devis      
+    etat:
+      targetEntity: ChatCreeSoftware\CoreBundle\Entity\Flags
+  oneToMany:
+    lignes:
+      targetEntity: LigneDevis
+      mappedBy:     devis
+lifecycleCallbacks: {  }

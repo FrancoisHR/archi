@@ -1,0 +1,17 @@
+ChatCreeSoftware\BordereauxBundle\Entity\Question:
+  type: entity
+  table: BordereauxQuestion
+  id:
+    id:
+      type: integer
+      generator:
+         strategy: AUTO  
+  fields:
+    identifiant:   { type: string(32) }
+    question:      { type: text }
+    
+  manyToOne:
+    prestation:
+      targetEntity: Prestation
+      inversedBy: questions    
+  lifecycleCallbacks: {  }

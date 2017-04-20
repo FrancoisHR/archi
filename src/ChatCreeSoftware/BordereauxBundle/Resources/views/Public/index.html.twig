@@ -1,0 +1,35 @@
+{% extends "CoreBundle::coreLayout.html.twig" %}
+
+{% set menu_selected = '11' %}
+
+{% block content %}
+    
+    <nav class="navbar navbar-inverse">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="#">Mes Bordereaux</a>
+        </div>
+    </nav>
+    
+    <table id="devis" class="table table-striped table-bordered" 
+        <thead>
+            <tr>
+                <td>Projet</td>
+                <td>Bordereau</td>
+                <td>Etat</td>
+                <td>Date dépôt</td>
+                <td>Date clôture</td>
+            </tr>
+        </thead>
+        <tbody>
+        {% for dev in devis %}
+            <tr>
+                <td>{{dev.bordereau.project.projectName}}</td>
+                <td><a href='{{ path( '_bordereaux_devis', {'id': dev.id } ) }}'>{{ dev.bordereau.titre }}</a></td>
+                <td>{{dev.etat.flagLabel}}</td>
+                <td>{%if dev.depot%}{{dev.depot|date("d/m/Y")}}{% endif %}</td>
+                <td>{%if dev.cloture%}{{dev.cloture|date("d/m/Y")}}{% endif %}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

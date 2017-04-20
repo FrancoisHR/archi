@@ -1,0 +1,21 @@
+{% extends "CoreBundle::layout.html.twig" %}
+
+{% block content %}
+
+    <br><br>
+
+    <div style="text-align: center">
+        <h1 class="exception-header">Erreur {{ exception.statusCode }}</h1>
+
+        <br><br><br>
+
+        <p style="font-size: 20px;">
+            Le document que vous cherchez est indisponible ou introuvable.
+            <br><br>
+            <p style="">
+                Vous pouvez revenir à <a href="{{ path('_login') }}">l'accueil</a>
+            </p>
+        </p>
+    </div>
+
+{% endblock %}

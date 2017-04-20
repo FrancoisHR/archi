@@ -1,0 +1,384 @@
+<html>
+    <head>
+        <link href="{{ asset('bundles/ChatCreeSoftware/Core/bootstrap/css/bootstrap.css') }}" rel="stylesheet" type="text/css" media="screen" />
+        <link href="{{ asset('bundles/ChatCreeSoftware/Core/css/dataTables.bootstrap.min.css') }}" rel="stylesheet" type="text/css" media="screen" />
+        <link href="{{ asset('bundles/ChatCreeSoftware/Core/css/jqueryui-datepicker-bootstrap.css') }}" rel="stylesheet" type="text/css" media="screen" />
+        <link href="{{asset('bundles/ChatCreeSoftware/ProjectManagement/css/invoice_print.css') }}" rel="stylesheet" type="text/css"/>
+        
+        <script src="{{ asset('bundles/ChatCreeSoftware/Core/js/jquery-3.1.1.min.js') }}" type="text/javascript"></script>
+        <script src="{{ asset('bundles/ChatCreeSoftware/Core/js/jquery-migrate-3.0.0.min.js') }}" type="text/javascript"></script>
+        <script src="{{ asset('bundles/ChatCreeSoftware/Core/js/jquery-ui.min.js') }}" type="text/javascript"></script>
+        <script src="{{ asset('bundles/ChatCreeSoftware/Core/js/jquery.autocomplete.js')}}" type="text/javascript"></script>
+        <script src="{{ asset('bundles/ChatCreeSoftware/Core/js/jquery.ui.datepicker-fr.js') }}" type="text/javascript"></script>
+        <script src="{{ asset('bundles/ChatCreeSoftware/Core/bootstrap/js/bootstrap.min.js') }}" type="text/javascript"></script>
+        <script src="{{ asset('bundles/ChatCreeSoftware/Core/js/jquery.bootstrap.min.js') }}" type="text/javascript"></script>            
+        <script src="{{ asset('bundles/ChatCreeSoftware/Core/js/datatables.min.js') }}" type="text/javascript"></script>
+        <script src="{{ asset('bundles/ChatCreeSoftware/Core/js/dataTables.bootstrap.min.js') }}" type="text/javascript"></script>
+        <script src="{{ asset('bundles/ChatCreeSoftware/Core/js/buttons.bootstrap.min.js') }}" type="text/javascript"></script>
+        <script src="{{ asset('bundles/ChatCreeSoftware/Core/js/datatables.date-euro.js') }}" type="text/javascript"></script>        
+        <script src="{{ asset('bundles/ChatCreeSoftware/Core/js/sprintf.js')}}" type="text/javascript"></script>    
+        <title>Devis n° {{invoice.number}}</title>
+    </head>
+    <body>
+        <div id="dialog-form">
+            <form>
+                <fieldset class="form">
+                    <input name="descriptionId" id="descriptionId" type="hidden"/>
+                    <label for="description">Description</label>
+                    <input type="text" name="description" id="description" class="text ui-widget-content ui-corner-all"><br>
+                </fieldset>
+            </form>
+        </div>
+        
+        <div id="dialog-address">
+            <table id="addressList">
+                <tbody class="rows">
+
+                </tbody>
+            </table>
+        </div>
+
+        <div class="pageMargin">
+        <div class="logo">
+            <img src="{{ asset('bundles/ChatCreeSoftware/ProjectManagement/images/logo_print.jpg') }}"/>
+        </div>
+        
+        <div class="address">
+            52, rue de Koerich<br>
+            L-8437 - Steinfort<br>
+            29, rue Jean Schneider<br>
+            L-8272 - Mamer<br>
+            Tel : +352-661-64.55.22<br>
+            Fax : +352-24.61.11.57<br>
+            Email : info@rl-architecture.lu<br>
+            Site : www.rlambay.lu
+        </div>
+        
+        <div class="headline invoiceNumber">
+            Devis n°
+        </div>
+        <div class="value invoiceNumberValue">{{invoice.number}}</div>
+        <div class="headline invoiceDate">
+            Date
+        </div>
+        <div class="value invoiceDateValue">{{invoice.date|date("d/m/y")}}</div>
+        <div class="headline customerVAT">
+            TVA Client
+        </div>        
+        <div class="value customerVATValue"><span class="vatNumber">{%if invoice.address %}{{invoice.address.vatNumber}}{% endif %}</span></div>
+        
+        <div class="customerAddress">
+            {% if invoice.address %}
+            <span class="addressCompany">{% if invoice.address.company %}
+                {{invoice.address.company}}
+            {% endif %}</span>
+            <span class="addressCompanyBreak">{% if invoice.address.company %}<br>{% endif %}</span>
+            <span class="addressTitle">{% if invoice.address.title %}{{invoice.address.title}}{% endif %}</span> <span class="addressLastname">{% if invoice.address.lastname %}{{invoice.address.lastname}}{% endif %}</span> <span class="addressFirstname">{% if invoice.address.firstname %}{{invoice.address.firstname}}{% endif %}</span>
+            <span class="addressNameBreak">{% if invoice.address.title or invoice.address.lastname or invoice.address.firstname %}<br>{% endif %}</span>
+            <span class="addressStreet1">{% if invoice.address.street1 %}
+                {{invoice.address.street1}}
+            {% endif %}</span>
+            <span class="addressStreet1Break">{% if invoice.address.street1 %}<br>{% endif %}</span>
+            <span class="addressStreet2">{% if invoice.address.street2 %}
+                {{invoice.address.street2}}
+            {% endif %}</span>
+            <span class="addressStreet2Break">{% if invoice.address.street2 %}<br>{% endif %}</span>
+            <span class="addressStreet3">{% if invoice.address.street3 %}
+                {{invoice.address.street3}}<br>
+            {% endif %}</span>
+            <span class="addressStreet3Break">{% if invoice.address.street3 %}<br>{% endif %}</span>
+            <span class="addressZipCode">{{invoice.address.zipCode}}</span> <span class="addressCity">{{invoice.address.city}}</span>
+            <span class="addressCountryBreak">{% if invoice.address.country %}<br>{% endif %}</span>
+            <span class="addressCountry">{% if invoice.address.country %}
+                {{invoice.address.country}}
+            {% endif %}</span>
+            {% else %}
+                <span class="addressCompany"></span>
+                <span class="addressCompanyBreak"></span>
+                <span class="addressTitle"></span> <span class="addressLastname"></span> <span class="addressFirstname"></span>
+                <span class="addressNameBreak"></span>
+                <span class="addressStreet1"></span>
+                <span class="addressStreet1Break"></span>
+                <span class="addressStreet2"></span>
+                <span class="addressStreet2Break"></span>
+                <span class="addressStreet3"></span>
+                <span class="addressStreet3Break"></span>
+                <span class="addressZipCode"></span> <span class="addressCity"></span>
+                <span class="addressCountryBreak"></span>
+                <span class="addressCountry"></span>
+            {% endif %}
+        </div>
+        
+        <table class="items">
+            <thead>
+                <tr>
+                    <th class="headline itemsDesc">Description</td>
+                    <th class="headline itemsUnitPrice">Prix Unitaire</td>
+                    <th class="headline itemsQuantity">Quantit&eacute;</td>
+                    <th class="headline itemsAmount">Montant</td>
+                </tr>
+            </thead>
+            <tbody>
+                {% set total = 0 %}
+                {% for item in invoice.items %}
+                <tr class="itemRow">
+                    <td class="itemsDesc" id="{{item.id}}" >{{item.itemDescription}}</td>
+                    <td class="itemsUnitPrice">{{"%.02f"|format(item.itemPrice)}}</td>
+                    <td class="itemsQuantity">{{"%.02f"|format(item.quantity)}}</td>
+                    <td class="itemsAmount">{{"%.02f"|format(item.quantity*item.itemPrice)}}</td>
+                </tr>
+                {% set total = total + item.quantity*item.itemPrice %}
+                {% endfor %}
+                <tr>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                </tr>
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="3" class="itemsQuantity">Montant HTVA</td>
+                    <td class="itemsAmount">{{"%.02f"|format(total)}}</td>
+                </tr>
+                <tr>
+                    <td colspan="3" class="itemsQuantity">TVA ({{"%.02f"|format(vat*100)}}%)</td>
+                    <td class="itemsAmount">{{"%.02f"|format(total*vat)}}</td>                   
+                </tr>
+                <tr>
+                    <td colspan="3" class="itemsQuantity">Montant TVAC</td>
+                    <td class="itemsAmount">{{"%.02f"|format(total*(1+vat))}}</td>                   
+                </tr>
+            </tfoot>
+        </table>
+        
+        <table class="specialConditions">
+            <tbody>
+                <tr>
+                    <td class="noborder">Nous restons à votre disposition pour toute information complémentaire.<br/>
+                        Cordialement,<br/>Romain Lambay architecte</td>
+                </tr>
+            </tbody>
+        </table>
+        <table class="conditionsHead">
+            <thead>
+                <tr>
+                    <td colspan="2">Si ce devis vous convient, veuillez nous le retourner signé:</td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="top">Date :</td>
+                    <td class="top">Signature :</td>
+                </tr>
+            </tbody>
+        </table>
+        
+        <div class="pageFooter">
+            {{invoice.footer}}
+        </div>
+        
+        </div>
+    </body>
+
+<script>
+        $(document).ready(function() {
+            oTable = $('#addressList').DataTable({
+                "bFilter": false,
+                "bInfo": false,
+                "bPaginate": false,
+                "bProcessing": true,
+                "sAjaxSource": "{{ path("_gestion_project_contactList",{'id':invoice.project.id}) }}",
+                "aoColumnDefs": [
+                    {
+                        // `data` refers to the data for the cell (defined by `mData`, which
+                        // defaults to the column being worked with, in this case is the first
+                        // Using `row[0]` is equivalent.
+                        "mRender": function ( data, type, row ) {
+                            var addressText="";
+                            if( row[2] != null ) addressText = row[2];
+                            if (addressText != "" && ( row[5] != null || row[6] != null) ) addressText += " - ";
+                            if( row[5] != null ) addressText += row[5] + " ";
+                            if( row[6] != null ) addressText += row[6];
+                            if( addressText != "" && row[7] != null ) addressText += "<br>";
+                            if( row[7] != null ) addressText += row[7];
+                            if (addressText != "" && ( row[10] != null || row[11] != null) ) addressText += " - ";
+                            if( row[10] != null ) addressText += row[10] + " ";
+                            if( row[11] != null ) addressText += row[11];
+                                                
+                            return "<a class='addressSelection' id='" + row['id'] + "' href='#'>" + addressText + "</a>";
+                        },
+                        "aTargets": [ 0 ]
+                    }
+                ]
+            });
+            
+
+        });
+            
+        $(document).on( "click", "td.itemsDesc", function(e) {
+            e.preventDefault();
+            
+            var id = $(e.target).attr('id');
+            
+            $( "#dialog-form input#descriptionId" ).val( id );            
+            $( "#dialog-form input#description" ).val( $(e.target).html() );
+            
+            $( "#dialog-form" ).dialog( "open" );    
+        });
+        
+        $(document).on( "click","div.customerAddress", function(e){
+
+            $( "#dialog-address" ).dialog( "open" );
+            $( "table#addressList tr").hover(
+                function(){
+                    $( this ).addClass("hover");
+                },
+                function(){
+                    $( this ).removeClass("hover");
+                });
+        });
+        
+        $(document).on( "click", "a.addressSelection", function(e){
+            $( "#dialog-address" ).dialog( "close" );
+            var addressId= $(this).attr('id');
+            params="invoiceId={{invoice.id}}&addressId="+addressId;
+            var url = "{{path('_project_invoice_ajax_update_address')}}";
+            $.ajax({
+                type: "POST",
+                url: url,
+                data: params,
+                dataType: "json",
+                success: function(data) {
+                    if (data.response === 200) {
+                        if( data.address.company ) {
+                            $( 'span.addressCompany' ).text( data.address.company);
+                            $( 'span.addressCompanyBreak' ).html( "<br/>");
+                        } else {
+                            $( 'span.addressCompany' ).text("");
+                            $( 'span.addressCompanyBreak' ).html( "");
+                        }
+                        if( data.address.vatNumber ) {
+                            $( 'span.vatNumber' ).text( data.address.vatNumber );
+                        } else {
+                            $( 'span.vatNumber' ).text("");
+                        }
+                        if( data.address.title ) {
+                            $( 'span.addressTitle' ).text( data.address.title );
+                        } else {
+                            $( 'span.addressTitle' ).text("");
+                        }
+                        if( data.address.lastname ) {
+                            $( 'span.addressLastname' ).text( data.address.lastname );
+                        } else {
+                            $( 'span.addressLastname' ).text("");
+                        }
+                        if( data.address.firstname ) {
+                            $( 'span.addressFirstname' ).text( data.address.firstname );
+                        } else {
+                            $( 'span.addressFirstname' ).text("");
+                        }
+                        if( data.address.title || data.address.lastname || data.address.firstname ) {
+                            $( 'span.addressNameBreak' ).html( "<br/>" );
+                        } else {
+                            $( 'span.addressNameBreak' ).html( "" );
+                        }
+                        if( data.address.street1 ) {
+                            $( 'span.addressStreet1' ).text( data.address.street1 );
+                            $( 'span.addressStreet1Break' ).html( "<br/>");
+                        } else {
+                            $( 'span.addressStreet1' ).text("");
+                            $( 'span.addressStreet1Break' ).html( "");
+                        }
+                        if( data.address.street2 ) {
+                            $( 'span.addressStreet2' ).text( data.address.street2 );
+                            $( 'span.addressStreet2Break' ).html( "<br/>");
+                        } else {
+                            $( 'span.addressStreet2' ).text("");
+                            $( 'span.addressStreet2Break' ).html( "");
+                        }
+                        if( data.address.street3 ) {
+                            $( 'span.addressStreet3' ).text( data.address.street3 );
+                            $( 'span.addressStreet3Break' ).html( "<br/>");
+                        } else {
+                            $( 'span.addressStreet3' ).text("");
+                            $( 'span.addressStreet3Break' ).html( "");
+                        }
+                        if( data.address.zipCode ) {
+                            $( 'span.addressZipCode' ).text( data.address.zipCode );
+                        } else {
+                            $( 'span.addressZipCode' ).html( "" );
+                        }
+                        if( data.address.city ) {
+                            $( 'span.addressCity' ).text( data.address.city );
+                        } else {
+                            $( 'span.addressCity' ).html( "" );
+                        }
+                        if( data.address.country ) {
+                            $( 'span.addressCountryBreak' ).html( "<br/>");
+                        } else {
+                            $( 'span.addressCountryBreak' ).html( "");
+                        }
+                        if( data.address.country ) {
+                            $( 'span.addressCountry' ).text( data.address.country );
+                        } else {
+                            $( 'span.addressCountry' ).html( "" );
+                        }
+                    } else {
+                        alert("Erreur lors de la modification");
+                    }
+                }
+            });
+        });
+        
+        $("#dialog-address").dialog({
+            autoOpen: false,
+            width: 400,
+            height: 500,
+            modal: true,
+            buttons: {
+                Cancel: function() {
+                    $( this ).dialog( "close" );
+                }
+            },
+            title: "Selectionner une addresse"
+        });
+        
+        $( "#dialog-form" ).dialog({
+            autoOpen: false,
+            height: 200,
+            width: 500,
+            modal: true,
+            buttons: {
+                "OK": function() {
+                    
+                    id = $( "#dialog-form input#descriptionId" ).val();
+                    desc = $( "#dialog-form input#description" ).val();
+                    
+                    params="id="+id+"&description="+desc;
+                    var url = "{{path('_project_invoice_ajax_update_desc')}}";
+                    $.ajax({
+                        type: "POST",
+                        url: url,
+                        data: params,
+                        dataType: "json",
+                        success: function(data) {
+                            if (data.response === 200) {
+                                $( '#'+id ).html( desc );
+                            } else {
+                                alert("Erreur lors de la modification");
+                            }
+                        }
+                    });
+                    $( this ).dialog( "close" );
+                },
+                Cancel: function() {
+                    $( this ).dialog( "close" );
+                }
+            },
+            close: function() {
+            },
+            title: "Description"
+        });    
+</script>
+</html>

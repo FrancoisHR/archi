@@ -1,0 +1,35 @@
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/repo/!svn/ver/33/ProjectManager/src/ChatCreeSoftware/CoreBundle/Resources/views/Security
+END
+change.html.twig
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/repo/!svn/ver/37/ProjectManager/src/ChatCreeSoftware/CoreBundle/Resources/views/Security/change.html.twig
+END
+recover.html.twig
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/repo/!svn/ver/33/ProjectManager/src/ChatCreeSoftware/CoreBundle/Resources/views/Security/recover.html.twig
+END
+forgotten.html.twig
+K 25
+svn:wc:ra_dav:version-url
+V 109
+/repo/!svn/ver/33/ProjectManager/src/ChatCreeSoftware/CoreBundle/Resources/views/Security/forgotten.html.twig
+END
+login.html.twig
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/repo/!svn/ver/39/ProjectManager/src/ChatCreeSoftware/CoreBundle/Resources/views/Security/login.html.twig
+END
+mailSent.html.twig
+K 25
+svn:wc:ra_dav:version-url
+V 108
+/repo/!svn/ver/37/ProjectManager/src/ChatCreeSoftware/CoreBundle/Resources/views/Security/mailSent.html.twig
+END

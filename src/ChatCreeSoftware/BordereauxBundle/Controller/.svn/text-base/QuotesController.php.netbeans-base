@@ -1,0 +1,93 @@
+<?php
+namespace ChatCreeSoftware\BordereauxBundle\Controller;
+
+use ChatCreeSoftware\BordereauxBundle\Entity\Devis,
+    ChatCreeSoftware\BordereauxBundle\Entity\LigneDevis,
+    ChatCreeSoftware\BordereauxBundle\Entity\Bordereau,
+    ChatCreeSoftware\BordereauxBundle\Entity\Ligne,    
+    Sensio\Bundle\FrameworkExtraBundle\Configuration\Route,
+    Sensio\Bundle\FrameworkExtraBundle\Configuration\Template,
+    Symfony\Bundle\FrameworkBundle\Controller\Controller,
+    Symfony\Component\HttpFoundation\Request,
+    Symfony\Component\HttpFoundation\Response;      
+
+class QuotesController extends Controller {
+    
+    /**
+     * 
+     * @Route( "/bordereaux/ajax/bordereau/quotes/{id}", name="_ajax_list_bordereau_quotes", defaults={ "id"=0 })
+     * @Template
+     */
+    public function projectBordereauAction( Bordereau $bordereau ){
+
+        $arrayDevis = [];
+        foreach( $bordereau->getDevis() as $devis ){
+            $ouverture = "";
+            $depot = "";
+            $cloture = "";
+            
+            if( $devis->getOuverture() ){
+                $ouverture = $devis->getOuverture()->format("d/m/Y");
+            }
+            if( $devis->getDepot() ){
+                $depot = $devis->getDepot()->format("d/m/Y");
+            }
+            if( $devis->getCloture() ){
+                $cloture = $devis->getCloture()->format("d/m/Y");
+            }
+            
+            $devisObject = [
+                "id" => $devis->getId(),
+                "userId" => $devis->getSoumissionnaire()->getId(),
+                "user" => $devis->getSoumissionnaire()->getLastname(),
+                "dateOuverture" => $ouverture,
+                "dateDepot" => $depot,
+                "dateCloture" => $cloture,
+                "commentaire" => $devis->getCommentaire(),
+                "etat" => $devis->getEtat()->getFlagLabel()
+            ];
+            $arrayDevis[] = $devisObject;
+        }
+        
+        $ajaxResult["data"] = $arrayDevis;
+        $return = json_encode($ajaxResult);
+        return new Response($return, 200);        
+    }
+    
+    /**
+     * @Route( "/bordereaux/ajax/bordereau/quote/save/{id}", name="_ajax_lignes_devis_save", defaults={ "id"=0 })
+     */
+    public function bordereauQuoteSaveAction( Request $request, Devis $devis ){
+        $em = $this->get('doctrine')->getManager();
+        $ligneRepo = $em->getRepository("BordereauxBundle:LigneDevis");
+
+        $action = $request->get("action");
+        $flagRepo = $em->getRepository("CoreBundle:Flags");
+        $flag = $flagRepo->findOneByFlagExtra( $action );
+        if( $flag ){
+            $devis->setEtat( $flag );
+        }
+        
+        $params = $request->request->all();
+        foreach( $params as $key => $value ){
+            $keySplit = split("_",$key);
+            if( count($keySplit) == 2 ){
+                $ligne = $ligneRepo->findOneById( $keySplit[1] );
+                switch( $keySplit[0] ){
+                    case "prixUnitaire":
+                        $ligne->setPrixUnitaire( $value );
+                        break;
+                    case "commentaire":
+                        $ligne->setCommentaire( $value );
+                        break;
+                }
+            }
+        }
+        
+        $em->flush();
+
+        $ajaxResult["data"] = ["response" => 200];
+        $return = json_encode($ajaxResult);
+        return new Response($return, 200);
+    }
+}

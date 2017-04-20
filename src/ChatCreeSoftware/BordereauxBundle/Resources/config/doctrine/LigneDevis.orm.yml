@@ -1,0 +1,19 @@
+ChatCreeSoftware\BordereauxBundle\Entity\LigneDevis:
+  type: entity
+  table: BordereauxLigneDevis
+  id:
+    id:
+      type: integer
+      generator:
+         strategy: AUTO  
+  fields:
+    prixUnitaire:   { type: float, nullable: true }
+    commentaire:    { type: text, nullable: true }
+  manyToOne:
+    devis:
+      targetEntity: Devis
+      inversedBy: lignes
+    ligne:
+      targetEntity: Ligne
+      inversedBy: lignesDevis
+lifecycleCallbacks: {  }

@@ -1,0 +1,20 @@
+<nav class="navbar navbar-inverse">
+    <div class="navbar-header">
+        <a class="navbar-brand" href="#">{{ name }}</a>
+    </div>
+    <ul class='nav navbar-nav'>
+        <li {{ selected==0?'class="active"':""}}><a href='{{ path('_gestion_project',{'id': projectId}) }}'>D&eacute;tails</a></li>
+        <li {{ selected==1?'class="active"':""}}><a href='{{ path('_gestion_project_contacts',{'id': projectId}) }}'>Contacts</a></li>
+        <li {{ selected==2?'class="active"':""}}><a href='{{ path('_gestion_project_tasks',{'id': projectId}) }}'>T&acirc;ches</a></li>
+        <li {{ selected==3?'class="active"':""}}><a href='{{ path('_gestion_project_suivi',{'id': projectId}) }}'>Heures</a></li>
+        <li {{ selected==4?'class="active"':""}}><a href='{{ path('_gestion_project_trajets',{'id': projectId}) }}'>Kms</a></li>
+        <li {{ selected==5?'class="active"':""}}><a href='{{ path('_gestion_project_journal',{'id': projectId}) }}'>Journal</a></li>
+        {% if is_granted('ROLE_ADMIN') %}
+            <li {{ selected==6?'class="active"':""}}><a href='{{ path('_bordereaux_project_liste',{'id': projectId}) }}'>Bordereaux</a></li>       
+            <li {{ selected==7?'class="active"':""}}><a href='{{ path('_gestion_project_devis',{'id': projectId}) }}'>Devis</a></li>
+            <li {{ selected==8?'class="active"':""}}><a href='{{ path('_gestion_project_facturation',{'id': projectId}) }}'>Facturation</a></li>
+            <li {{ selected==9?'class="active"':""}} style="color: #8D8D8D;"><a href="#">Admin</a></li>
+        {% endif %}
+        <li><a href='{{ path( '_project', {'id': projectId } ) }}'>Fichiers</a></li>
+    </ul>
+</nav>

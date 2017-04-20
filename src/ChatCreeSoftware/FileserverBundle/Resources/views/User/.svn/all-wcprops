@@ -1,0 +1,77 @@
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/repo/!svn/ver/33/ProjectManager/src/ChatCreeSoftware/FileserverBundle/Resources/views/User
+END
+askDeleteMail.html.twig
+K 25
+svn:wc:ra_dav:version-url
+V 115
+/repo/!svn/ver/52/ProjectManager/src/ChatCreeSoftware/FileserverBundle/Resources/views/User/askDeleteMail.html.twig
+END
+editUser.html.twig
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/repo/!svn/ver/52/ProjectManager/src/ChatCreeSoftware/FileserverBundle/Resources/views/User/editUser.html.twig
+END
+auditUser.html.twig
+K 25
+svn:wc:ra_dav:version-url
+V 111
+/repo/!svn/ver/52/ProjectManager/src/ChatCreeSoftware/FileserverBundle/Resources/views/User/auditUser.html.twig
+END
+deleteMail.html.twig
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/repo/!svn/ver/52/ProjectManager/src/ChatCreeSoftware/FileserverBundle/Resources/views/User/deleteMail.html.twig
+END
+userSuccess.html.twig
+K 25
+svn:wc:ra_dav:version-url
+V 113
+/repo/!svn/ver/52/ProjectManager/src/ChatCreeSoftware/FileserverBundle/Resources/views/User/userSuccess.html.twig
+END
+changePassword.html.twig
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/repo/!svn/ver/52/ProjectManager/src/ChatCreeSoftware/FileserverBundle/Resources/views/User/changePassword.html.twig
+END
+listLastLogins.html.twig
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/repo/!svn/ver/52/ProjectManager/src/ChatCreeSoftware/FileserverBundle/Resources/views/User/listLastLogins.html.twig
+END
+listUserAccess.html.twig
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/repo/!svn/ver/52/ProjectManager/src/ChatCreeSoftware/FileserverBundle/Resources/views/User/listUserAccess.html.twig
+END
+listUsers.html.twig
+K 25
+svn:wc:ra_dav:version-url
+V 111
+/repo/!svn/ver/52/ProjectManager/src/ChatCreeSoftware/FileserverBundle/Resources/views/User/listUsers.html.twig
+END
+askDeleteUser.html.twig
+K 25
+svn:wc:ra_dav:version-url
+V 115
+/repo/!svn/ver/52/ProjectManager/src/ChatCreeSoftware/FileserverBundle/Resources/views/User/askDeleteUser.html.twig
+END
+deleteUser.html.twig
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/repo/!svn/ver/52/ProjectManager/src/ChatCreeSoftware/FileserverBundle/Resources/views/User/deleteUser.html.twig
+END
+createUser.html.twig
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/repo/!svn/ver/52/ProjectManager/src/ChatCreeSoftware/FileserverBundle/Resources/views/User/createUser.html.twig
+END

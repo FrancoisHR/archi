@@ -1,0 +1,35 @@
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/repo/!svn/ver/33/ProjectManager/src/ChatCreeSoftware/CoreBundle/Controller
+END
+ProjectController.php
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/repo/!svn/ver/38/ProjectManager/src/ChatCreeSoftware/CoreBundle/Controller/ProjectController.php
+END
+SecurityController.php
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/repo/!svn/ver/52/ProjectManager/src/ChatCreeSoftware/CoreBundle/Controller/SecurityController.php
+END
+CommonController.php
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/repo/!svn/ver/52/ProjectManager/src/ChatCreeSoftware/CoreBundle/Controller/CommonController.php
+END
+aclController.php
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/repo/!svn/ver/52/ProjectManager/src/ChatCreeSoftware/CoreBundle/Controller/aclController.php
+END
+fileUploadController.php
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/repo/!svn/ver/51/ProjectManager/src/ChatCreeSoftware/CoreBundle/Controller/fileUploadController.php
+END

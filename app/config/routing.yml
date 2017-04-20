@@ -1,0 +1,21 @@
+_ChatCreeSoftware_bordereaux:
+    resource: "@BordereauxBundle/Controller"
+    type:     annotation
+    prefix:   /
+    schemes:  [http]
+
+_ChatCreeSoftware_coreBundle:
+    resource: "@CoreBundle/Controller"
+    type:     annotation
+    prefix:   /
+    schemes:  [http]
+
+_ChatCreeSoftware_fileserver:
+  resource: "@FileserverBundle/Controller"
+  type:     annotation
+  schemes:  [http]
+
+_ChatCreeSoftware_projectmanagement:
+  resource: "@ProjectManagementBundle/Controller"
+  type:     annotation
+  schemes:  [http]

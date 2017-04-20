@@ -1,0 +1,215 @@
+{% extends "CoreBundle::coreLayout.html.twig" %}
+
+{% set menu_selected = '1' %}
+
+{% block stylesheet %}
+    {{ parent() }}
+    <link href="{{ asset('bundles/ChatCreeSoftware/Core/css/fileinput.min.css') }}" media="all" rel="stylesheet" type="text/css" />
+{% endblock %}
+
+{% block includes %}
+    {{ parent() }}
+    <script src="{{ asset('bundles/ChatCreeSoftware/Core/js/fileinput.min.js') }}"></script>
+    <script src="{{ asset('bundles/ChatCreeSoftware/Core/js/fileinput.fr.js') }}"></script>            
+{% endblock %}
+
+{% block javascript %}
+    {{ parent() }}
+
+    $(document).ready(function() {
+        $(document).on( "click", "#new", function(e) {
+            $("#foldercreate").toggleClass("hidden");
+        });
+
+        $(document).on( "click", "#upload", function(e) {
+            $("#fileupload").toggleClass("hidden");
+        });
+        
+        if( window.safari && window.safari.pushNotification ) {
+            var result = window.safari.pushNotification.permission( "web.lu.rlambay.client" );
+        }
+        
+        /* $("#form_files").fileinput({
+            language: "fr",
+            uploadAsync: true,
+            uploadUrl: "{{path( '_core_file_upload' ) }}" ,
+            uploadExtraData: {
+                projectId: {{ project.id }},
+                foldername: "{{ foldername }}"
+            }
+        });
+        
+        $('#file').on('fileuploaded', function(event, data, previewId, index) {
+            var form = data.form, files = data.files, extra = data.extra,
+                response = data.response, reader = data.reader;
+            $("#sent-file").val( data.filenames[0]);
+        });
+    
+        $("#file").on('filedeleted', function(event, key) {
+            $("#sent-file").val( "" );
+        });        */
+    });
+{% endblock %}
+    
+{% block content %}
+    
+<div id="newfolder" class="modal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">x</button>
+                <h4 class="modal-title">Cr&eacute;er un dossier</h4>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal" action="#" method="post">
+                    <div class="form-row">
+                        {{ form_errors(folderForm) }}
+                        {{ form_widget(folderForm.folderName) }}
+                        <span class="form-field-error">{{ form_errors(folderForm.folderName) }} </span>
+                        <button type="submit" class="btn btn-primary" name="button" value="CREATE_FOLDER">Cr&eacute;er dossier</button>
+                        <button type="submit" class="btn btn-default" name="button" value="CANCEL">Annuler</button>
+                    </div>        
+                    {{ form_widget(folderForm._token) }}
+                </form>
+            </div>
+        </div>
+    </div>
+</div>    
+
+<div id="fileupload" class="modal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">x</button>
+                <h4 class="modal-title">D&eacute;poser des fichiers</h4>
+            </div>
+            <div class="modal-body">
+                {{ form_start(uploadForm, { 'action': '#', 'attr': { 'id':'upload_form', 'class':'form-horizontal' } } ) }}
+
+        {{ form_errors(uploadForm) }}
+        <div class="form-group">
+            {{form_label(uploadForm.comment,'Fichiers', { 'label_attr': { 'class':'col-sm-2 control-label' } } ) }}
+            <div class="col-sm-8">
+                {{ form_widget(uploadForm.files, { 'attr': { 'class':'form-control' } }) }}
+                <span class="form-field-error">{{ form_errors(uploadForm.files) }} </span>
+            </div>
+        </div>
+        <div class="form-group">
+            {{form_label(uploadForm.comment,'Commentaire', { 'label_attr': { 'class':'col-sm-2 control-label' } } ) }}
+            <div class="col-sm-8">
+                {{ form_widget(uploadForm.comment, { 'attr': { 'class':'form-control' } }) }}
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-8">
+                <div class="checkbox">
+                    <label>
+                        {{ form_widget(uploadForm.attachment) }}Joindre les fichiers
+                    </label>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-8">
+                <button type="submit" class="btn btn-primary" name="button" value="UPLOAD">Envoyer</button>
+                <button type="submit" class="btn btn-default" name="button" value="CANCEL">Annuler</button>
+            </div>
+        </div>
+    {{ form_widget(uploadForm._token) }}
+    {{ form_end(uploadForm) }}
+</div>
+        </div>
+    </div>
+</div>
+                
+<ul class="breadcrumb">
+    <li><a href="{{ path('_project_list') }}">Liste des projets</a></li>
+    <li {% if projectRoot == true %}class="active"{%endif%}>{% if projectRoot == true %}{{ project.projectName }}{% else %}<a class="projectlist" href='{{ path( '_project', {'id': project.id } ) }}'>{{ project.projectName }}</a>{% endif %}{% if is_granted('ROLE_EMPLOYEE') %}&nbsp;<a class="badge" href="{{path('_gestion_project',{'id':project.id})}}">Gestion</a>{% endif %}</li>
+    {% if foldername %}<li class="active"><span class="glyphicon glyphicon-folder-open"></span>{{ foldername }}</li>{% endif %}
+</ul>
+
+{% if is_granted("EDIT", project) %}
+    <div class="row">
+        <div class="col-sm-6">
+        {% if projectRoot==true and is_granted("EDIT", project) %}
+            <button data-toggle="modal" href="#newfolder" class="btn btn-default"><span class="glyphicon glyphicon-folder-open"></span>Nouveau dossier</button>
+        {% endif %} 
+            <button data-toggle="modal" href="#delete" class="btn btn-default disabled"><span class="glyphicon glyphicon-remove-sign"></span>Supprimer</button>
+            <button data-toggle="modal" href="#fileupload" class="btn btn-default"><span class="glyphicon glyphicon-open-file"></span>Déposer</button>
+        </div>
+    </div>
+{% endif %}
+<div class="row">
+    <div class="col-sm-8">
+    <table class="table table-condensed table-striped table-bordered">
+    <thead>
+        <tr>
+            <th>&nbsp;</th>
+            <th>Nom</th>
+            <th>Date</th>
+            <th>Taille</th>
+        </tr>  
+    </thead>
+{% if projectRoot == true %}
+    {% for folder in folders %}
+        <tr>
+            <td><a href="{{path('_project_folder', { 'id': project.id, 'foldername': folder.filename } ) }}"><img src="{{ asset('bundles/ChatCreeSoftware/FileServer/images/folder.png') }}" /></a></td>
+            <td><a href="{{path('_project_folder', { 'id': project.id, 'foldername': folder.filename } ) }}">{{ folder.filename }}</a></td>
+            <td><a href="{{path('_project_folder', { 'id': project.id, 'foldername': folder.filename } ) }}">{{ folder.cTime|date("d/m/Y H:i:s") }}</a></td>
+            <td>&nbsp;</td>
+        </tr>
+    {% endfor %}
+{% else %}
+    <tr>
+        <td><a href="{{path('_project', { 'id': project.id } ) }}"><img src="{{ asset('bundles/ChatCreeSoftware/FileServer/images/retour.png') }}" /></a></td>
+        <td><b><a href="{{path('_project', { 'id': project.id } ) }}">Retour au niveau pr&eacute;c&eacute;dent..</a></b></td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td> 
+    </tr>    
+{% endif %}
+{% for file in files %}
+        {% if file.cTime > loginDates.lastLogin.timestamp %}
+            <tr class="new">
+        {% else %}
+            <tr>
+        {% endif %}
+        <td width="24">
+        {% if is_granted("EDIT", project) %}
+        <input type="checkbox"/>
+        {% else %}
+        &nbsp;
+        {% endif %}
+        </td>
+
+        {% if foldername %}
+            {% set fileUrl = asset( project.projectPath ~ "/" ~ foldername ~ "/" ~ file.filename ) %}
+        {% else %}
+            {% set fileUrl = asset( project.projectPath ~ "/" ~ file.filename ) %}
+        {% endif %}
+        <td><a target="_new" href='{{ fileUrl }}'>{{ file.filename }}</a></td>
+        <td><a target="_new" href='{{ fileUrl }}'>{{ file.cTime|date("d/m/Y H:i:s") }}</a></td>
+        <td style="text-align: right;"><a target="_new" href='{{ fileUrl }}'>
+        {% if (file.size > 1024*1024*1024)%}
+            {{ "%.2f Go"|format(file.size/1024/1024/1024) }}
+        {% elseif (file.size > 1024*1024)%}
+            {{ "%.2f Mo"|format(file.size/1024/1024) }}
+        {% elseif (file.size > 1024)%}
+            {{ "%.2f Ko"|format(file.size/1024) }}
+        {% else %}
+            {{ "%.0f o"|format(file.size) }}
+        {% endif %}
+            </a></td>
+    </tr>
+{% else %}
+    <tr><td>&nbsp;</td><td colspan="3">Ce {% if projectRoot==true%}projet{%else%}dossier{%endif%} ne contient aucun fichier.</td></tr>
+{% endfor %}
+</table>
+    </div>
+</div>
+
+    
+</div>
+{% endblock %}
+
+{% block appfooter %}
+{% endblock %}

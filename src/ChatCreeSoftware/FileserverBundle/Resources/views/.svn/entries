@@ -1,0 +1,67 @@
+10
+
+dir
+33
+http://svn@clairvaux.local/repo/ProjectManager/src/ChatCreeSoftware/FileserverBundle/Resources/views
+http://svn@clairvaux.local/repo
+
+
+
+2017-02-11T10:42:10.773090Z
+33
+svn
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+455bf1c5-d7f4-45b9-b08c-de1e00ab3d8f
+
+Default
+dir
+
+Mails
+dir
+
+Project
+dir
+
+Admin
+dir
+
+layout.html.twig
+file
+52
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+deleted
+
+User
+dir
+

@@ -1,0 +1,23 @@
+ChatCreeSoftware\BordereauxBundle\Entity\Librairie:
+  type: entity
+  table: BordereauxLibrairie
+  id:
+    id:
+      type: integer
+      generator:
+         strategy: AUTO  
+  fields:
+    titre:          { type: string(120) }
+    auteur:         { type: string(120) }
+    prefixe:        { type: string(8) }
+    description:    { type: string(120) }
+    date:           { type: date }
+    versionDtd:     { type: string(32) }
+  oneToMany:
+    corpsMetiers:
+      targetEntity: CorpsMetier
+      mappedBy: librairie
+    fichiers:
+      targetEntity: Fichier
+      mappedBy:   librairie
+  lifecycleCallbacks: {  }

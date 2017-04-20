@@ -1,0 +1,83 @@
+10
+
+dir
+33
+http://svn@clairvaux.local/repo/ProjectManager/src/ChatCreeSoftware/FileserverBundle
+http://svn@clairvaux.local/repo
+
+
+
+2017-02-11T10:42:10.773090Z
+33
+svn
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+455bf1c5-d7f4-45b9-b08c-de1e00ab3d8f
+
+Repository
+dir
+
+Tests
+dir
+
+Controller
+dir
+
+Listener
+dir
+
+FileserverBundle.php
+file
+
+
+
+
+2012-01-29T18:36:47.000000Z
+c020778bc94d636c02aa3b5f514500e8
+2013-04-02T00:37:28.497469Z
+2
+svn
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+144
+
+Forms
+dir
+
+Resources
+dir
+
+Entity
+dir
+

@@ -1,0 +1,48 @@
+<?php
+
+namespace ChatCreeSoftware\FileserverBundle\Controller;
+
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\Security\Core\SecurityContext;
+
+class SecurityController extends Controller
+{
+    /**
+     * @Route("/projets/login", name="_login")
+     * @Template
+     */
+    public function loginAction()
+    {
+        // get the error if any (works with forward and redirect -- see below)
+        if ($this->get('request')->attributes->has(SecurityContext::AUTHENTICATION_ERROR)) {
+            $error = $this->get('request')->attributes->get(SecurityContext::AUTHENTICATION_ERROR);
+        } else {
+            $error = $this->get('request')->getSession()->get(SecurityContext::AUTHENTICATION_ERROR);
+        }
+ 
+        return array(
+            'last_username' => $this->get('request')->getSession()->get(SecurityContext::LAST_USERNAME),
+            'error'         => $error,
+        );       
+    }
+    
+    /**
+     * @Route( "/projets/login_check", name="_security_check" )
+     */
+    public function loginCheckAction()
+    {
+        
+    }
+    
+    /**
+     * @Route( "/projets/logout", name="_logout" )
+     */
+    public function logoutAction()
+    {
+        
+    }
+    
+}
+?>

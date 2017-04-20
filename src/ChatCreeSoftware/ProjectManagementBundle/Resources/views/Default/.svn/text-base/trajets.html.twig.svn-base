@@ -1,0 +1,298 @@
+{% extends "ProjectManagementBundle::layout.html.twig" %}
+
+{% block stylesheet %}
+    {{ parent() }}
+{% endblock %}
+
+{% block navigation %}
+    {{ render(controller("ProjectManagementBundle:Navigation:navigation",{'selected': 4})) }}
+{% endblock %}
+
+{% block projectmenu %}
+    <nav class="navbar navbar-inverse">
+    <div class="navbar-header">
+        <a class="navbar-brand" href="#">Kilomètres</a>
+    </div>
+    </nav>
+{% endblock %}
+    
+{% block content %}
+    <div id="dialog">
+        Voulez-vous vraiment supprimer cette entr&eacute;e ?
+    </div>
+    <div class="form-horizontal">
+        <div class="form-group">
+            <label for="datepicker" class="col-sm-1 control-label">Date</label>
+            <div class="col-sm-1">
+                <input name="datepicker" type="text" id="datepicker" class="form-control">
+            </div>
+        </div>     
+    </div>
+
+    <table id="logs" class="table table-striped table-bordered">
+        <thead>
+            <tr>
+                <th class="projectname">Projet</th>
+                <th class="username">Origine</th>
+                <th class="username">Destination</th>
+                <th class="duration">Distance</th>
+                <th class="description">Description</th>
+         </tr>
+   
+        </thead>
+        <tbody>
+        
+        </tbody>
+        <tfoot>
+            <td class="description" colspan=2></td>
+            <td class="taskname"><b>Total journ&eacute;e</b></td>
+            <td class="duration"><b><span class="total_duration"></span></b></td>
+            <td class="description"></td>
+            
+        </tr>
+        </tfoot>
+    </table>
+    
+{% endblock %}
+
+{% block javascript %}
+    {{ parent() }}
+$(document).ready(function() {
+
+    $( "#datepicker" ).datepicker( {
+        "onClose": function( dateText, picker){
+            if( dateText != "" ) {
+                date = dateText.split("/");
+                dateText = "/" + date[2] + "-" + date[1] + "-" + date[0];
+            }
+            
+            oTable.ajax.url( 'ajax_list_user_trajets' + dateText );
+            oTable.ajax.reload();
+        }
+    });
+
+    oTable = $('#logs').DataTable( {
+        ajax : '{{path('_ajax_list_user_trajets')}}',
+        autoWidth: false,
+        buttons: [
+            {text: '<span class="glyphicon glyphicon-plus"></span>Ajouter', className: 'New', action: function () {
+                if ($('tr.new').length > 0) {
+                    alert("Une nouvelle ligne est déjà en cours d'édition");
+                } else {
+                    var nRow = oTable.row.add(['', '', '', 0, '']).draw(false).node();
+                    $(nRow).addClass('new');
+                    oTable.select.style( "api" );
+                    oTable.row(".selected").deselect();
+                    oTable.row( nRow ).select(  );
+                    editRow(nRow);
+                    nEditing = nRow;
+                }
+            }},
+            {text: '<span class="glyphicon glyphicon-pencil"></span>Editer', className: 'Edit selectionRequired disabled', action: function ( ) {
+                var row = this.row({selected: true}).node();
+                
+                 if ($('tr.new').length > 0) {
+                    alert("Une nouvelle ligne est déjà en cours d'édition");
+                } else {
+                    oTable.select.style( "api" );
+                    editRow(row);
+                    nEditing = row;
+                }
+                
+            }},
+            {text: '<span class="glyphicon glyphicon-remove"></span>Supprimer', className: 'Delete selectionRequired disabled', action: function ( ) {
+                var row = this.row({selected: true});
+                var selected = row.data();
+                var timelogId = selected['id'];
+
+                var deleteDialog = $("#dialog");
+                if( $(row.node()).hasClass( 'new' ) ) {
+                    oTable.rows( row ).remove().draw(false);
+                    $("a.btn.btn-default.selectionRequired").addClass("disabled");
+                } else {
+                    $("#dialog").dialog({
+                        autoOpen: false,
+                        modal: true,
+                        buttons: {
+                            "Confirmer" : {
+                                text: "Confirmer", 
+                                class: "btn-primary",
+                                click: function() {
+                                    $(this).dialog("close");
+                                    var params = "id=" + timelogId; 
+								
+                                    var url="{{path('_ajax_delete_user_trajets')}}";
+
+                                    $.ajax( {
+                                        type: "POST",
+                                        url: url,
+                                        data: params,
+                                        dataType: "json",
+                                        success: function( data ) {
+                                            if( data.response == 200 ) {
+                                                oTable.rows( row ).remove().draw(false);
+                                                $("a.btn.btn-default.selectionRequired").addClass("disabled");
+                                            } else {
+                                                alert( "Erreur lors de la suppression" );
+                                            }
+                                        },
+                                        error: function( jqXHR, textStatus, errorThrown ) {
+                                            alert( textStatus );
+                                        }
+                                    });
+                                }
+                            },
+                            "Annuler" : function() {
+                                $(this).dialog("close");
+                            }
+                        },
+                        title: "Confirmation de suppression"
+                    });
+
+                    $("#dialog").dialog("open");
+                }
+
+                deleteDialog.dialog("open");
+            }},
+            {text: '<span class="glyphicon glyphicon-remove-circle"></span>Annuler', className: 'Cancel', action: function() { projectUtilities.cancelEdit(); } },
+            {text: '<span class="glyphicon glyphicon-floppy-disk"></span>Enregistrer', className: 'Save', action: function() {
+                saveRow( nEditing );
+                nEditing = null;
+            }},
+        ],
+        columnDefs: [
+            {
+                className: "projectname",
+                render: function ( data, type, row ) {
+                    var projectId = row["projectId"];
+                    var url = "{{path('_gestion_project_trajets')}}/" + projectId
+                    return "<a href='" + url + "'>" + data + "</a>";
+                },                
+                targets: [0]
+            },
+            {className: "username", targets: [1,2] },
+            {className: "duration", targets: [3] },
+            {className: "description", targets: [4] }
+        ],
+        dom: 'Bt',
+        footerCallback: function ( row, data, start, end, display ) {
+                var distance=0;
+                
+                for( var i=0; i < data.length; i++ ) {
+                    var dist = data[i][3];
+                    if( !isNaN(dist) ) {
+                        distance += dist;
+                    }
+                }
+                $('span.total_duration').text( sprintf( "%d", distance));   
+        },
+        language: {
+            emptyTable: "Aucun trajets"
+        },
+        ordering: true,
+        rowId: 'id',
+        select: {
+            style: 'single'
+        }
+    });
+
+    $('#logs tbody').on( 'click', 'tr', function () {
+        if (nEditing == null ) {
+            if ( $(this).hasClass('selected') ) {
+                $("a.btn.btn-default.selectionRequired").removeClass("disabled");
+            } else {
+                $("a.btn.btn-default.selectionRequired").addClass("disabled");
+            }
+        }
+    } );
+      
+    nEditing = null;
+        
+    $("#dialog").dialog({
+        autoOpen: false,
+        modal: true,
+        buttons: {
+            "Confirmer" : {
+                text: "Confirmer", 
+                class: "btn-primary",
+                click: function() {
+                    $(this).dialog("close");
+                }
+            },
+            "Annuler" : function() {
+                $(this).dialog("close");
+            }
+        },
+        title: "Confirmation de suppression"
+    });
+          
+    $( "#logs" ).keydown(function( event ) { projectUtilities.keydown( event ) } );
+    
+    $("a.btn.btn-default.Cancel, a.btn.btn-default.Save").hide();
+});
+
+function editRow( nRow ) {
+    var aData = oTable.row( nRow ).data();
+    var jqTds = $('>td', nRow );
+    jqTds[0].innerHTML = '<input type="text" id="project" value="'+aData[0]+'" class="form-control"/>';
+    jqTds[1].innerHTML = '<input type="text" id="project" value="'+aData[1]+'" class="form-control"/>';
+    jqTds[2].innerHTML = '<input value="'+aData[2]+'" type="text" class="form-control">';
+    jqTds[3].innerHTML = '<input value="'+aData[3]+'" type="text" class="form-control">';
+    jqTds[4].innerHTML = '<input value="'+aData[4]+'" type="text" class="form-control">';
+                          
+    $('#project').autocomplete( { serviceUrl: '{{ path('_gestion_project_ajax_autocomplete_project') }}',
+                                  zIndex: 1000 } );
+    $( "input:visible:first", nRow ).focus();
+    $("a.btn.btn-default.New,a.btn.btn-default.selectionRequired").addClass("disabled");
+    $("a.btn.btn-default.Cancel, a.btn.btn-default.Save").show();
+}
+    
+function saveRow( nRow ) {
+    var jqInputs = $( 'input,select', nRow );
+    var params = "";
+    var action = "U";
+       
+    params = "";
+    if( $( nRow ).hasClass( 'new' ) ){
+        $( nRow ).removeClass( 'new' );
+        action="C";
+    } else {
+        var rowId = $( nRow ).attr('id');
+        params = "id=" + rowId + "&";
+    }                
+        
+    params += "pname=" + jqInputs[0].value + "&action=" + action + "&date=" + $( "#datepicker" ).val() +
+        "&start=" + encodeURIComponent(jqInputs[1].value) + "&end=" + encodeURIComponent(jqInputs[2].value) + "&distance=" + jqInputs[3].value + "&description=" + encodeURIComponent(jqInputs[4].value);
+            
+    var url = "{{ path('_ajax_update_user_trajet') }}";
+    $.ajax( {
+        type: "POST",
+        url: url,
+        data: params,
+        dataType: "json",
+        success: function( data ) {
+            if( data.response == 200 ) {
+                oTable.cell( nRow, 0 ).data( jqInputs[0].value );
+                oTable.cell( nRow, 1 ).data( jqInputs[1].value );
+                oTable.cell( nRow, 2 ).data( jqInputs[2].value );
+                oTable.cell( nRow, 3 ).data( parseFloat(jqInputs[3].value) );
+                oTable.cell( nRow, 4 ).data( jqInputs[4].value );
+                $(nRow).attr( "id", data.id );
+                oTable.row( nRow ).draw();
+                oTable.select.style('single');
+                $("a.btn.btn-default.New").removeClass("disabled");
+                $("a.btn.btn-default.Cancel, a.btn.btn-default.Save").hide();
+            } else {
+                if( data.message == "No Project" ){
+                    alert( "Ce projet n'existe pas" );
+                } else
+                    alert( "Erreur lors de la mise à jour" );
+            }
+        },
+        error: function( jqXHR, textStatus, errorThrown ) {
+            alert( textStatus );
+            projectUtilities.restoreRow( nRow );
+        }
+    });
+}
+{% endblock %}

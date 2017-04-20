@@ -1,0 +1,28 @@
+{% extends "FileserverBundle::layout.html.twig" %}
+
+{% block content %}
+
+    <h1>Droits de <i>{{ login }}</i></h1>
+    
+    <table>
+        <tr>
+        <th>Projet</th>
+        <th>Acc&egrave;s</th>
+        </tr>
+    {% set count = 0 %}
+    {% for project in projects %}
+        {% if count is even %}
+            {% set class="even" %}
+        {% else %}
+            {% set class="odd" %}
+        {% endif %}
+        <tr class="{{ class }}">
+            <td>{{project.name}}</td>
+            <td>{{project.access}}</td>
+            
+        </tr>
+        {% set count = count + 1 %}
+        
+    {% endfor %}
+        </table>
+{% endblock %}

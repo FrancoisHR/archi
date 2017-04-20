@@ -1,0 +1,20 @@
+{% extends "CoreBundle::layout.html.twig" %}
+
+{% block content %}
+    <div class="logtitle">
+        <h3>Bienvenue dans l'espace client !</h3>
+        <p class="text-justify">Vous pouvez demander vos codes d'acc&egrave;s pour acc&eacute;der aux plans et documents de vos projets. <a target="_new" href="http://www.rlambay.lu/html/mode-emploi.html">Mode d'emploi</a></p>
+    </div>
+    <form class="form-login" action="{{ path('_security_check') }}" method="post">
+            {% if error %}
+                <span class="erreur">Echec de l'authentification</span>
+            {% endif %}
+            <label class="sr-only" for="username">Login:</label>
+            <input class="form-control" type="text" id="username" name="_username" placeholder="Login" value="{{ last_username }}" />
+            <label class="sr-only" for="password">Password:</label>
+            <input class="form-control" type="password" id="password" name="_password" placeholder="Password"/>
+            <p class="text-right"><a href="{{ path('_forgotten') }}">Mot de passe oublié</a></p>
+            <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+            <button class="btn btn-primary btn-lg btn-block" type="submit">&nbsp;Login&nbsp;</button>
+    </form>
+{% endblock %}

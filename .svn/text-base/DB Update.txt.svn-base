@@ -1,0 +1,213 @@
+CREATE TABLE Address (id INT AUTO_INCREMENT NOT NULL, project_id INT DEFAULT NULL, company VARCHAR(255) DEFAULT NULL, title VARCHAR(50) DEFAULT NULL, firstname VARCHAR(255) DEFAULT NULL, lastname VARCHAR(255) DEFAULT NULL, street1 VARCHAR(255) DEFAULT NULL, street2 VARCHAR(255) DEFAULT NULL, street3 VARCHAR(255) DEFAULT NULL, city VARCHAR(255) DEFAULT NULL, zipCode VARCHAR(255) DEFAULT NULL, country VARCHAR(255) DEFAULT NULL, type VARCHAR(64) DEFAULT NULL, INDEX IDX_C2F3561D166D1F9C (project_id), PRIMARY KEY(id)) ENGINE = InnoDB;
+CREATE TABLE BankAccount (id INT AUTO_INCREMENT NOT NULL, label VARCHAR(50) NOT NULL, bic VARCHAR(10) NOT NULL, iban VARCHAR(16) NOT NULL, enabled TINYINT(1) NOT NULL, PRIMARY KEY(id)) ENGINE = InnoDB;
+CREATE TABLE Invoice (id INT AUTO_INCREMENT NOT NULL, project_id INT DEFAULT NULL, customer_id INT DEFAULT NULL, number VARCHAR(15) NOT NULL, state VARCHAR(1) NOT NULL, date DATE NOT NULL, reminder DATE DEFAULT NULL, paid DATE DEFAULT NULL, footer LONGTEXT NOT NULL, termsConditions LONGTEXT NOT NULL, specialTermsConditions LONGTEXT DEFAULT NULL, invoiceRebate DOUBLE PRECISION DEFAULT NULL, invoiceRebateText LONGTEXT DEFAULT NULL, vatExemption TINYINT(1) NOT NULL, vatExemptionText LONGTEXT DEFAULT NULL, INDEX IDX_5FD82ED8166D1F9C (project_id), INDEX IDX_5FD82ED89395C3F3 (customer_id), PRIMARY KEY(id)) ENGINE = InnoDB;
+CREATE TABLE InvoiceItem (id INT AUTO_INCREMENT NOT NULL, invoice_id INT DEFAULT NULL, itemCode VARCHAR(10) DEFAULT NULL, itemDescription VARCHAR(255) NOT NULL, itemPrice DOUBLE PRECISION NOT NULL, quantity DOUBLE PRECISION NOT NULL, itemRebate DOUBLE PRECISION DEFAULT NULL, itemRebateText LONGTEXT DEFAULT NULL, INDEX IDX_DC2F73CE2989F1FD (invoice_id), PRIMARY KEY(id)) ENGINE = InnoDB;
+CREATE TABLE InvoiceNumbering (id INT AUTO_INCREMENT NOT NULL, year VARCHAR(4) NOT NULL, number INT NOT NULL, PRIMARY KEY(id)) ENGINE = InnoDB;
+CREATE TABLE InvoicingData (id INT AUTO_INCREMENT NOT NULL, numberingType INT DEFAULT NULL, numberingFormat VARCHAR(50) DEFAULT NULL, footerFormat VARCHAR(255) DEFAULT NULL, invoiceLogo VARCHAR(255) DEFAULT NULL, conditions LONGTEXT DEFAULT NULL, specialConditions LONGTEXT DEFAULT NULL, reminderText LONGTEXT DEFAULT NULL, PRIMARY KEY(id)) ENGINE = InnoDB;
+CREATE TABLE Journey (id INT AUTO_INCREMENT NOT NULL, project_id INT DEFAULT NULL, date DATE NOT NULL, start VARCHAR(255) NOT NULL, end VARCHAR(255) NOT NULL, distance DOUBLE PRECISION NOT NULL, description LONGTEXT DEFAULT NULL, INDEX IDX_7ABFF3E166D1F9C (project_id), PRIMARY KEY(id)) ENGINE = InnoDB;
+ALTER TABLE Address ADD CONSTRAINT FK_C2F3561D166D1F9C FOREIGN KEY (project_id) REFERENCES project(id);
+ALTER TABLE Invoice ADD CONSTRAINT FK_5FD82ED8166D1F9C FOREIGN KEY (project_id) REFERENCES project(id);
+ALTER TABLE Invoice ADD CONSTRAINT FK_5FD82ED89395C3F3 FOREIGN KEY (customer_id) REFERENCES user(id);
+ALTER TABLE InvoiceItem ADD CONSTRAINT FK_DC2F73CE2989F1FD FOREIGN KEY (invoice_id) REFERENCES Invoice(id);
+ALTER TABLE Journey ADD CONSTRAINT FK_7ABFF3E166D1F9C FOREIGN KEY (project_id) REFERENCES project(id);
+ALTER TABLE user ADD company VARCHAR(150) DEFAULT NULL;
+ALTER TABLE Flags ADD flagImage VARCHAR(256) DEFAULT NULL
+
+
+
+09/02/2014
+---------------------
+ALTER TABLE InvoiceItem ADD invoicing_id INT DEFAULT NULL;
+ALTER TABLE InvoiceItem ADD CONSTRAINT FK_DC2F73CEF7F33FAC FOREIGN KEY (invoicing_id) REFERENCES Invoicing(id);
+CREATE UNIQUE INDEX UNIQ_DC2F73CEF7F33FAC ON InvoiceItem (invoicing_id)
+
+03/05/2014
+------------------------
+ALTER TABLE Invoice DROP FOREIGN KEY FK_5FD82ED89395C3F3;
+DROP INDEX IDX_5FD82ED89395C3F3 ON Invoice;
+ALTER TABLE Invoice CHANGE customer_id address_id INT DEFAULT NULL;
+ALTER TABLE Invoice ADD CONSTRAINT FK_5FD82ED8F5B7AF75 FOREIGN KEY (address_id) REFERENCES Address(id);
+CREATE INDEX IDX_5FD82ED8F5B7AF75 ON Invoice (address_id)
+ALTER TABLE address ADD vatNumber VARCHAR(15) DEFAULT NULL, DROP type;
+ALTER TABLE Address ADD addressType_id INT DEFAULT NULL;
+ALTER TABLE Address ADD CONSTRAINT FK_C2F3561DC89BD733 FOREIGN KEY (addressType_id) REFERENCES Flags(id);
+CREATE INDEX IDX_C2F3561DC89BD733 ON Address (addressType_id)
+ALTER TABLE Journey ADD user_id INT DEFAULT NULL;
+ALTER TABLE Journey ADD CONSTRAINT FK_7ABFF3EA76ED395 FOREIGN KEY (user_id) REFERENCES user(id);
+CREATE INDEX IDX_7ABFF3EA76ED395 ON Journey (user_id)
+
+INSERT INTO `Address`(`project_id`, `company`, `title`, `lastname`, `street1`, `city`, `zipCode`, `addressType_id`) VALUES (187,'','Madame','Kremer','146, rue d\'Athus','Pétange','L-4710',21);
+INSERT INTO `Address`(`project_id`, `company`, `title`, `lastname`, `street1`, `city`, `zipCode`, `addressType_id`) VALUES (187,'','Monsieur','Reuter','3, rue d\'Oetrange','Sandweiler','L-5236',21);
+INSERT INTO `Address`(`project_id`, `company`, `title`, `lastname`, `street1`, `city`, `zipCode`, `addressType_id`) VALUES (187,'Exclusive Homes','','','BP294','Esch/Alzette','L-4003',21);
+INSERT INTO `Address`(`project_id`, `company`, `title`, `lastname`, `street1`, `city`, `zipCode`, `addressType_id`) VALUES (187,'','Monsieur','Karvellas','179, rue Pierre Krier','Luxembourg','L-1880',21);
+INSERT INTO `Address`(`project_id`, `company`, `title`, `lastname`, `street1`, `city`, `zipCode`, `addressType_id`) VALUES (187,'','Madame','Weber','27, rue de Hagen','Kleinbettingen','L-8381',21);
+INSERT INTO `Address`(`project_id`, `company`, `title`, `lastname`, `street1`, `city`, `zipCode`, `addressType_id`) VALUES (187,'','Madame','Meier','3, rue du Kiem','Beyren','L-5410',21);
+INSERT INTO `Address`(`project_id`, `company`, `title`, `lastname`, `street1`, `city`, `zipCode`, `addressType_id`) VALUES (187,'','Mme et M','Debeautay','133, rue An Den Jenken','Pétange','L-4745',21);
+INSERT INTO `Address`(`project_id`, `company`, `title`, `lastname`, `street1`, `city`, `zipCode`, `addressType_id`) VALUES (187,'','Mme et M','Guardado-Sintra','146, rue d'Athus','Lintgen','L-7450',21);
+INSERT INTO `Address`(`project_id`, `company`, `title`, `lastname`, `street1`, `city`, `zipCode`, `addressType_id`) VALUES (187,'','Madame','Lok','220, route de Luxembourg','Pétange','L-4751',21);
+INSERT INTO `Address`(`project_id`, `company`, `title`, `lastname`, `street1`, `city`, `zipCode`, `addressType_id`) VALUES (187,'','Monsieur','Bauster','146, rue d'Athus','Pétange','L-4710',21);
+INSERT INTO `Address`(`project_id`, `company`, `title`, `lastname`, `street1`, `city`, `zipCode`, `addressType_id`) VALUES (187,'','Monsieur','Schons','2, rue Fuert','Beyren','L-5410',21);
+INSERT INTO `Address`(`project_id`, `company`, `title`, `lastname`, `street1`, `city`, `zipCode`, `addressType_id`) VALUES (187,'','Monsieur','Medinger','23, rue du verger','Luxembourg','L-2665',21);
+INSERT INTO `Address`(`project_id`, `company`, `title`, `lastname`, `street1`, `city`, `zipCode`, `addressType_id`) VALUES (187,'SA Habitare Green Concept','','','46, Cité Breitfeld','Differdange','L-4519',21);
+INSERT INTO `Address`(`project_id`, `company`, `title`, `lastname`, `street1`, `city`, `zipCode`, `addressType_id`) VALUES (187,'FEMACO','','','BP 482','Luxembourg','L-2014',21);
+INSERT INTO `Address`(`project_id`, `company`, `title`, `lastname`, `street1`, `city`, `zipCode`, `addressType_id`) VALUES (187,'','Madame','Kolten','10b, rue du Cimetière','Steinfort','L-8413',21);
+INSERT INTO `Address`(`project_id`, `company`, `title`, `lastname`, `street1`, `city`, `zipCode`, `addressType_id`) VALUES (187,'','Monsieur','Medinger','23, rue du Verger','Luxembourg','L-2665',21);
+INSERT INTO `Address`(`project_id`, `company`, `title`, `lastname`, `street1`, `city`, `zipCode`, `addressType_id`) VALUES (187,'','Monsieur','Alomerovic','105, rue de la chiers','Pétange','L-4720',21);
+INSERT INTO `Address`(`project_id`, `company`, `title`, `lastname`, `street1`, `city`, `zipCode`, `addressType_id`) VALUES (187,'','Monsieur','Lahure','17, rue Prënzebierg','Pétange','L-4773',21);
+INSERT INTO `Address`(`project_id`, `company`, `title`, `lastname`, `street1`, `city`, `zipCode`, `addressType_id`) VALUES (187,'','Monsieur','Thoss','19, rue de Cessange','Luxembourg','L-1320',21);
+
+
+13/10/2014
+------------------
+CREATE TABLE LogBook (id INT AUTO_INCREMENT NOT NULL, project_id INT DEFAULT NULL, user_id INT DEFAULT NULL, date DATE NOT NULL, texte LONGTEXT DEFAULT NULL, logType_id INT DEFAULT NULL, INDEX IDX_86E405B2166D1F9C (project_id), INDEX IDX_86E405B2A76ED395 (user_id), INDEX IDX_86E405B2E638012E (logType_id), PRIMARY KEY(id)) ENGINE = InnoDB;
+ALTER TABLE LogBook ADD CONSTRAINT FK_86E405B2166D1F9C FOREIGN KEY (project_id) REFERENCES project(id);
+ALTER TABLE LogBook ADD CONSTRAINT FK_86E405B2A76ED395 FOREIGN KEY (user_id) REFERENCES user(id);
+ALTER TABLE LogBook ADD CONSTRAINT FK_86E405B2E638012E FOREIGN KEY (logType_id) REFERENCES Flags(id)
+
+16/07/2016
+------------------
+update acl_classes set class_type = replace(identifier,'ChatCreeSoftware\\FileserverBundle\\Entity','ChatCreeSoftware\\CoreBundle\\Entity') where identifier like 'ChatCreeSoftware\\\\FileserverBundle\\\\Entity\\\\%';
+update acl_security_identities set identifier = replace(identifier,'ChatCreeSoftware\\FileserverBundle\\Entity','ChatCreeSoftware\\CoreBundle\\Entity') where identifier like 'ChatCreeSoftware\\\\FileserverBundle\\\\Entity\\\\User%';
+ALTER TABLE Invoicing ADD type VARCHAR(1) NOT NULL;
+update Invoicing set type='I' where type="";
+ALTER TABLE InvoiceNumbering ADD type INT NOT NULL;
+update InvoiceNumbering set type=1 where type is null or type=0;
+ALTER TABLE Invoice CHANGE termsConditions termsConditions LONGTEXT DEFAULT NULL;
+insert into InvoicingData (id,numberingType,numberingFormat,footerFormat,invoiceLogo) values (2, 1, "%04d-%04d","No 114592 - TVA : LU22406754 - CB : LU73 0019 2655 9530 9000 - BIC : BCEELULL", "logo_print.jpg");
+
+03/12/2016
+--------------------
+ALTER TABLE LogBook CHANGE date date DATETIME NOT NULL;
+
+CREATE TABLE FileLink (id INT AUTO_INCREMENT NOT NULL, user_id INT DEFAULT NULL, project_id INT DEFAULT NULL, file VARCHAR(512) NOT NULL, token VARCHAR(512) NOT NULL, date DATETIME NOT NULL, INDEX IDX_DC0C3FAA76ED395 (user_id), INDEX IDX_DC0C3FA166D1F9C (project_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB;
+ALTER TABLE FileLink ADD CONSTRAINT FK_DC0C3FAA76ED395 FOREIGN KEY (user_id) REFERENCES user (id);
+ALTER TABLE FileLink ADD CONSTRAINT FK_DC0C3FA166D1F9C FOREIGN KEY (project_id) REFERENCES project (id);
+
+ALTER TABLE acl_entries DROP FOREIGN KEY FK_46C8B806EA000B10;
+ALTER TABLE acl_classes CHANGE id id INT UNSIGNED AUTO_INCREMENT NOT NULL;
+
+ALTER TABLE acl_entries DROP FOREIGN KEY FK_46C8B806DF9183C9;
+ALTER TABLE acl_security_identities CHANGE id id INT UNSIGNED AUTO_INCREMENT NOT NULL;
+
+ALTER TABLE acl_entries DROP FOREIGN KEY FK_46C8B8063D9AB4A6;
+ALTER TABLE acl_object_identities DROP FOREIGN KEY FK_9407E54977FA751A;
+ALTER TABLE acl_object_identity_ancestors DROP FOREIGN KEY FK_825DE2993D9AB4A6;
+ALTER TABLE acl_object_identity_ancestors DROP FOREIGN KEY FK_825DE299C671CEA1;
+
+ALTER TABLE acl_object_identities CHANGE id id INT UNSIGNED AUTO_INCREMENT NOT NULL, CHANGE parent_object_identity_id parent_object_identity_id INT UNSIGNED DEFAULT NULL, CHANGE class_id class_id INT UNSIGNED NOT NULL;
+ALTER TABLE acl_object_identity_ancestors CHANGE object_identity_id object_identity_id INT UNSIGNED NOT NULL, CHANGE ancestor_id ancestor_id INT UNSIGNED NOT NULL;
+ALTER TABLE acl_entries CHANGE id id INT UNSIGNED AUTO_INCREMENT NOT NULL, CHANGE object_identity_id object_identity_id INT UNSIGNED DEFAULT NULL, CHANGE security_identity_id security_identity_id INT UNSIGNED NOT NULL, CHANGE class_id class_id INT UNSIGNED NOT NULL, CHANGE ace_order ace_order SMALLINT UNSIGNED NOT NULL;
+
+ALTER TABLE acl_entries ADD CONSTRAINT FK_46C8B8063D9AB4A6 FOREIGN KEY (object_identity_id) REFERENCES acl_object_identities (id) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE acl_entries ADD CONSTRAINT FK_46C8B806DF9183C9 FOREIGN KEY (security_identity_id) REFERENCES acl_security_identities (id) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE acl_entries ADD CONSTRAINT FK_46C8B806EA000B10 FOREIGN KEY (class_id) REFERENCES acl_classes (id) ON DELETE CASCADE ON UPDATE CASCADE;
+
+ALTER TABLE acl_object_identities ADD CONSTRAINT FK_9407E54977FA751A FOREIGN KEY (parent_object_identity_id) REFERENCES acl_object_identities (id);
+
+ALTER TABLE acl_object_identity_ancestors ADD CONSTRAINT FK_825DE2993D9AB4A6 FOREIGN KEY (object_identity_id) REFERENCES acl_object_identities (id) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE acl_object_identity_ancestors ADD CONSTRAINT FK_825DE299C671CEA1 FOREIGN KEY (ancestor_id) REFERENCES acl_object_identities (id) ON DELETE CASCADE ON UPDATE CASCADE;
+
+9/12/2016
+-------------------------------------------------------------
+ALTER TABLE LogBook ADD ip VARCHAR(50) DEFAULT NULL, ADD locked TINYINT(1) DEFAULT NULL;
+
+22/12/2016
+-------------------------------------------------------------
+CREATE TABLE BordereauxCorpsMetier (id INT AUTO_INCREMENT NOT NULL, librairie_id INT DEFAULT NULL, numero VARCHAR(3) NOT NULL, titre VARCHAR(120) NOT NULL, INDEX IDX_FFD50887330C7BB3 (librairie_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB;
+CREATE TABLE BordereauxInfoSupplementaire (id INT AUTO_INCREMENT NOT NULL, prestation_id INT DEFAULT NULL, information VARCHAR(32) NOT NULL, valeur LONGTEXT NOT NULL, INDEX IDX_E0E0BD8A9E45C554 (prestation_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB;
+CREATE TABLE BordereauxLibrairie (id INT AUTO_INCREMENT NOT NULL, titre VARCHAR(120) NOT NULL, auteur VARCHAR(120) NOT NULL, prefixe VARCHAR(8) NOT NULL, description VARCHAR(120) NOT NULL, date DATE NOT NULL, versionDtd VARCHAR(32) NOT NULL, PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB;
+CREATE TABLE BordereauxParametre (id INT AUTO_INCREMENT NOT NULL, prestation_id INT DEFAULT NULL, ordre INT NOT NULL, numero VARCHAR(2) NOT NULL, titre VARCHAR(120) NOT NULL, INDEX IDX_D7BF28019E45C554 (prestation_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB;
+CREATE TABLE BordereauxPrestation (id INT AUTO_INCREMENT NOT NULL, section_id INT DEFAULT NULL, numero VARCHAR(3) NOT NULL, numeroComplet VARCHAR(37) NOT NULL, type VARCHAR(1) NOT NULL, indiceRevision VARCHAR(1) NOT NULL, dateRevision DATE DEFAULT NULL, unite VARCHAR(10) DEFAULT NULL, titre VARCHAR(120) NOT NULL, description LONGTEXT DEFAULT NULL, INDEX IDX_276FB685D823E37A (section_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB;
+CREATE TABLE BordereauxQuestion (id INT AUTO_INCREMENT NOT NULL, prestation_id INT DEFAULT NULL, identifiant VARCHAR(32) NOT NULL, question LONGTEXT NOT NULL, INDEX IDX_7F64A7849E45C554 (prestation_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB;
+CREATE TABLE BordereauxSection (id INT AUTO_INCREMENT NOT NULL, numero VARCHAR(3) NOT NULL, titre VARCHAR(120) NOT NULL, corpsMetier_id INT DEFAULT NULL, INDEX IDX_B2BD369CAA47C370 (corpsMetier_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB;
+ALTER TABLE BordereauxCorpsMetier ADD CONSTRAINT FK_FFD50887330C7BB3 FOREIGN KEY (librairie_id) REFERENCES BordereauxLibrairie (id);
+ALTER TABLE BordereauxInfoSupplementaire ADD CONSTRAINT FK_E0E0BD8A9E45C554 FOREIGN KEY (prestation_id) REFERENCES BordereauxPrestation (id);
+ALTER TABLE BordereauxParametre ADD CONSTRAINT FK_D7BF28019E45C554 FOREIGN KEY (prestation_id) REFERENCES BordereauxPrestation (id);
+ALTER TABLE BordereauxPrestation ADD CONSTRAINT FK_276FB685D823E37A FOREIGN KEY (section_id) REFERENCES BordereauxSection (id);
+ALTER TABLE BordereauxQuestion ADD CONSTRAINT FK_7F64A7849E45C554 FOREIGN KEY (prestation_id) REFERENCES BordereauxPrestation (id);
+ALTER TABLE BordereauxSection ADD CONSTRAINT FK_B2BD369CAA47C370 FOREIGN KEY (corpsMetier_id) REFERENCES BordereauxCorpsMetier (id);
+
+CREATE TABLE CoreReset (id INT AUTO_INCREMENT NOT NULL, user_id INT DEFAULT NULL, timestamp DATETIME NOT NULL, token VARCHAR(512) NOT NULL, mail VARCHAR(255) NOT NULL, ip VARCHAR(39) NOT NULL, INDEX IDX_7C6DA1C4A76ED395 (user_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB;
+ALTER TABLE CoreReset ADD CONSTRAINT FK_7C6DA1C4A76ED395 FOREIGN KEY (user_id) REFERENCES user (id);
+
+RENAME TABLE user TO CoreUser, ConfigData TO CoreConfigData, email TO CoreEmail, Flags TO CoreFlags, log TO CoreLog;
+RENAME TABLE LogBook TO CoreLogBook, project TO CoreProject;
+ALTER TABLE CoreEmail DROP FOREIGN KEY coreemail_ibfk_1;
+DROP INDEX idx_e7927c74a76ed395 ON CoreEmail;
+CREATE INDEX IDX_CB6262FDA76ED395 ON CoreEmail (user_id);
+ALTER TABLE CoreEmail ADD CONSTRAINT CoreEmail_ibfk_1 FOREIGN KEY (user_id) REFERENCES CoreUser (id);
+ALTER TABLE CoreLog DROP FOREIGN KEY CoreLog_ibfk_1;
+DROP INDEX idx_8f3f68c5a76ed395 ON CoreLog;
+CREATE INDEX IDX_D6F44EBCA76ED395 ON CoreLog (user_id);
+ALTER TABLE CoreLog ADD CONSTRAINT CoreLog_ibfk_1 FOREIGN KEY (user_id) REFERENCES CoreUser (id);
+ALTER TABLE CoreLogBook DROP FOREIGN KEY FK_86E405B2166D1F9C;
+ALTER TABLE CoreLogBook DROP FOREIGN KEY FK_86E405B2A76ED395;
+ALTER TABLE CoreLogBook DROP FOREIGN KEY FK_86E405B2E638012E;
+DROP INDEX idx_86e405b2166d1f9c ON CoreLogBook;
+CREATE INDEX IDX_59170EBF166D1F9C ON CoreLogBook (project_id);
+DROP INDEX idx_86e405b2a76ed395 ON CoreLogBook;
+CREATE INDEX IDX_59170EBFA76ED395 ON CoreLogBook (user_id);
+DROP INDEX idx_86e405b2e638012e ON CoreLogBook;
+CREATE INDEX IDX_59170EBFE638012E ON CoreLogBook (logType_id);
+ALTER TABLE CoreLogBook ADD CONSTRAINT FK_86E405B2166D1F9C FOREIGN KEY (project_id) REFERENCES CoreProject (id);
+ALTER TABLE CoreLogBook ADD CONSTRAINT FK_86E405B2A76ED395 FOREIGN KEY (user_id) REFERENCES CoreUser (id);
+ALTER TABLE CoreLogBook ADD CONSTRAINT FK_86E405B2E638012E FOREIGN KEY (logType_id) REFERENCES CoreFlags (id);
+ALTER TABLE CoreProject DROP FOREIGN KEY CoreProject_ibfk_1;
+ALTER TABLE CoreProject DROP FOREIGN KEY CoreProject_ibfk_2;
+ALTER TABLE CoreProject DROP FOREIGN KEY CoreProject_ibfk_3;
+DROP INDEX idx_2fb3d0eee466b9c6 ON CoreProject;
+CREATE INDEX IDX_3FFDE27FE466B9C6 ON CoreProject (projectType_id);
+DROP INDEX idx_2fb3d0eefa884ca5 ON CoreProject;
+CREATE INDEX IDX_3FFDE27FFA884CA5 ON CoreProject (projectStatus_id);
+DROP INDEX idx_2fb3d0eed807e460 ON CoreProject;
+CREATE INDEX IDX_3FFDE27FD807E460 ON CoreProject (projectContract_id);
+ALTER TABLE CoreProject ADD CONSTRAINT CoreProject_ibfk_1 FOREIGN KEY (projectType_id) REFERENCES CoreFlags (id);
+ALTER TABLE CoreProject ADD CONSTRAINT CoreProject_ibfk_2 FOREIGN KEY (projectStatus_id) REFERENCES CoreFlags (id);
+ALTER TABLE CoreProject ADD CONSTRAINT CoreProject_ibfk_3 FOREIGN KEY (projectContract_id) REFERENCES CoreFlags (id);
+CREATE UNIQUE INDEX UNIQ_A413D4F7AA08CB10 ON CoreUser (login);
+
+ALTER TABLE CoreProject ADD projectBudget DOUBLE PRECISION DEFAULT NULL;
+CREATE TABLE BordereauxBordereau (id INT AUTO_INCREMENT NOT NULL, project_id INT DEFAULT NULL, type VARCHAR(120) NOT NULL, titre VARCHAR(250) DEFAULT NULL, indice INT DEFAULT NULL, referenceLot VARCHAR(120) DEFAULT NULL, date DATE NOT NULL, description LONGTEXT DEFAULT NULL, logo VARCHAR(255) DEFAULT NULL, INDEX IDX_8CCC7D21166D1F9C (project_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB;
+CREATE TABLE BordereauxLigne (id INT AUTO_INCREMENT NOT NULL, bordereau_id INT DEFAULT NULL, parente_id INT DEFAULT NULL, prestation_id INT DEFAULT NULL, numero INT NOT NULL, titre VARCHAR(250) DEFAULT NULL, description LONGTEXT DEFAULT NULL, quantite DOUBLE PRECISION DEFAULT NULL, prixUnitaire DOUBLE PRECISION DEFAULT NULL, unite VARCHAR(10) DEFAULT NULL, photo VARCHAR(255) DEFAULT NULL, legende VARCHAR(255) DEFAULT NULL, INDEX IDX_4EA314C755D5304E (bordereau_id), INDEX IDX_4EA314C7C274BE90 (parente_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB;
+ALTER TABLE BordereauxBordereau ADD CONSTRAINT FK_8CCC7D21166D1F9C FOREIGN KEY (project_id) REFERENCES CoreProject (id);
+ALTER TABLE BordereauxLigne ADD CONSTRAINT FK_4EA314C755D5304E FOREIGN KEY (bordereau_id) REFERENCES BordereauxBordereau (id);
+ALTER TABLE BordereauxLigne ADD CONSTRAINT FK_4EA314C7C274BE90 FOREIGN KEY (parente_id) REFERENCES BordereauxLigne (id);
+ALTER TABLE BordereauxLigne ADD CONSTRAINT FK_4EA314C79E45C554 FOREIGN KEY (prestation_id) REFERENCES BordereauxPrestation (id);
+CREATE INDEX IDX_4EA314C79E45C554 ON BordereauxLigne (prestation_id);
+CREATE TABLE BordereauxLignesParametres (ligne_id INT NOT NULL, parametre_id INT NOT NULL, INDEX IDX_FD00E1B25A438E76 (ligne_id), INDEX IDX_FD00E1B26358FF62 (parametre_id), PRIMARY KEY(ligne_id, parametre_id)) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB;
+ALTER TABLE BordereauxLignesParametres ADD CONSTRAINT FK_FD00E1B25A438E76 FOREIGN KEY (ligne_id) REFERENCES BordereauxLigne (id);
+ALTER TABLE BordereauxLignesParametres ADD CONSTRAINT FK_FD00E1B26358FF62 FOREIGN KEY (parametre_id) REFERENCES BordereauxParametre (id);
+
+24/02/2017
+=================================
+ALTER TABLE BordereauxLigne ADD alternativede_id INT DEFAULT NULL, ADD `optionel` TINYINT(1) DEFAULT NULL;
+ALTER TABLE BordereauxLigne ADD CONSTRAINT FK_4EA314C72490BB63 FOREIGN KEY (alternativede_id) REFERENCES BordereauxLigne (id);
+CREATE INDEX IDX_4EA314C72490BB63 ON BordereauxLigne (alternativede_id);
+
+01/03/2017
+=================================
+update BordereauxLigne set `bordereau_id`=null where `parente_id` is not null or `alternativede_id` is not null
+
+05/05/2017
+=================================
+CREATE TABLE BordereauxFichier (id INT AUTO_INCREMENT NOT NULL, librairie_id INT DEFAULT NULL, titre VARCHAR(120) NOT NULL, numero VARCHAR(10) NOT NULL, version INT NOT NULL, date DATE NOT NULL, fichier VARCHAR(255) NOT NULL, INDEX IDX_4B8196C330C7BB3 (librairie_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB;
+ALTER TABLE BordereauxFichier ADD CONSTRAINT FK_4B8196C330C7BB3 FOREIGN KEY (librairie_id) REFERENCES BordereauxLibrairie (id);
+CREATE TABLE BordereauxBordereauxFichiers (bordereau_id INT NOT NULL, fichier_id INT NOT NULL, INDEX IDX_67AB4F0A55D5304E (bordereau_id), INDEX IDX_67AB4F0AF915CFE (fichier_id), PRIMARY KEY(bordereau_id, fichier_id)) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB;
+ALTER TABLE BordereauxBordereauxFichiers ADD CONSTRAINT FK_67AB4F0A55D5304E FOREIGN KEY (bordereau_id) REFERENCES BordereauxBordereau (id) ON DELETE CASCADE;
+ALTER TABLE BordereauxBordereauxFichiers ADD CONSTRAINT FK_67AB4F0AF915CFE FOREIGN KEY (fichier_id) REFERENCES BordereauxFichier (id) ON DELETE CASCADE;
+
+19/03/2017
+=================================
+CREATE TABLE CoreCountry (id INT AUTO_INCREMENT NOT NULL, name VARCHAR(255) NOT NULL, languageCode VARCHAR(8) NOT NULL, phoneCode VARCHAR(4) NOT NULL, phoneFormat VARCHAR(32) NOT NULL, PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB;
+CREATE TABLE CorePhone (id INT AUTO_INCREMENT NOT NULL, country_id INT DEFAULT NULL, number VARCHAR(15) DEFAULT NULL, phoneType_id INT DEFAULT NULL, INDEX IDX_68BF8954E53F183 (phoneType_id), INDEX IDX_68BF8954F92F3E70 (country_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB;
+CREATE TABLE BordereauxDevis (id INT AUTO_INCREMENT NOT NULL, bordereau_id INT DEFAULT NULL, etat_id INT DEFAULT NULL, soumissionnaire_id INT DEFAULT NULL, version INT DEFAULT NULL, ouverture DATE NOT NULL, depot DATE DEFAULT NULL, cloture DATE DEFAULT NULL, description LONGTEXT DEFAULT NULL, INDEX IDX_92740A6F55D5304E (bordereau_id), INDEX IDX_92740A6FD29926FB (soumissionnaire_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB;
+CREATE TABLE BordereauxLigneDevis (id INT AUTO_INCREMENT NOT NULL, devis_id INT DEFAULT NULL, ligne_id INT DEFAULT NULL, prixUnitaire DOUBLE PRECISION DEFAULT NULL, commentaire LONGTEXT DEFAULT NULL, INDEX IDX_7B6C9F9E41DEFADA (devis_id), INDEX IDX_7B6C9F9E5A438E76 (ligne_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB;
+ALTER TABLE CorePhone ADD CONSTRAINT FK_68BF8954E53F183 FOREIGN KEY (phoneType_id) REFERENCES CoreFlags (id);
+ALTER TABLE CorePhone ADD CONSTRAINT FK_68BF8954F92F3E70 FOREIGN KEY (country_id) REFERENCES CoreCountry (id);
+ALTER TABLE BordereauxDevis ADD CONSTRAINT FK_92740A6F55D5304E FOREIGN KEY (bordereau_id) REFERENCES BordereauxBordereau (id);
+ALTER TABLE BordereauxDevis ADD CONSTRAINT FK_92740A6FD29926FB FOREIGN KEY (soumissionnaire_id) REFERENCES CoreUser (id);
+ALTER TABLE BordereauxDevis ADD CONSTRAINT FK_92740A6FCB3F4674 FOREIGN KEY (etat_id) REFERENCES CoreFlags (id);
+CREATE INDEX IDX_92740A6FCB3F4674 ON BordereauxDevis (etat_id);
+ALTER TABLE BordereauxLigneDevis ADD CONSTRAINT FK_7B6C9F9E41DEFADA FOREIGN KEY (devis_id) REFERENCES BordereauxDevis (id);
+ALTER TABLE BordereauxLigneDevis ADD CONSTRAINT FK_7B6C9F9E5A438E76 FOREIGN KEY (ligne_id) REFERENCES BordereauxLigne (id);
+ALTER TABLE BordereauxLigne DROP prixUnitaire;

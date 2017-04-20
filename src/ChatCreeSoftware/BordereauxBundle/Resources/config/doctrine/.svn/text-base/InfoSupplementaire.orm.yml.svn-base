@@ -1,0 +1,17 @@
+ChatCreeSoftware\BordereauxBundle\Entity\InfoSupplementaire:
+  type: entity
+  table: BordereauxInfoSupplementaire
+  id:
+    id:
+      type: integer
+      generator:
+         strategy: AUTO  
+  fields:
+    information:   { type: string(32) }
+    valeur:        { type: text }
+    
+  manyToOne:
+    prestation:
+      targetEntity: Prestation
+      inversedBy: infoSupplementaires    
+  lifecycleCallbacks: {  }

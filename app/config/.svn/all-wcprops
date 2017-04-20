@@ -1,0 +1,77 @@
+K 25
+svn:wc:ra_dav:version-url
+V 43
+/repo/!svn/ver/32/ProjectManager/app/config
+END
+composer.json
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/repo/!svn/ver/18/ProjectManager/app/config/composer.json
+END
+config_dev.yml
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/repo/!svn/ver/52/ProjectManager/app/config/config_dev.yml
+END
+parameters.yml
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/repo/!svn/ver/52/ProjectManager/app/config/parameters.yml
+END
+services.yml
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/repo/!svn/ver/52/ProjectManager/app/config/services.yml
+END
+config_test.yml
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/repo/!svn/ver/14/ProjectManager/app/config/config_test.yml
+END
+config.yml
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/repo/!svn/ver/52/ProjectManager/app/config/config.yml
+END
+routing_dev.yml
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/repo/!svn/ver/52/ProjectManager/app/config/routing_dev.yml
+END
+parameters.yml.dist
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/repo/!svn/ver/18/ProjectManager/app/config/parameters.yml.dist
+END
+routing.yml
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/repo/!svn/ver/52/ProjectManager/app/config/routing.yml
+END
+security.yml
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/repo/!svn/ver/52/ProjectManager/app/config/security.yml
+END
+config_prod.yml
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/repo/!svn/ver/52/ProjectManager/app/config/config_prod.yml
+END
+composer.lock
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/repo/!svn/ver/18/ProjectManager/app/config/composer.lock
+END

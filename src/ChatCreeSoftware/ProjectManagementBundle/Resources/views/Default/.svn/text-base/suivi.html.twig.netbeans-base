@@ -1,0 +1,314 @@
+{% extends "ProjectManagementBundle::layout.html.twig" %}
+
+{% block stylesheet %}
+    {{ parent() }}
+{% endblock %}
+
+{% block navigation %}
+    {{ render(controller("ProjectManagementBundle:Navigation:navigation",{'selected': 3})) }}
+{% endblock %}
+
+{% block projectmenu %}
+    <nav class="navbar navbar-inverse">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="#">Heures</a>
+        </div>
+    </nav>
+{% endblock %}
+
+{% block content %}
+    <div class="col-sm-12">
+    <div id="dialog" title="Confirmation de suppression">
+        Voulez-vous vraiment supprimer cette entr&eacute;e ?
+    </div>
+
+    <div class="form-horizontal">
+        <div class="form-group">
+            <label for="datepicker" class="col-sm-1 control-label">Date</label>
+            <div class="col-sm-1">
+                <input name="datepicker" type="text" id="datepicker" class="form-control">
+            </div>
+        </div>     
+    </div>
+    <div class="row">
+        <div class="col-sm-12">
+        <table id="logs" class="table table-striped table-bordered">
+            <thead>
+                <tr>
+                    <th class="projectname">Projet</th>
+                    <th class="duration">Dur&eacute;e</th>
+                    <th class="description">Description</th>
+                </tr>
+            </thead>
+            <tbody>
+
+            </tbody>
+            <tfoot>
+                <tr class="total">
+                    <td class="projet"><b>Total journ&eacute;e</b></td>
+                    <td class="duration"><b><span class="total_duration"></span></b></td>
+                    <td class="description"></td>
+                </tr>
+            </tfoot>
+        </table>
+        </div>
+    </div>
+    </div>
+{% endblock %}
+
+{% block javascript %}
+$(document).ready(function() {
+    oTable = $('#logs').DataTable({
+        autoWidth: false,
+        ajax: 'ajax_list_user_logs',
+        buttons: [
+            {text: '<span class="glyphicon glyphicon-plus"></span>Ajouter', className: 'New', action: function () {
+                if ($('tr.new').length > 0) {
+                    alert("Une nouvelle ligne est déjà en cours d'édition");
+                } else {
+                    var nRow = oTable.row.add(['', '', '', '']).draw(false).node();
+                    $(nRow).addClass('new');
+                    oTable.select.style( "api" );
+                    oTable.row(".selected").deselect();
+                    oTable.row( nRow ).select(  );
+                    editRow(nRow);
+                    nEditing = nRow;
+                }
+            }},
+            {text: '<span class="glyphicon glyphicon-pencil"></span>Editer', className: 'Edit selectionRequired disabled', action: function ( ) {
+                var row = this.row({selected: true}).node();
+                
+                 if ($('tr.new').length > 0) {
+                    alert("Une nouvelle ligne est déjà en cours d'édition");
+                } else {
+                    editRow(row);
+                    oTable.select.style( "api" );
+                    nEditing = row;
+                }
+                
+            }},
+            {text: '<span class="glyphicon glyphicon-remove"></span>Supprimer', className: 'Delete selectionRequired disable', action: function ( ) {
+
+                var row = this.row({selected: true});
+                var selected = row.data();
+                var timelogId = selected['id'];
+
+                var deleteDialog = $("#dialog");
+                if( $(row.node()).hasClass( 'new' ) ) {
+                    oTable.rows( row ).remove().draw(false);
+                    $("a.btn.btn-default.selectionRequired").addClass("disabled");;
+                } else {
+                    $("#dialog").dialog({
+                        autoOpen: false,
+                        modal: true,
+                        buttons: {
+                            "Confirmer" : {
+                                text: "Confirmer", 
+                                class: "btn-primary",
+                                click: function() {
+                                    $(this).dialog("close");
+                                    var params = "id=" + timelogId; 
+								
+                                    var url="{{path('_project_user_log_ajax_delete')}}";
+
+                                    $.ajax( {
+                                        type: "POST",
+                                        url: url,
+                                        data: params,
+                                        dataType: "json",
+                                        success: function( data ) {
+                                            if( data.response == 200 ) {
+                                                oTable.rows( row ).remove().draw(false);
+                                                $("a.btn.btn-default.selectionRequired").addClass("disabled");;
+                                            } else {
+                                                alert( "Erreur lors de la suppression" );
+                                            }
+                                        },
+                                        error: function( jqXHR, textStatus, errorThrown ) {
+                                            alert( textStatus );
+                                        }
+                                    });
+                                }
+                            },
+                            "Annuler" : function() {
+                                $(this).dialog("close");
+                            }
+                        },
+                        title: "Confirmation de suppression"
+                    });
+
+                    $("#dialog").dialog("open");
+                }
+
+                deleteDialog.dialog("open");
+            }},
+            {text: '<span class="glyphicon glyphicon-remove-circle"></span>Annuler', className: 'Cancel', action: function() { projectUtilities.cancelEdit(); } },
+            {text: '<span class="glyphicon glyphicon-floppy-disk"></span>Enregistrer', className: 'Save', action: function() {
+                saveRow( nEditing );
+                nEditing = null;
+            }},
+        ],
+        columnDefs: [
+            {className: "duration", targets: [1] }
+        ],
+        dom: 'Bt',
+        footerCallback: function ( row, data, start, end, display ) {
+            var hours = 0, minutes = 0;
+
+            for (var i = 0; i < data.length; i++) {
+                time = data[i][1].split(":");
+                h = parseInt(time[0]);
+                m = parseInt(time[1]);
+                if (!isNaN(h)) {
+                    hours += h;
+                }
+                if (!isNaN(m)) {
+                    minutes += m;
+
+                    if (minutes >= 60) {
+                        hours++;
+                        minutes -= 60;
+                    }
+                }
+            }
+            $('span.total_duration').text(sprintf("%02d:%02d", hours, minutes));
+        },
+        language: {
+            emptyTable: "Aucun suivi pour cette date"
+        },
+        ordering: true,
+        rowId: 'id',
+        select: {
+            style: 'single'
+        }
+        
+    });
+
+    $( "#datepicker" ).datepicker( {
+        "onClose": function( dateText, picker){
+            if( dateText != "" ) {
+                date = dateText.split("/");
+                dateText = "/" + date[2] + "-" + date[1] + "-" + date[0];
+                
+                oTable.ajax.url( 'ajax_list_user_logs' + dateText );
+                oTable.ajax.reload();
+                
+            }
+        }
+    });
+    
+    $('#logs tbody').on( 'click', 'tr', function () {
+        if (nEditing == null ) {
+            if ( $(this).hasClass('selected') ) {
+                $("a.btn.btn-default.selectionRequired").removeClass("disabled");
+            } else {
+                $("a.btn.btn-default.selectionRequired").addClass("disabled");;
+            }
+        }
+    } );
+    
+    nEditing = null;      
+      
+    $("#dialog").dialog({
+        autoOpen: false,
+        modal: true,
+        buttons: {
+            "Confirmer" : {
+                text: "Confirmer", 
+                class: "btn-primary",
+                click: function() {
+                    $(this).dialog("close");
+                }
+            },
+            "Annuler" : function() {
+                $(this).dialog("close");
+            }
+        },
+        title: "Confirmation de suppression"
+    });
+
+    $( "#logs" ).keydown(function( event ) { projectUtilities.keydown( event ) } ); 
+
+    $("a.btn.btn-default.Cancel, a.btn.btn-default.Save").hide();    
+});
+
+function editRow( nRow ) {
+    var aData = oTable.row( nRow ).data();
+    var jqTds = $('>td', nRow );
+    jqTds[0].innerHTML = '<input type="text" id="project" value="'+aData[0]+'" class="form-control"/>';
+      
+    jqTds[1].innerHTML = '<span class="project_duration"><select id="hours" class="form-control"><option value="0">00</option>' +
+                '<option value="1">01</option><option value="2">02</option><option value="3">03</option>' +
+                '<option value="4">04</option><option value="5">05</option><option value="6">06</option>' +
+                '<option value="7">07</option><option value="8">08</option></select>:<select id="minutes" class="form-control">' +
+                '<option value="0">00</option><option value="5">05</option><option value="10">10</option>' +
+                '<option value="15">15</option><option value="20">20</option><option value="25">25</option>' +
+                '<option value="30">30</option><option value="35">35</option><option value="40">40</option>' +
+                '<option value="45">45</option><option value="50">50</option><option value="55">55</option></select></span>';
+    jqTds[2].innerHTML = '<input value="'+aData[2]+'" type="text" class="form-control">';
+                    
+    if( aData[1]!=="" ){
+        var time = aData[1].split(':');
+        $('#hours', nRow).val(time[0].replace(/^[0]+/g,"")).attr('selected', true);
+        $('#minutes', nRow).val(time[1].replace(/^[0]+/g,"")).attr('selected', true);
+    } else {
+        $('#hours option:first', nRow).attr('selected', true);
+        $('#minutes option:first', nRow).attr('selected', true);
+    }    
+    
+    $('#project').autocomplete( { serviceUrl: '{{ path('_gestion_project_ajax_autocomplete_project') }}',
+                                    zIndex: 1000 } );
+    $( "input[type=text]:visible:first", nRow ).focus();
+    $("a.btn.btn-default.New,a.btn.btn-default.selectionRequired").addClass("disabled");
+    $("a.btn.btn-default.Cancel, a.btn.btn-default.Save").show();
+}
+     
+function saveRow( nRow ) {
+    var jqInputs = $( 'input,select', nRow );
+    var params = "";
+    var action = "U";
+        
+    params = "";
+    if( $( nRow ).hasClass( 'new' ) ){
+        $( nRow ).removeClass( 'new' );
+        action="C";
+    } else {
+        var rowId = $( nRow ).attr('id');
+        params = "id=" + rowId + "&";
+    }                
+        
+    params += "pname=" + jqInputs[0].value + "&action=" + action + "&date=" + $( "#datepicker" ).val() +
+        "&hours=" + jqInputs[1].value + "&minutes=" + jqInputs[2].value + "&description=" + encodeURIComponent(jqInputs[3].value);
+            
+    var url = "{{ path('_ajax_new_user_log') }}";
+    $.ajax( {
+        type: "POST",
+        url: url,
+        data: params,
+        dataType: "json",
+        success: function( data ) {
+            if( data.response == 200 ) {
+                oTable.cell( nRow, 0 ).data( jqInputs[0].value );
+                oTable.cell( nRow, 1 ).data( $('option:selected',jqInputs[1]).text() + ":" + $('option:selected',jqInputs[2]).text() );
+                oTable.cell( nRow, 2 ).data( jqInputs[3].value );
+                $(nRow).attr( "id", data.id );
+                oTable.row( nRow ).draw();
+                oTable.select.style('single');
+                $("a.btn.btn-default.New").removeClass("disabled");
+                $("a.btn.btn-default.Cancel, a.btn.btn-default.Save").hide();
+            } else {
+                if( data.message == "No Project" ){
+                    alert( "Ce projet n'existe pas" );
+                } else {
+                    alert( "Erreur lors de la mise à jour" );
+                }
+                projectUtilities.restoreRow( nRow );
+            }              
+        },
+        error: function( jqXHR, textStatus, errorThrown ) {
+            alert( textStatus );
+            projectUtilities.restoreRow( nRow );
+        }
+    });
+}
+{% endblock %}

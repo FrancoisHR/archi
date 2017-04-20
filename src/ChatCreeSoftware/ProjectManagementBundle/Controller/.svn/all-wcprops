@@ -1,0 +1,71 @@
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/repo/!svn/ver/33/ProjectManager/src/ChatCreeSoftware/ProjectManagementBundle/Controller
+END
+TaskAjaxController.php
+K 25
+svn:wc:ra_dav:version-url
+V 111
+/repo/!svn/ver/35/ProjectManager/src/ChatCreeSoftware/ProjectManagementBundle/Controller/TaskAjaxController.php
+END
+ConfigurationController.php
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/repo/!svn/ver/37/ProjectManager/src/ChatCreeSoftware/ProjectManagementBundle/Controller/ConfigurationController.php
+END
+InvoicingAjaxController.php
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/repo/!svn/ver/49/ProjectManager/src/ChatCreeSoftware/ProjectManagementBundle/Controller/InvoicingAjaxController.php
+END
+ContactController.php
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/repo/!svn/ver/35/ProjectManager/src/ChatCreeSoftware/ProjectManagementBundle/Controller/ContactController.php
+END
+ReportController.php
+K 25
+svn:wc:ra_dav:version-url
+V 109
+/repo/!svn/ver/33/ProjectManager/src/ChatCreeSoftware/ProjectManagementBundle/Controller/ReportController.php
+END
+InvoiceController.php
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/repo/!svn/ver/35/ProjectManager/src/ChatCreeSoftware/ProjectManagementBundle/Controller/InvoiceController.php
+END
+NavigationController.php
+K 25
+svn:wc:ra_dav:version-url
+V 113
+/repo/!svn/ver/33/ProjectManager/src/ChatCreeSoftware/ProjectManagementBundle/Controller/NavigationController.php
+END
+LogbookAjaxController.php
+K 25
+svn:wc:ra_dav:version-url
+V 114
+/repo/!svn/ver/49/ProjectManager/src/ChatCreeSoftware/ProjectManagementBundle/Controller/LogbookAjaxController.php
+END
+TrajetsAjaxController.php
+K 25
+svn:wc:ra_dav:version-url
+V 114
+/repo/!svn/ver/50/ProjectManager/src/ChatCreeSoftware/ProjectManagementBundle/Controller/TrajetsAjaxController.php
+END
+SuiviAjaxController.php
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/repo/!svn/ver/50/ProjectManager/src/ChatCreeSoftware/ProjectManagementBundle/Controller/SuiviAjaxController.php
+END
+DefaultController.php
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/repo/!svn/ver/50/ProjectManager/src/ChatCreeSoftware/ProjectManagementBundle/Controller/DefaultController.php
+END

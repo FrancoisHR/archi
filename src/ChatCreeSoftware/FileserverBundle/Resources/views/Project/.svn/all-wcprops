@@ -1,0 +1,35 @@
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/repo/!svn/ver/33/ProjectManager/src/ChatCreeSoftware/FileserverBundle/Resources/views/Project
+END
+project.html.twig
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/repo/!svn/ver/52/ProjectManager/src/ChatCreeSoftware/FileserverBundle/Resources/views/Project/project.html.twig
+END
+confirmDeleteProject.html.twig
+K 25
+svn:wc:ra_dav:version-url
+V 125
+/repo/!svn/ver/52/ProjectManager/src/ChatCreeSoftware/FileserverBundle/Resources/views/Project/confirmDeleteProject.html.twig
+END
+deleteProject.html.twig
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/repo/!svn/ver/52/ProjectManager/src/ChatCreeSoftware/FileserverBundle/Resources/views/Project/deleteProject.html.twig
+END
+uploadSuccess.html.twig
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/repo/!svn/ver/52/ProjectManager/src/ChatCreeSoftware/FileserverBundle/Resources/views/Project/uploadSuccess.html.twig
+END
+editProjectAcls.html.twig
+K 25
+svn:wc:ra_dav:version-url
+V 120
+/repo/!svn/ver/52/ProjectManager/src/ChatCreeSoftware/FileserverBundle/Resources/views/Project/editProjectAcls.html.twig
+END

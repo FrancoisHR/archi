@@ -1,0 +1,388 @@
+<?php
+
+namespace ChatCreeSoftware\FileserverBundle\Entity;
+
+use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Validator\Constraints as Assert;
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * @ORM\Entity
+ * @ORM\Table(name="user")
+ */
+class User implements UserInterface
+{
+    
+    private static $role_array = array('ROLE_USER' => 'User', 'ROLE_EMPLOYEE' => 'Employé', 'ROLE_ADMIN' => 'Admin');
+    private static $title_array = array( '' => '', 'Monsieur' => 'Monsieur', 'Madame' => 'Madame', 'Mademoiselle' => 'Mademoiselle');
+
+    /**
+     * @ORM\Id
+     * @ORM\Column(type="integer")
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+    private $id;
+
+    /**
+     * @ORM\Column(type="string", length="50")
+     */
+    private $title;
+    
+    /**
+     * @ORM\Column(type="string", length="50")
+     */
+    private $firstname;
+
+    /**
+     * @ORM\Column(type="string", length="50")
+     * @Assert\NotBlank( message="Remplissez le nom")
+     */
+    private $lastname;
+
+    /**
+     * @ORM\Column(type="string", length="50")
+     * @Assert\NotBlank( message="Remplissez le login")
+     */
+    private $login;
+
+    /**
+     * @ORM\Column(type="string", length="255")
+     * @Assert\NotBlank( message="Remplissez le mot de passe")
+     * @Assert\MinLength(limit="6", message="Mot de passe de {{ limit }} caracteres au moins")
+     */
+    private $password;
+
+    /**
+     * @ORM\Column(type="string", length="50")
+     */
+    private $role;
+    
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $enabled;
+
+    /**
+     * @var ChatCreeSoftware\FileserverBundle\Entity\Email
+     */
+    private $emails;
+
+    public function __construct()
+    {
+        $this->emails = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+    /**
+     * Get id
+     *
+     * @return integer $id
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * Set firstname
+     *
+     * @param string $firstname
+     */
+    public function setFirstname($firstname)
+    {
+        $this->firstname = $firstname;
+    }
+
+    /**
+     * Get firstname
+     *
+     * @return string $firstname
+     */
+    public function getFirstname()
+    {
+        return $this->firstname;
+    }
+
+    /**
+     * Set lastname
+     *
+     * @param string $lastname
+     */
+    public function setLastname($lastname)
+    {
+        $this->lastname = $lastname;
+    }
+
+    /**
+     * Get lastname
+     *
+     * @return string $lastname
+     */
+    public function getLastname()
+    {
+        return $this->lastname;
+    }
+
+    /**
+     * Set login
+     *
+     * @param string $login
+     */
+    public function setLogin($login)
+    {
+        $this->login = $login;
+    }
+
+    /**
+     * Get login
+     *
+     * @return string $login
+     */
+    public function getLogin()
+    {
+        return $this->login;
+    }
+
+    /**
+     * Set password
+     *
+     * @param string $password
+     */
+    public function setPassword($password)
+    {
+        $this->password = $password;
+    }
+
+    /**
+     * Get password
+     *
+     * @return string $password
+     */
+    public function getPassword()
+    {
+        return $this->password;
+    }
+
+    /**
+     * Set role
+     *
+     * @param string $role
+     */
+    public function setRole($role)
+    {
+        $this->role = $role;
+    }
+
+    /**
+     * Get role
+     *
+     * @return string $role
+     */
+    public function getRole()
+    {
+        return $this->role;
+    }
+    
+    public function getRoleLabel() {
+        return self::$role_array[$this->role];
+    }
+
+    /**
+     * Set enabled
+     *
+     * @param boolean $enabled
+     */
+    public function setEnabled($enabled)
+    {
+        $this->enabled = $enabled;
+    }
+
+    /**
+     * Get enabled
+     *
+     * @return boolean $enabled
+     */
+    public function getEnabled()
+    {
+        return $this->enabled;
+    }
+
+    /**
+     * Set title
+     *
+     * @param string $title
+     */
+    public function setTitle($title)
+    {
+        $this->title = $title;
+    }
+
+    /**
+     * Get title
+     *
+     * @return string $title
+     */
+    public function getTitle()
+    {
+        return $this->title;
+    }    
+       
+    /**
+     * Add emails
+     *
+     * @param ChatCreeSoftware\FileserverBundle\Entity\Email $emails
+     */
+    public function addEmails(\ChatCreeSoftware\FileserverBundle\Entity\Email $emails)
+    {
+        $this->emails[] = $emails;
+    }
+
+    /**
+     * Get emails
+     *
+     * @return Doctrine\Common\Collections\Collection $emails
+     */
+    public function getEmails()
+    {
+        return $this->emails;
+    }    
+
+    public static function getRolesArray() {
+        return self::$role_array;
+    }
+
+    public static function getTitlesArray() {
+        return self::$title_array;
+    }
+    
+//*************************************************
+    // UserInterface implementation
+    
+    public function equals( UserInterface $user ){
+        return true;
+    }
+    
+    public function eraseCredentials()
+    {
+        
+    }
+    
+    public function getRoles()
+    {
+        return array( $this->role );
+    }
+    
+    public function getSalt()
+    {
+        
+    }
+    
+    public function getUsername()
+    {
+        return $this->login;
+    }
+
+    /**
+     * @var ChatCreeSoftware\FileserverBundle\Entity\Log
+     */
+    private $logs;
+
+
+    /**
+     * Add logs
+     *
+     * @param ChatCreeSoftware\FileserverBundle\Entity\Log $logs
+     */
+    public function addLogs(\ChatCreeSoftware\FileserverBundle\Entity\Log $logs)
+    {
+        $this->logs[] = $logs;
+    }
+
+    /**
+     * Get logs
+     *
+     * @return Doctrine\Common\Collections\Collection 
+     */
+    public function getLogs()
+    {
+        return $this->logs;
+    }
+    /**
+     * @var ChatCreeSoftware\ProjectManagementBundle\Entity\TimeLog
+     */
+    private $timeLogs;
+
+
+    /**
+     * Add timeLogs
+     *
+     * @param ChatCreeSoftware\ProjectManagementBundle\Entity\TimeLog $timeLogs
+     */
+    public function addTimeLogs(\ChatCreeSoftware\ProjectManagementBundle\Entity\TimeLog $timeLogs)
+    {
+        $this->timeLogs[] = $timeLogs;
+    }
+
+    /**
+     * Get timeLogs
+     *
+     * @return Doctrine\Common\Collections\Collection 
+     */
+    public function getTimeLogs()
+    {
+        return $this->timeLogs;
+    }
+
+    /**
+     * Add emails
+     *
+     * @param ChatCreeSoftware\FileserverBundle\Entity\Email $emails
+     */
+    public function addEmail(\ChatCreeSoftware\FileserverBundle\Entity\Email $emails)
+    {
+        $this->emails[] = $emails;
+    }
+
+    /**
+     * Add logs
+     *
+     * @param ChatCreeSoftware\FileserverBundle\Entity\Log $logs
+     */
+    public function addLog(\ChatCreeSoftware\FileserverBundle\Entity\Log $logs)
+    {
+        $this->logs[] = $logs;
+    }
+
+    /**
+     * Add timeLogs
+     *
+     * @param ChatCreeSoftware\ProjectManagementBundle\Entity\TimeLog $timeLogs
+     */
+    public function addTimeLog(\ChatCreeSoftware\ProjectManagementBundle\Entity\TimeLog $timeLogs)
+    {
+        $this->timeLogs[] = $timeLogs;
+    }
+    /**
+     * @var boolean $actor
+     */
+    private $actor;
+
+
+    /**
+     * Set actor
+     *
+     * @param boolean $actor
+     */
+    public function setActor($actor)
+    {
+        $this->actor = $actor;
+    }
+
+    /**
+     * Get actor
+     *
+     * @return boolean 
+     */
+    public function getActor()
+    {
+        return $this->actor;
+    }
+}

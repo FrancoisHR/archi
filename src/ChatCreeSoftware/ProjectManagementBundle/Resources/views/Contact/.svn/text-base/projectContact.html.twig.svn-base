@@ -1,0 +1,389 @@
+{% extends "ProjectManagementBundle::layout.html.twig" %}
+
+{% block stylesheet %}
+    {{ parent() }}
+{% endblock %}
+
+{% block navigation %}
+    {{ render(controller("ProjectManagementBundle:Navigation:navigation",{'selected': project.id + 8 })) }}
+{% endblock %}
+
+{% block projectmenu %}
+       {{ render(controller("ProjectManagementBundle:Navigation:projectNavigation",{'selected': 1, 'id': project.id, 'name': project.projectName })) }}
+{% endblock %}
+
+{% block content %}
+<div id="dialog" title="Confirmation de suppression">
+    Voulez-vous vraiment supprimer cette entr&eacute;e ?
+</div>
+<div id="dialog-form" title="Adresse">
+  <form class="form-horizontal">
+    <div class="form-group">
+        {{form_label(form.addressType,'Type', { 'label_attr': { 'class':'col-sm-4 control-label' } } ) }}
+        <div class="col-sm-8">
+            {{form_widget(form.addressType, { 'attr': {'class': 'form-control' } }) }}
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="company" class="col-sm-4 control-label">Soci&eacute;t&eacute;</label>
+        <div class="col-sm-8">
+            <input type="text" name="company" id="company" class="form-control">
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="vatNumber" class="col-sm-4 control-label">Num&eacute;ro TVA</label>
+        <div class="col-sm-8">
+            <input type="text" name="vatNumber" id="vatNumber" class="form-control">
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="title" class="col-sm-4 control-label">Titre</label>
+        <div class="col-sm-8">
+            <input type="text" name="title" id="title" value="" class="form-control">
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="firstname" class="col-sm-4 control-label">Pr&eacute;nom</label>
+        <div class="col-sm-8">
+            <input type="text" name="firstname" id="firstname" value="" class="form-control">
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="lastname" class="col-sm-4 control-label">Nom</label>
+        <div class="col-sm-8">
+            <input type="text" name="lastname" id="lastname" value="" class="form-control">
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="street1" class="col-sm-4 control-label">Adresse 1</label>
+        <div class="col-sm-8">
+            <input type="text" name="street1" id="street1" value="" class="form-control">
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="street2" class="col-sm-4 control-label">Adresse 2</label>
+        <div class="col-sm-8">
+            <input type="text" name="street2" id="street2" value="" class="form-control">
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="street3" class="col-sm-4 control-label">Adresse 3</label>
+        <div class="col-sm-8">
+            <input type="text" name="street3" id="street3" value="" class="form-control">
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="zipCode" class="col-sm-4 control-label">Code Postal</label>
+        <div class="col-sm-8">
+            <input type="text" name="zipCode" id="zipCode" value="" class="form-control">
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="city" class="col-sm-4 control-label">Ville</label>
+        <div class="col-sm-8">
+            <input type="text" name="city" id="city" value="" class="form-control">
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="pays" class="col-sm-4 control-label">Pays</label>
+        <div class="col-sm-8">
+            <input type="text" name="country" id="country" value="" class="form-control">
+        </div>
+    </div>
+  </form>
+</div>
+
+<div class="row row-side-margin">
+    <div class="col-sm-12">
+        <table id="addressList" class="table table-striped table-bordered">
+            <thead>
+            <tr>
+                <th>Adresses</th>
+            </tr>
+            </thead>
+            <tbody class="rows">
+
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
+
+{% block javascript %}
+    $(document).ready(function() {
+        oTable = $('#addressList').DataTable({
+            autoWidth: false,
+            columns: [
+                {width: "500px"},
+            ],        
+            ajax: "contactList/{{project.id}}",
+            buttons: [
+                {text: 'Ajouter', className: 'New', action: function () {
+                    $("#dialog-form").dialog( "option", "buttons", [
+                        {
+                            text: "Ajouter",
+                            class: "btn-primary",
+                            click :function() {                
+                                var params="project={{project.id}}&type="+$('select[id=form_addressType]').val()+
+                                        "&company="+$('input#company').val()+
+                                        "&vatNumber="+$('input#vatNumber').val()+
+                                        "&title="+$('input#title').val()+
+                                        "&firstname="+$('input#firstname').val()+
+                                        "&lastname="+$('input#lastname').val()+
+                                        "&street1="+$('input#street1').val()+
+                                        "&street2="+$('input#street2').val()+
+                                        "&street3="+$('input#street3').val()+
+                                        "&zipCode="+$('input#zipCode').val()+
+                                        "&city="+$('input#city').val()+
+                                        "&country="+$('input#country').val();
+                             
+                                var url = "{{path('_project_contact_ajax_add')}}";
+                                $( this ).dialog( "close" );
+                                $.ajax({
+                                    type: "POST",
+                                    url: url,
+                                    data: params,
+                                    dataType: "json",
+                                    success: function(data) {
+                                        if (data.response === 200) {
+                                            $('#addressList').DataTable().ajax.reload();
+                                        } else {
+                                            alert("Erreur lors de l'ajout");
+                                        }
+                                    }
+                                });                    
+                            }
+                        },
+                        {
+                            text: "Annuler",
+                            click : function() {
+                                $( this ).dialog( "close" );
+                            }
+                        }
+                    ] );
+                    $( "#dialog-form" ).dialog( "open" );    
+                }},
+                {text: 'Editer', className: 'Edit disabled', action: function ( ) {
+                    var row = this.row({selected: true});
+                    var selected = row.data();
+                    var params="addressId=" + selected['id'];
+                                           
+                    var url = "{{path('_project_contact_ajax_get')}}";
+                    $.ajax({
+                        type: "POST",
+                        url: url,
+                        data: params,
+                        dataType: "json",
+                        success: function(data) {
+                            if (data.response === 200) {
+                                $( 'select#form_addressType' ).val( data.address.addressType );
+                                $( 'input#company' ).val( data.address.company );
+                                $( 'input#title' ).val( data.address.title );          
+                                $( 'input#firstname' ).val( data.address.firstname ); 
+                                $( 'input#lastname' ).val( data.address.lastname );
+                                $( 'input#street1' ).val( data.address.street1 );
+                                $( 'input#street2' ).val( data.address.street2 );
+                                $( 'input#street3' ).val( data.address.street3 );
+                                $( 'input#zipCode' ).val( data.address.zipCode );
+                                $( 'input#city' ).val( data.address.city );
+                                $( 'input#country' ).val( data.address.country );
+
+                                $("#dialog-form").dialog( "option", "buttons", [
+                                    {
+                                        text: "Modifier",
+                                        class: "btn-primary",
+                                        click :function() {                
+                                            var params = "addressId=" + selected['id'] + "&type="+$('select[id=form_addressType]').val()+
+                                                "&company="+$('input#company').val()+
+                                                "&vatNumber="+$('input#vatNumber').val()+
+                                                "&title="+$('input#title').val()+
+                                                "&firstname="+$('input#firstname').val()+
+                                                "&lastname="+$('input#lastname').val()+
+                                                "&street1="+$('input#street1').val()+
+                                                "&street2="+$('input#street2').val()+
+                                                "&street3="+$('input#street3').val()+
+                                                "&zipCode="+$('input#zipCode').val()+
+                                                "&city="+$('input#city').val()+
+                                                "&country="+$('input#country').val();
+                             
+                                            var url = "{{path('_project_contact_ajax_modify')}}";
+                                            $( this ).dialog( "close" );
+                                            $.ajax({
+                                                type: "POST",
+                                                url: url,
+                                                data: params,
+                                                dataType: "json",
+                                                success: function(data) {
+                                                    var table=$('#addressList').DataTable();
+                                                    if (data.response === 200) {
+                                                        table.ajax.reload();
+                                                    } else {
+                                                        alert("Erreur lors de la modification");
+                                                    }
+                                                },
+                                                error: function(data) {
+                                                    alert( "error" );
+                                                }
+                                            });
+                                        }
+                                    },
+                                    {
+                                        text: "Annuler",
+                                        click : function() {
+                                            $( this ).dialog( "close" );
+                                        }
+                                    }
+                                ] );
+                                
+                                $( "#dialog-form" ).dialog( "open" );
+                            } else {
+                                alert("Erreur lors de la modification");
+                            }
+                        }
+                    });
+                }},
+                {text: 'Supprimer', className: 'Delete disabled', action: function ( ) {
+                    var row = this.row({selected: true});
+                    var selected = row.data();
+                    var contactId = selected['id'];
+
+                    var deleteDialog = $("#dialog");
+                    $("#dialog").dialog({
+                        autoOpen: false,
+                        modal: true,
+                        buttons: {
+                            "Confirmer" : {
+                                text: "Confirmer", 
+                                class: "btn-primary",
+                                click: function() {
+                                    $(this).dialog("close");
+                                    var params = "id=" + contactId; 
+						
+                                    var url="{{path('_project_contact_ajax_delete')}}";
+
+                                    $.ajax( {
+                                        type: "POST",
+                                        url: url,
+                                        data: params,
+                                        dataType: "json",
+                                        success: function( data ) {
+                                            if( data.response == 200 ) {
+                                                oTable.rows( row ).remove().draw(false);
+                                                $("a.btn.btn-default.Edit, a.btn.btn-default.Delete").addClass("disabled");;
+                                            } else {
+                                                alert( "Erreur lors de la suppression" );
+                                            }
+                                        },
+                                        error: function( jqXHR, textStatus, errorThrown ) {
+                                            alert( textStatus );
+                                        }
+                                    });
+                                }
+                            },
+                            "Annuler" : function() {
+                                $(this).dialog("close");
+                            }
+                        },
+                        title: "Confirmation de suppression"
+                    });
+                    $("#dialog").dialog("open");
+                    deleteDialog.dialog("open");
+                }},
+            ],
+            dom: 'l<"clear">Bfrtp',
+            columnDefs: [
+                {
+                    // `data` refers to the data for the cell (defined by `mData`, which
+                    // defaults to the column being worked with, in this case is the first
+                    // Using `row[0]` is equivalent.
+                    render: function ( data, type, row ) {
+                        var addressText="";
+                        if( row[1] != null ) addressText = row[1];
+                        if (addressText != "" && ( row[4] != null || row[5] != null) ) addressText += " - ";
+                        if( row[4] != null ) addressText += row[4] + " ";
+                        if( row[5] != null ) addressText += row[5];
+                        if( addressText != "" && row[6] != null ) addressText += "<br>";
+                        if( row[6] != null ) addressText += row[6];
+                        if (addressText != "" && ( row[9] != null || row[10] != null) ) addressText += " - ";
+                        if( row[9] != null ) addressText += row[9] + " ";
+                        if( row[10] != null ) addressText += row[10];
+                                                
+                        // return "<a class='addressSelection' id='" + row['id'] + "' href='#'>" + addressText + "</a>";
+                        return addressText;
+                    },
+                    targets: [ 0 ]
+                }
+            ],
+        language: {
+            lengthMenu: "Afficher _MENU_ lignes par page",
+            zeroRecords: "Aucune adresse",
+            info: "Page _PAGE_ de _PAGES_",
+            infoEmpty: "Aucune adresse",
+            infoFiltered: "(filtr&eacute; de _MAX_ adresses)",
+            loadingRecords: "Chargement...",
+            processing: "Traitement...",
+            search: "Recherche:",
+            paginate: {
+                first: " ",
+                last: " ",
+                next: " ",
+                previous: " "
+            }
+        },
+            rowId: 'id',
+            select: {
+                style: 'single'            
+            }
+        });
+
+    $("#dialog").dialog({
+        autoOpen: false,
+        modal: true,
+        buttons: {
+            "Confirmer" : {
+                text: "Confirmer", 
+                class: "btn-primary",
+                click: function() {
+                    $(this).dialog("close");
+                }
+            },
+            "Annuler" : function() {
+                $(this).dialog("close");
+            }
+        },
+        title: "Confirmation de suppression"
+    });
+        
+        $('#addressList tbody').on( 'click', 'tr', function () {
+            if ( $(this).hasClass('selected') ) {
+                $("a.btn.btn-default.Edit, a.btn.btn-default.Delete").removeClass("disabled");
+            } else {
+                $("a.btn.btn-default.Edit, a.btn.btn-default.Delete").addClass("disabled");;
+            }
+        } );
+        
+        $( "#dialog-form" ).dialog({
+            autoOpen: false,
+            height: 600,
+            width: 450,
+            modal: true,
+            close: function() {
+                var type = $( 'select#form_addressType' ),
+                    company = $( 'input#company' ),
+                    title = $( 'input#title' ),            
+                    firstname = $( 'input#firstname' ),
+                    lastname = $( 'input#lastname' ),
+                    street1 = $( 'input#street1' ),
+                    street2 = $( 'input#street2' ),
+                    street3 = $( 'input#street3' ),
+                    zipCode = $( 'input#zipCode' ),
+                    city = $( 'input#city' ),
+                    country = $( 'input#country' ),                   
+                    allFields = $( [] ).add( type ).add(company).add( title ).add( firstname ).add( lastname ).add( street1 ).add( street2 ).add( street3 ).add( zipCode ).add( city ).add( country );
+                    allFields.val( "" ).removeClass( "ui-state-error" );
+            },
+            title: "Ajouter une adresse"
+        });                        
+    });
+    
+{% endblock %}

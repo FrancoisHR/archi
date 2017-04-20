@@ -1,0 +1,6 @@
+services:
+    fileserver.services.interfaceListener:
+        class: ChatCreeSoftware\FileserverBundle\Listener\InterfaceListener
+        arguments: ["@doctrine.orm.entity_manager","@security.acl.provider","@security.authorization_checker","@router"]        
+        tags:
+            - { name: kernel.event_subscriber }

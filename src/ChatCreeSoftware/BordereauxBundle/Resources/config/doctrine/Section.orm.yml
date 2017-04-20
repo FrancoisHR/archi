@@ -1,0 +1,20 @@
+ChatCreeSoftware\BordereauxBundle\Entity\Section:
+  type: entity
+  table: BordereauxSection
+  id:
+    id:
+      type: integer
+      generator:
+         strategy: AUTO  
+  fields:
+    numero:         { type: string(3) }
+    titre:          { type: string(120) }
+  manyToOne:
+    corpsMetier:
+      targetEntity: CorpsMetier
+      inversedBy: sections
+  oneToMany:
+    prestations:
+      targetEntity: Prestation
+      mappedBy: section
+  lifecycleCallbacks: {  }

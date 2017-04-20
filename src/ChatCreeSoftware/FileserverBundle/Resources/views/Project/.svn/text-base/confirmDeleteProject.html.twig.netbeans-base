@@ -1,0 +1,54 @@
+{% extends "FileserverBundle::layout.html.twig" %}
+
+{% set menu_selected = '1' %}
+
+{% block content %}
+    <ul class="breadcrumb">
+        <li><a href="{{ path('_project_list') }}">Liste des projets</a></li>
+        <li>Supprimer le projet {{ project.projectName }}</li>
+    </ul>
+    <div class="row">
+        <div class="col-sm-8">
+            <table>
+                {% for folder in folders %}
+                    <tr>
+                        <td><img src="{{ asset('bundles/ChatCreeSoftware/FileServer/images/folder.png') }}" /><b>{{ folder.filename }}</b></td>
+                        <td>{{ folder.cTime|date("d/m/Y") }}</td>
+                        <td>&nbsp;</td>
+                    </tr>
+                {% endfor %}
+                {% for file in files %}
+                    <tr>
+                        <td><a href='{{asset( project.projectPath ~ "/" ~ file.filename ) }}'>{{ file.filename }}</a></td>
+                        <td>{{ file.cTime|date("d/m/Y") }}</td>
+                        {% if (file.size/1024/1024/1024 > 1)%}
+                            <td>{{ "%.2fGB"|format(file.size/1024/1024/1024) }}</td>
+                        {% elseif (file.size/1024/1024 > 1)%}
+                            <td>{{ "%.2fMB"|format(file.size/1024/1024) }}</td>
+                        {% elseif (file.size/1024 > 1)%}
+                            <td>{{ "%.2fKB"|format(file.size/1024) }}</td>
+                        {% else %}
+                            <td>{{ "%iB"|format(file.size) }}</td>
+                        {% endif %}
+                    </tr>
+                {% else %}
+                    <tr><td>Ce projet ne contient aucun fichier.</td>
+                    {% endfor %}
+            </table>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-sm-8">
+
+            <h1>Attention : Supprimer ce projet va supprimer tous les fichiers qu'il contient!</h1>
+            <div class="formcontainer">
+                <a href="{{ path('_project_perform_delete',{"id":project.id}) }}"><input type="button" class="btn btn-primary" name="OK" value="OK" /></a>
+                <a href="{{ path('_project_list') }}"><input type="button" name="Cancel" value="Cancel" class="btn btn-default" /></a>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block appfooter %}
+{% endblock %}

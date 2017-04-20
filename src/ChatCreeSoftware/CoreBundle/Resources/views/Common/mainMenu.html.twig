@@ -1,0 +1,18 @@
+<div class="panel panel-default">
+    <ul class="nav nav-pills nav-stacked  nav-condensed">
+        {% for item in menu %}
+            <li role="presentation" {% if menu_selected == item.selectionId %} class="active"{% endif %}><a href="{{ item.url }}">{{item.name}}</a></li>
+        {% endfor %}
+        {% if is_granted('ROLE_OVERLORD') %}
+            <li role="presentation"><a href="#" data-toggle="collapse" data-target="#drilldown-1">Administration<span class="glyphicon glyphicon-chevron-right pull-right"></span></a>
+                <div style="padding-left:10px;">
+                    <ul id="drilldown-1" class="nav nav-pills nav-stacked {% if menu_selected < '7' %}collapse{% endif %}">
+                        <li role="presentation" {% if menu_selected == '7' %} class="active"{% endif %}><a href='{{ path( "_admin_list_users" ) }}'>Liste des Utilisateurs</a></li>
+                        <li role="presentation" {% if menu_selected == '8' %} class="active"{% endif %}><a href="{{ path('_admin_user_create') }}">Cr&eacute;er un utilisateur</a></li>
+                        <li role="presentation" {% if menu_selected == '9' %} class="active"{% endif %}><a href='{{ path( "_admin_last_user_login" ) }}'>Derni&egrave;res connexions</a></li>
+                    </ul>
+                </div>
+            </li>
+        {% endif %}
+    </ul>
+</div>

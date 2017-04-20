@@ -1,0 +1,14 @@
+ChatCreeSoftware\ProjectManagementBundle\Entity\BankAccount:
+  type: entity
+  table: BankAccount
+  id:
+    id:
+      type: integer
+      generator:
+         strategy: AUTO  
+  fields:
+    label:    { type: string(50) }
+    bic:      { type: string(10)}
+    iban:     { type: string(16)}
+    enabled:  { type: boolean }
+  lifecycleCallbacks: {  }

@@ -1,0 +1,17 @@
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/repo/!svn/ver/33/ProjectManager/src/ChatCreeSoftware/ProjectManagementBundle/Resources/views/Configuration
+END
+configurationInvoicing.html.twig
+K 25
+svn:wc:ra_dav:version-url
+V 140
+/repo/!svn/ver/33/ProjectManager/src/ChatCreeSoftware/ProjectManagementBundle/Resources/views/Configuration/configurationInvoicing.html.twig
+END
+configurationAddressType.html.twig
+K 25
+svn:wc:ra_dav:version-url
+V 142
+/repo/!svn/ver/35/ProjectManager/src/ChatCreeSoftware/ProjectManagementBundle/Resources/views/Configuration/configurationAddressType.html.twig
+END

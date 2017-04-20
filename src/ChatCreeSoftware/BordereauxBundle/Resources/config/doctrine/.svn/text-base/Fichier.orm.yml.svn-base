@@ -1,0 +1,23 @@
+ChatCreeSoftware\BordereauxBundle\Entity\Fichier:
+  type: entity
+  table: BordereauxFichier
+  id:
+    id:
+      type: integer
+      generator:
+         strategy: AUTO  
+  fields:
+    titre:          { type: string(120) }
+    numero:         { type: string(10) }
+    version:        { type: integer }
+    date:           { type: date }
+    fichier:        { type: string(255) }
+  manyToOne:
+    librairie:
+      targetEntity: Librairie
+      inversedBy:   fichiers
+  manyToMany:
+    bordereaux:
+      targetEntity:     Bordereau
+      mappedBy:       fichiers      
+  lifecycleCallbacks: {  }

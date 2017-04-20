@@ -1,0 +1,23 @@
+ChatCreeSoftware\ProjectManagementBundle\Entity\Task:
+  type: entity
+  table: Task
+  fields:
+    id:
+      type: integer
+      id: true
+      generator:
+        strategy: AUTO
+    name:
+      type: string
+      length: 255
+    target:
+      type: date
+      nullable: true
+    finalize:
+      type: date
+      nullable: true
+  manyToOne:
+    project:
+      targetEntity: ChatCreeSoftware\CoreBundle\Entity\Project
+      inversedBy: tasks         
+  lifecycleCallbacks: {  }

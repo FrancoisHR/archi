@@ -1,0 +1,160 @@
+{% extends "ProjectManagementBundle::layout.html.twig" %}
+
+{% block stylesheet %}
+    {{ parent() }}
+{% endblock %}
+
+{% block includes %}
+    {{ parent() }}
+{% endblock %}
+
+{% block navigation %}
+    {{ render(controller("ProjectManagementBundle:Navigation:navigation",{'selected': 7})) }}
+{% endblock %}    
+    
+{% block content %}
+    <div id="dialog-form" title="Type d'adresse">
+        <form>
+                <label for="addressType">Type d'adresse</label>
+                <input type="hidden" name="addressTypeId" id="addressTypeId"></>
+                <input type="text" name="addressType" id="addressType" class="text ui-widget-content ui-corner-all"><br>
+        </form>
+    </div>
+    
+    <fieldset>
+        <legend>Types d'adresses</legend>
+        <br/><a id="new" href="">Ajouter un nouveau type d'adresse</a>    
+        <table id="addressType">
+            <thead>
+                <th>id</th>
+                <th>Type d'adresse<th>
+            </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </fieldset>
+{% endblock %}
+
+{% block javascript %}
+    {{ parent() }}
+    $(document).ready(function() {
+        oTable = $('table#addressType').DataTable({
+            "bFilter": false,
+            "bInfo": false,
+            "bPaginate": false,
+            "bProcessing": true,
+            "ajax": "{{path('_configuration_list_addressType')}}",
+            "columnDefs": [
+                {
+                    "targets": 0,
+                    "visible": false,
+                    "searchable": false,
+                    "sortable": false
+                },
+                {
+                    "targets": 1,
+                    "render": function ( data, type, row ) {                                            
+                        return "<a class='addressSelection' id='" + row[0] + "' href='#'>" + row[1] + "</a>";
+                    }
+                }
+            ],
+            "aoColumns": [
+                { "sWidth": "40px" },
+                { "sWidth": "300px", "sClass": "addressType" },
+            ],
+            "order": [[ 1, "asc" ]]
+        });
+                
+        $( "#dialog-form" ).dialog({
+            autoOpen: false,
+            height: 170,
+            width: 450,
+            modal: true,
+            close: function() {
+                $( 'input#addressType' ).val( "" ).removeClass( "ui-state-error" );
+            }
+        });                    
+        
+        $(document).on( "click", "a#new", function( e ) {
+            e.preventDefault();
+
+            $("#dialog-form").dialog( {
+                buttons:
+                {
+                    "Ajouter" : function() {                
+                        var params="addressType="+$('input#addressType').val();
+                             
+                        var url = "{{path('_configuration_add_addressType')}}";
+                        $( this ).dialog( "close" );
+                        $.ajax({
+                            type: "POST",
+                            url: url,
+                            data: params,
+                            dataType: "json",
+                            success: function(data) {
+                                if (data.response === 200) {
+                                    $('table#addressType').DataTable().ajax.reload();
+                                } else {
+                                    alert("Erreur lors de l'ajout");
+                                }
+                            }
+                        });
+                    
+                    },
+                    "Annuler": function() {
+                        $( this ).dialog( "close" );
+                    }
+                },
+                title: "Ajouter un type d'adresse"
+            } );
+            
+            $( "#dialog-form" ).dialog( "open" );    
+        });
+        
+        $(document).on( "click", "a.addressSelection", function( e ) {
+            e.preventDefault();
+            
+            var id = $(e.target).attr('id');
+            var text = $(e.target).text();
+            
+            $("input#addressTypeId").val( id );
+            $("input#addressType").val( text );
+            
+            $("#dialog-form").dialog( "option", "buttons", [
+            {
+                text: "Modifier",
+                click: function() {
+                    var text = $("input#addressType").val();
+                    var params="addressTypeId=" + id + "&addressType=" + text;
+                             
+                    var url = "{{path('_configuration_modify_addressType')}}";
+                    $( this ).dialog( "close" );
+                    $.ajax({
+                        type: "POST",
+                        url: url,
+                        data: params,
+                        dataType: "json",
+                        success: function(data) {
+                            if (data.response === 200) {
+                                $('table#addressType').DataTable().ajax.reload();
+                            } else {
+                                alert("Erreur lors de la modification");
+                            }
+                        }
+                    });
+                    $( this ).dialog( "close" );
+                }
+            },
+            {
+                text: "Annuler",
+                click: function() { $( this ).dialog( "close" );
+                }
+            }
+            ] );
+            
+            $( "#dialog-form" ).dialog( "open" );
+            
+        });
+    });
+{% endblock %}

@@ -1,0 +1,48 @@
+ChatCreeSoftware\CoreBundle\Entity\User:
+  type: entity
+  table: CoreUser
+  repositoryClass: ChatCreeSoftware\CoreBundle\Repository\UserRepository
+  entityListeners:
+    ChatCreeSoftware\CoreBundle\Listener\UserListener:
+  id:
+    id:
+      type: integer
+      generator:
+         strategy: AUTO  
+  fields:
+    company:   { type: string(150), nullable: true }
+    title:     { type: string(50), nullable: true }
+    firstname: { type: string(150), nullable: true }
+    lastname:  { type: string(150) }
+    login:     { type: string(50), unique: true } 
+    password:  { type: string(255) }
+    role:      { type: string(50) }
+    enabled:   { type: boolean }
+    actor:     { type: boolean, nullable: true }
+  oneToMany:
+    emails:
+      targetEntity: Email
+      mappedBy:     user
+      cascade:
+        - persist
+        - remove
+    resets:
+      targetEntity: Reset
+      mappedBy:     user
+      cascade:
+        - remove
+    logs:
+      targetEntity: Log
+      mappedBy:     user
+      cascade:
+        - remove
+    timeLogs:
+      targetEntity: ChatCreeSoftware\ProjectManagementBundle\Entity\TimeLog
+      mappedBy:     user
+    journeys:
+      targetEntity: ChatCreeSoftware\ProjectManagementBundle\Entity\Journey
+      mappedBy:     user
+    devis:
+      targetEntity: ChatCreeSoftware\BordereauxBundle\Entity\Devis
+      mappedBy:     soumissionnaire       
+  lifecycleCallbacks: {  }

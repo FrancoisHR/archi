@@ -1,0 +1,23 @@
+ChatCreeSoftware\CoreBundle\Entity\LogBook:
+  type: entity
+  table: CoreLogBook
+  id:
+    id:
+      type: integer
+      generator: 
+        strategy: AUTO
+  fields:
+    date:   { type: datetime }
+    texte:  { type: text, nullable: true }
+    ip:     { type: string(50), nullable: true }
+    locked: { type: boolean, nullable: true }
+  manyToOne:
+    project:
+      targetEntity: ChatCreeSoftware\CoreBundle\Entity\Project
+      inversedBy: logbook
+    user:
+      targetEntity: ChatCreeSoftware\CoreBundle\Entity\User
+    logType:
+      targetEntity: ChatCreeSoftware\CoreBundle\Entity\Flags      
+
+  lifecycleCallbacks: {  }

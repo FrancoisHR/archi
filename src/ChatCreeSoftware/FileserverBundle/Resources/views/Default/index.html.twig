@@ -1,0 +1,159 @@
+{% extends "CoreBundle::coreLayout.html.twig" %}
+
+{% set menu_selected = '1' %}
+
+{% block content %}
+    <div id="dialog" title="Confirmation de suppression">
+        Voulez-vous vraiment supprimer ce projet ?
+    </div>
+    <nav class="navbar navbar-inverse">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="#">Mes projets</a>
+        </div>
+    </nav>    
+    
+    <table id="tableProjet" class="table table-striped table-bordered">
+        <thead>
+            <tr>
+                <th></th>
+                <th></th>
+                <th>Projet</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for project in projects %}
+            <tr id="{{project.id}}}" data-mask="{{project.mask}}">
+                <td>
+                {% if project.mask==128 %}
+                    <a href='{{ path( '_project_delete', {'id': project.id } ) }}'>
+                        <img src="{{ asset('bundles/ChatCreeSoftware/FileServer/images/delete.png') }}" alt="[ACL]" align="absmiddle" /></a>
+                {% endif %}
+                </td>
+                <td>
+                {% if project.mask==128 %}
+                    <a href='{{ path( '_project_edit_acls', {'id': project.id } ) }}'>
+                        <img src="{{ asset('bundles/ChatCreeSoftware/FileServer/images/lock.png') }}" alt="[ACL]" align="absmiddle" /></a>
+                {% endif %}
+                </td>
+                <td>
+                    <a href='{{ path( '_project', {'id': project.id } ) }}'>{{ project.projectName }}</a>
+                </td>
+            </tr>
+        {% endfor %}
+    </tbody>
+    </table>
+{% endblock %}
+
+{% block javascript %}
+
+var oTable;
+
+$(document).ready(function() {
+    iTable = $("#tableProjet").DataTable({
+        autoWidth: false,
+        {% if is_granted("ROLE_ADMIN") %} buttons: [
+            {text: '<span class="glyphicon glyphicon-plus"></span>Ajouter', className: 'New', action: function () {
+                    window.location = "{{path('_admin_create_project')}}";
+            }
+        },
+        {text: '<span class="glyphicon glyphicon-user"></span>Droits', className: 'Rights selectionRequired disabled', action: function () {
+            }
+        },
+        {text: '<span class="glyphicon glyphicon-remove"></span>Supprimer', className: 'Delete selectionRequired disabled', action: function() {
+                var row = this.row({selected: true});
+                var selected = row.data();
+                var projectId = selected['id'];
+
+                if( $(row.node()).hasClass( 'new' ) ) {
+                    oTable.rows( row ).remove().draw(false);
+                    $("#devis-selector a.btn.btn-default.selectionRequired").addClass("disabled");;
+                } else {
+                    $("#dialog").dialog({
+                        autoOpen: false,
+                        modal: true,
+                        buttons: {
+                            "Confirmer" : {
+                                text: "Confirmer", 
+                                class: "btn-primary",
+                                click: function() {
+                                    $(this).dialog("close");
+								
+                                    var url={{ path( '_project_perform_delete' ) }} + "/" + projectId;
+
+                                    $.ajax( {
+                                        type: "POST",
+                                        url: url,
+                                        dataType: "json",
+                                        success: function( data ) {
+                                            if( data.response === 200 ) {
+                                                oTable.rows( row ).remove().draw(false);
+                                                $("#devis-selector a.btn.btn-default.selectionRequired").addClass("disabled");;
+                                            } else {
+                                               alert( "Erreur lors de la suppression" );
+                                            }
+                                        },
+                                        error: function( jqXHR, textStatus, errorThrown ) {
+                                            alert( textStatus );
+                                        }
+                                    });
+                                }
+                            },
+                            "Annuler" : function() {
+                                $(this).dialog("close");
+                            }
+                        },
+                        title: "Confirmation de suppression"
+                    });
+
+                    $("#dialog").dialog("open");
+                }
+                
+            }
+        },
+        ],{% endif %}
+        columns: [        
+            {width: "50px"},
+            {width: "50px"},
+            {width: "300px"},
+        ],
+        {% if is_granted("ROLE_ADMIN") %} 
+            dom: 'l<"clear">Bfrtp',
+        {% else %}
+            dom: 'frt',
+        {% endif %}
+        select: {
+            style: 'single'
+        },
+        language: {
+            lengthMenu: "Afficher _MENU_ lignes par page",
+            zeroRecords: "Aucun projet",
+            info: "Page _PAGE_ de _PAGES_",
+            infoEmpty: "Aucun projet",
+            infoFiltered: "(filtr&eacute; de _MAX_ projets)",
+            loadingRecords: "Chargement...",
+            processing: "Traitement...",
+            search: "Recherche:",
+            paginate: {
+                first: " ",
+                last: " ",
+                next: " ",
+                previous: " "
+            }
+        },
+    });
+    
+    $("#dialog").dialog({
+        autoOpen: false,
+        modal: true
+    });
+    
+    $('#tableProjet tbody').on('click', 'tr', function () {
+        if ($(this).hasClass('selected')) {
+            $("a.btn.btn-default.selectionRequired").removeClass("disabled");
+        } else {
+            $("a.btn.btn-default.selectionRequired").addClass("disabled");
+        }
+    });
+    
+});
+{% endblock %}

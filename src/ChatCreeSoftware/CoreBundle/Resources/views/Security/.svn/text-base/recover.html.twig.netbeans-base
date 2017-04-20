@@ -1,0 +1,43 @@
+{% extends "CoreBundle::layout.html.twig" %}
+
+{% block javascript %}
+    {{ parent() }}
+        $(document).ready(function () {
+            $("#password1, #password2").on("keyup", function () {
+                var password = $("#password1").val();
+                var confirmPassword = $("#password2").val();
+
+                if (password !== confirmPassword){
+                    $('div.has-feedback').switchClass("has-success", "has-error");
+                    $(".glyphicon").switchClass( "glyphicon-ok", "glyphicon-remove");
+                } else {
+                    $('div.has-feedback').switchClass("has-error","has-success");
+                    $(".glyphicon").switchClass( "glyphicon-remove", "glyphicon-ok");
+                }
+            });
+        });
+{% endblock %}
+
+{% block content %}
+    <div class="logtitle">
+        <h3>Mot de passe oublié</h3>
+        {% if( reset ) %}
+            <p class="text-justify">Veuillez saisir votre nouveau mot de passe.</p>
+        {% else %}
+            <p class="text-justify">Le lien que vous avez suivi est inexistant ou a expiré.</p>
+            <p class="text-justify">Si vous cherchez à changer votre mot de passe, veuillez recommencer la <a href='{{ path('_forgotten') }}'>procédure</a> et utiliser le lien envoyé par e-mail dans la demi-heure suivant.</p>
+        {% endif %}
+    </div>
+    {% if(reset) %}
+    <form class="form-login" action="{{ path('_password_change',{'id':reset.id}) }}" method="post">
+            <label class="sr-only" for="password1">Password:</label>
+            <input class="password1 form-control" type="password" id="password1" name="_password1" placeholder="Password"/>
+            <div class="form-group has-feedback">
+                <label class="sr-only" for="password2">Vérification:</label>
+                <input class="password2 form-control" type="password" id="password2" name="_password2" placeholder="Password"/>
+                <span class="glyphicon form-control-feedback"></span>
+            </div>
+            <button class="btn btn-lg btn-login btn-block" type="submit">&nbsp;Changer&nbsp;</button>
+    </form>
+    {% endif %}
+{% endblock %}

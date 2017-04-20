@@ -1,0 +1,65 @@
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/repo/!svn/ver/27/ProjectManager/src/ChatCreeSoftware/CoreBundle/Resources/config/doctrine
+END
+Country.orm.yml
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/repo/!svn/ver/52/ProjectManager/src/ChatCreeSoftware/CoreBundle/Resources/config/doctrine/Country.orm.yml
+END
+Project.orm.yml
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/repo/!svn/ver/52/ProjectManager/src/ChatCreeSoftware/CoreBundle/Resources/config/doctrine/Project.orm.yml
+END
+Email.orm.yml
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/repo/!svn/ver/27/ProjectManager/src/ChatCreeSoftware/CoreBundle/Resources/config/doctrine/Email.orm.yml
+END
+Phone.orm.yml
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/repo/!svn/ver/52/ProjectManager/src/ChatCreeSoftware/CoreBundle/Resources/config/doctrine/Phone.orm.yml
+END
+Flags.orm.yml
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/repo/!svn/ver/27/ProjectManager/src/ChatCreeSoftware/CoreBundle/Resources/config/doctrine/Flags.orm.yml
+END
+LogBook.orm.yml
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/repo/!svn/ver/27/ProjectManager/src/ChatCreeSoftware/CoreBundle/Resources/config/doctrine/LogBook.orm.yml
+END
+User.orm.yml
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/repo/!svn/ver/52/ProjectManager/src/ChatCreeSoftware/CoreBundle/Resources/config/doctrine/User.orm.yml
+END
+ConfigData.orm.yml
+K 25
+svn:wc:ra_dav:version-url
+V 109
+/repo/!svn/ver/27/ProjectManager/src/ChatCreeSoftware/CoreBundle/Resources/config/doctrine/ConfigData.orm.yml
+END
+Log.orm.yml
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/repo/!svn/ver/27/ProjectManager/src/ChatCreeSoftware/CoreBundle/Resources/config/doctrine/Log.orm.yml
+END
+Reset.orm.yml
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/repo/!svn/ver/27/ProjectManager/src/ChatCreeSoftware/CoreBundle/Resources/config/doctrine/Reset.orm.yml
+END

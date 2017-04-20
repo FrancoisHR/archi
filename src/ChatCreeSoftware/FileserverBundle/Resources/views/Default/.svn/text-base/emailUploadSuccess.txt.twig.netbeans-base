@@ -1,0 +1,15 @@
+Bonjour {{user.firstname}} {{user.lastname}},
+
+le projet {{ projectName }} a été mis à jour par {{logonUser.firstname}} {{logonUser.lastname}}.
+
+{% if files|length > 1 %}
+Les fichiers suivants ont été ajoutés :
+{% else %}
+Le fichier suivant a été ajouté :
+{% endif %}
+
+{% for file in files %}
+{% if file %}
+    {{ file.clientOriginalName }}
+{% endif %}
+{% endfor %}

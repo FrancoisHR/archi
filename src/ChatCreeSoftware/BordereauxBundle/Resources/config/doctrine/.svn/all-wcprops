@@ -1,0 +1,77 @@
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/repo/!svn/ver/27/ProjectManager/src/ChatCreeSoftware/BordereauxBundle/Resources/config/doctrine
+END
+Section.orm.yml
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/repo/!svn/ver/27/ProjectManager/src/ChatCreeSoftware/BordereauxBundle/Resources/config/doctrine/Section.orm.yml
+END
+Question.orm.yml
+K 25
+svn:wc:ra_dav:version-url
+V 113
+/repo/!svn/ver/27/ProjectManager/src/ChatCreeSoftware/BordereauxBundle/Resources/config/doctrine/Question.orm.yml
+END
+Prestation.orm.yml
+K 25
+svn:wc:ra_dav:version-url
+V 115
+/repo/!svn/ver/35/ProjectManager/src/ChatCreeSoftware/BordereauxBundle/Resources/config/doctrine/Prestation.orm.yml
+END
+Bordereau.orm.yml
+K 25
+svn:wc:ra_dav:version-url
+V 114
+/repo/!svn/ver/52/ProjectManager/src/ChatCreeSoftware/BordereauxBundle/Resources/config/doctrine/Bordereau.orm.yml
+END
+InfoSupplementaire.orm.yml
+K 25
+svn:wc:ra_dav:version-url
+V 123
+/repo/!svn/ver/27/ProjectManager/src/ChatCreeSoftware/BordereauxBundle/Resources/config/doctrine/InfoSupplementaire.orm.yml
+END
+Fichier.orm.yml
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/repo/!svn/ver/48/ProjectManager/src/ChatCreeSoftware/BordereauxBundle/Resources/config/doctrine/Fichier.orm.yml
+END
+LigneDevis.orm.yml
+K 25
+svn:wc:ra_dav:version-url
+V 115
+/repo/!svn/ver/52/ProjectManager/src/ChatCreeSoftware/BordereauxBundle/Resources/config/doctrine/LigneDevis.orm.yml
+END
+Devis.orm.yml
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/repo/!svn/ver/52/ProjectManager/src/ChatCreeSoftware/BordereauxBundle/Resources/config/doctrine/Devis.orm.yml
+END
+CorpsMetier.orm.yml
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/repo/!svn/ver/27/ProjectManager/src/ChatCreeSoftware/BordereauxBundle/Resources/config/doctrine/CorpsMetier.orm.yml
+END
+Ligne.orm.yml
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/repo/!svn/ver/52/ProjectManager/src/ChatCreeSoftware/BordereauxBundle/Resources/config/doctrine/Ligne.orm.yml
+END
+Parametre.orm.yml
+K 25
+svn:wc:ra_dav:version-url
+V 114
+/repo/!svn/ver/35/ProjectManager/src/ChatCreeSoftware/BordereauxBundle/Resources/config/doctrine/Parametre.orm.yml
+END
+Librairie.orm.yml
+K 25
+svn:wc:ra_dav:version-url
+V 114
+/repo/!svn/ver/48/ProjectManager/src/ChatCreeSoftware/BordereauxBundle/Resources/config/doctrine/Librairie.orm.yml
+END

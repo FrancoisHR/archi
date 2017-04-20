@@ -1,0 +1,116 @@
+{% extends "CoreBundle::coreLayout.html.twig" %}
+{% form_theme form with ['bootstrap_3_horizontal_layout.html.twig', _self ] %}
+
+{% set menu_selected = '8' %}
+
+{% block checkbox_widget %}
+    {% spaceless %}
+        <input type="checkbox" {{ block('widget_attributes') }}{% if value is defined %} value="{{ value }}"{% endif %}{% if checked %} checked="checked"{% endif %} />
+    {% endspaceless %}
+{% endblock checkbox_widget %}
+
+{% block stylesheet %}
+    <link rel="stylesheet" href="{{asset('bundles/ChatCreeSoftware/Core/bootstrap/css/bootstrap.css') }}" type="text/css" media="screen" />
+    {{ parent() }}
+{% endblock %}
+
+{% block content %}
+    <nav class="navbar navbar-inverse">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="#">Cr&eacute;ation d'utilisateur</a>
+        </div>
+    </nav>
+    {{ form_start(form, {'action': path('_admin_user_create') } ) }}
+<div class="row">
+    <div class="col-sm-6">
+        <div class="form-group">
+                <label for="form_enabled" class="col-lg-2 control-label">Actif</label>
+                <div class="col-sm-6">{{form_widget(form.enabled) }}</div>
+                {{form_errors(form.enabled) }}
+            </div>
+        <div class="form-group">
+                {{form_label(form.company,'Société' ) }}
+                <div class="col-sm-6">{{form_widget(form.company) }}</div>
+                {{form_errors(form.company) }}
+            </div>
+        <div class="form-group">
+                {{form_label(form.title,'Titre' ) }}
+                <div class="col-sm-6">{{form_widget(form.title) }}</div>
+                {{form_errors(form.title) }}
+            </div>
+        <div class="form-group">
+                {{form_label(form.firstname,'Prénom' ) }}
+                <div class="col-sm-6">{{form_widget(form.firstname) }}</div>
+                {{form_errors(form.firstname) }}
+            </div>
+        <div class="form-group">
+                {{form_label(form.lastname,'Nom' ) }}
+                <div class="col-sm-6">{{form_widget(form.lastname) }}</div>
+                {{form_errors(form.lastname) }}
+            </div>
+        <div class="form-group">
+                {{form_label(form.login,'Login' ) }}
+                <div class="col-sm-6">{{form_widget(form.login) }}</div>
+                {{form_errors(form.login) }}
+            </div>
+        <div class="form-group">
+                {{form_label(form.password,'Password' ) }}
+                <div class="col-sm-6">{{form_widget(form.password) }}</div>
+                {{form_errors(form.password) }}
+            </div>
+        <div class="form-group">
+                {{form_label(form.role,'Role' ) }}
+                <div class="col-sm-6">{{form_widget(form.role) }}</div>
+                {{form_errors(form.role) }}
+            </div>
+    </div>
+    <div class="col-sm-6">       
+        <fieldset  class="col-sm-offset-2 col-sm-10">
+                <legend>Adresses emails</legend>
+                <div id="emails">
+                    {% for field in form.emails %}
+                        <div class="row">
+                            {{form_widget(field.id) }}
+                            <div class="form-group">
+                                <div class="input-group"><span class="input-group-addon">{{form_widget(field.primaire) }}</span>
+                                    {{form_widget(field.mail) }}</div>
+                                <span class="form-field-error">{{form_errors(field.mail)}}</span>
+                            </div>
+                        </div>
+                        {% endfor %}
+                </div>
+                <button type="button" name="addEmailButton" id="addEmailButton">Ajouter</button>
+
+            </fieldset>
+    </div>
+</div>
+    <div class="row">
+        <div class="col-sm-6">
+        {{ form_rest(form) }}
+
+        <input type="submit" />
+        <a href="{{ path('_admin_list_users') }}"><input type="button" name="cancel" value="Cancel" /></a>
+        </div>
+    </div>
+    {{ form_end(form) }}
+{% endblock %}
+
+{% block script %}
+    $(function () {
+        var fieldCount = $("#emails > div").length - 1;
+        $("#addEmailButton").click(function () {
+            fieldCount++;
+
+            var checkboxID = "form_emails_" + fieldCount + "_primaire";
+            var checkboxName = "form[emails][" + fieldCount + "][primaire]";
+            var textID = "form_emails_" + fieldCount + "_mail";
+            var textName = "form[emails][" + fieldCount + "][mail]";
+            $("#emails").append(
+                    '<div class="row"><div class="form-group"><div class="input-group"><span class="input-group-addon"><input type="checkbox" ' +
+                    'id="' + checkboxID + '" name="' + checkboxName + '" required="required" value="1" checked="checked" /></span>' +
+                    '<input type="text" id="' + textID + '" name="' + textName + '" required="required" style="width: 245px" value="" class="form-control"/></div>' +
+                    '<span class="form-field-error"></span></div></div>'
+                    );
+        });
+    });
+{% endblock %}

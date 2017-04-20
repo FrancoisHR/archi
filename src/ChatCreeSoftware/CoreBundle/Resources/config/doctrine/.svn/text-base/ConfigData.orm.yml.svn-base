@@ -1,0 +1,14 @@
+ChatCreeSoftware\CoreBundle\Entity\ConfigData:
+  type: entity
+  table: CoreConfigData
+  id:
+    id:
+      type: integer
+      generator:
+         strategy: AUTO  
+  fields:
+    name:      { type: string(15) }
+    date:      { type: date }
+    value:     { type: text }
+    
+  lifecycleCallbacks: {  }

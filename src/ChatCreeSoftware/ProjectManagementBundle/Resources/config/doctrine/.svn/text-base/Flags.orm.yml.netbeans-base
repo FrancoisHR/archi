@@ -1,0 +1,15 @@
+ChatCreeSoftware\ProjectManagementBundle\Entity\Flags:
+  type: entity
+  table: Flags
+  fields:
+    id:
+      type: integer
+      id: true
+      generator:
+        strategy: AUTO
+    flagType:   { type: string(2) }
+    flagLabel:  { type: string(64) }
+    flagExtra:  { type: string(64), nullable: true }
+    flagAlt:    { type: string(32), nullable: true }
+    flagImage:  { type: string(256), nullable: true }
+  lifecycleCallbacks: {  }

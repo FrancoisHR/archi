@@ -1,0 +1,25 @@
+ChatCreeSoftware\ProjectManagementBundle\Entity\TimeLog:
+  type: entity
+  table: TimeLog
+  fields:
+    id:
+      type: integer
+      id: true
+      generator:
+        strategy: AUTO
+    date:
+      type: date
+    hours:
+      type: integer
+    minutes:
+      type: integer
+    description:
+      type: text
+  manyToOne:
+    user:
+      targetEntity: ChatCreeSoftware\FileserverBundle\Entity\User
+      inversedBy: timeLogs
+    project:
+      targetEntity: ChatCreeSoftware\FileserverBundle\Entity\Project
+      inversedBy: timeLogs
+  lifecycleCallbacks: {  }

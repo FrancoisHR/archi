@@ -1,0 +1,137 @@
+<?php
+
+namespace ChatCreeSoftware\FileserverBundle\Entity;
+
+use Symfony\Component\Validator\Constraints as Assert;
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * ChatCreeSoftware\FileserverBundle\Entity\Email
+ */
+class Email
+{
+    /**
+     * @ORM\Id
+     * @ORM\Column(type="integer")
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+    private $id;
+
+    /**
+     * @ORM\Column(type="string", length="255")
+     * @Assert\Email(message="Adresse mail invalide")
+     * @Assert\NotBlank( message="Remplissez l'adresse mail")
+     */
+    private $mail;
+
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $primary;
+
+
+    /**
+     * Get id
+     *
+     * @return integer $id
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    public function setId()
+    {
+        
+    }
+    
+    /**
+     * Set mail
+     *
+     * @param string $mail
+     */
+    public function setMail($mail)
+    {
+        $this->mail = $mail;
+    }
+
+    /**
+     * Get mail
+     *
+     * @return string $mail
+     */
+    public function getMail()
+    {
+        return $this->mail;
+    }
+    /**
+     * @var ChatCreeSoftware\FileserverBundle\Entity\User
+     */
+    private $user;
+
+
+    /**
+     * Set user
+     *
+     * @param ChatCreeSoftware\FileserverBundle\Entity\User $user
+     */
+    public function setUser(\ChatCreeSoftware\FileserverBundle\Entity\User $user)
+    {
+        $this->user = $user;
+    }
+
+    /**
+     * Get user
+     *
+     * @return ChatCreeSoftware\FileserverBundle\Entity\User $user
+     */
+    public function getUser()
+    {
+        return $this->user;
+    }
+
+    /**
+     * Set primary
+     *
+     * @param boolean $primary
+     */
+    public function setPrimary($primary)
+    {
+        $this->primary = $primary;
+    }
+
+    /**
+     * Get primary
+     *
+     * @return boolean $primary
+     */
+    public function getPrimary()
+    {
+        return $this->primary;
+    }
+    /**
+     * @var boolean $primaire
+     */
+    private $primaire;
+
+
+    /**
+     * Set primaire
+     *
+     * @param boolean $primaire
+     */
+    public function setPrimaire($primaire)
+    {
+        $this->primaire = $primaire;
+    }
+
+    /**
+     * Get primaire
+     *
+     * @return boolean $primaire
+     */
+    public function getPrimaire()
+    {
+        return $this->primaire;
+    }
+}

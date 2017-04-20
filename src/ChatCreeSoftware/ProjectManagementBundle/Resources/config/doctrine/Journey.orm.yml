@@ -1,0 +1,31 @@
+ChatCreeSoftware\ProjectManagementBundle\Entity\Journey:
+  type: entity
+  table: null
+  fields:
+    id:
+      type: integer
+      id: true
+      generator:
+        strategy: AUTO
+    date:
+      type: date
+    start:
+      type: string
+      length: 255
+    end:
+      type: string
+      length: 255
+    distance:
+      type: float
+    description:
+      type: text
+      nullable: true
+  manyToOne:
+    project:
+      targetEntity: ChatCreeSoftware\CoreBundle\Entity\Project
+      inversedBy: journeys
+    user:
+      targetEntity: ChatCreeSoftware\CoreBundle\Entity\User
+      inversedBy: journeys
+      
+  lifecycleCallbacks: {  }

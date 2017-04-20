@@ -1,0 +1,21 @@
+parameters:
+    database_driver:   pdo_mysql
+    database_host:     localhost
+    database_port:     ~
+    database_name:     null
+    database_user:     null
+    database_password: ~
+
+    mailer_transport:  smtp
+    mailer_host:       null 
+    mailer_user:       ~
+    mailer_password:   ~
+
+    locale:            en
+    secret:            secretkey
+
+    default_target: "projets/liste"
+    web_dir:        "%kernel.root_dir%/../web"
+    lib_dir:        "%kernel.root_dir%/../web/library"
+    projects_dir:    "%kernel.root_dir%/../web/projects"
+    bordereaux_dir:  ".bordereaux"

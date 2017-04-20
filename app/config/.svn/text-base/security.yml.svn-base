@@ -1,0 +1,45 @@
+security:
+    access_decision_manager:
+        strategy: unanimous
+
+    encoders:
+        ChatCreeSoftware\CoreBundle\Entity\User: sha512
+
+    acl:
+        connection: default
+        
+    role_hierarchy:
+        ROLE_PROVIDER: [ROLE_USER]
+        ROLE_EMPLOYEE: [ROLE_PROVIDER]
+        ROLE_ADMIN: [ROLE_EMPLOYEE, ROLE_PROVIDER, ROLE_ADMIN]
+
+    providers:
+        chain_provider:
+            chain:
+                providers: [user_db]
+        user_db:
+            entity: { class: ChatCreeSoftware\CoreBundle\Entity\User, property: login }
+
+    firewalls:
+        fileserver:
+            pattern: 
+            user_checker: ChatCreeSoftware.Core.user_checker
+            anonymous: ~
+            form_login:
+              check_path: /login_check
+              login_path: /login
+              default_target_path: "%default_target%"
+              success_handler: core.security.login_audit
+              failure_handler: core.security.login_audit
+              csrf_token_generator: security.csrf.token_manager
+            logout:
+              path: /logout
+              target: /login
+
+    access_control:
+        - { path: /login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: /reset/.*, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: /document/.*, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: /projets/.*, roles: ['ROLE_USER'] }
+        - { path: /gestion/.*, roles: ['ROLE_EMPLOYEE'] } 
+        - { path: /bordereaux/.*, roles: ['ROLE_PROVIDER'] } 

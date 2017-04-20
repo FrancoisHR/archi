@@ -1,0 +1,211 @@
+{% extends "ProjectManagementBundle::layout.html.twig" %}
+
+{% block navigation %}
+    {{ render(controller("ProjectManagementBundle:Navigation:navigation",{'selected': project.id + 8 })) }}
+{% endblock %}
+
+{% block projectmenu %}
+    {{ render(controller("ProjectManagementBundle:Navigation:projectNavigation",{'selected': 0, 'id': project.id, 'name': project.projectName })) }}
+{% endblock %}
+
+{% block content %}
+    <script>
+        $(document).ready(function () {
+            $("#form_projectStart").datepicker();
+            $("#form_projectEnd").datepicker();
+            $("#form_authDate").datepicker();
+            $("#form_workStart").datepicker();
+        });
+    </script>
+    <div class="row">
+        <div class="col-sm-12">
+            {{ form_start(form,{ 'action': path('_gestion_project',{'id':project.id}), 'attr' : {'novalidate': '','class':'form-horizontal'} }) }}
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        {{form_label(form.projectName,'Nom', { 'label_attr': { 'class':'col-sm-3 control-label' } } ) }}
+                        <div class="col-sm-8">
+                            {{form_widget(form.projectName, { 'attr': {'class': 'form-control'} }) }}
+                            {{form_errors(form.projectName) }}
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        {{form_label(form.projectDesc,'Description', { 'label_attr': { 'class':'col-sm-3 control-label' } } ) }}
+                        <div class="col-sm-8">
+                            {{form_widget(form.projectDesc, { 'attr': {'class': 'form-control'} }) }}
+                            {{form_errors(form.projectDesc) }}
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        {{form_label(form.projectBudget,'Budget', { 'label_attr': { 'class':'col-sm-3 control-label' } } ) }}
+                        <div class="col-sm-8">
+                            <div class="input-group">
+                                {{form_widget(form.projectBudget, { 'attr': {'class': 'form-control', "style":"text-align:right"} }) }}
+                                <span class="input-group-addon">€</span>
+                            </div>
+                            {{form_errors(form.projectBudget) }}
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        {{form_label(form.projectPrice,'Honoraires', { 'label_attr': { 'class':'col-sm-3 control-label' } } ) }}
+                        <div class="col-sm-8">
+                            <div class="input-group">
+                                {{form_widget(form.projectPrice, { 'attr': {'class': 'form-control', "style":"text-align:right"} }) }}
+                                <span class="input-group-addon">€</span>
+                            </div>
+                            {{form_errors(form.projectPrice) }}
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        {{form_label(form.projectStart,'Début', { 'label_attr': { 'class':'col-sm-3 control-label' } } ) }}
+                        <div class="col-sm-8">
+                            <div class="input-group">
+                                {{form_widget(form.projectStart, { 'attr': {'class': 'form-control'} }) }}
+                                <span class="input-group-addon btn"><span class="glyphicon glyphicon-calendar"></span></span>
+                            </div>
+                            {{form_errors(form.projectStart) }}
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        {{form_label(form.projectEnd,'Fin', { 'label_attr': { 'class':'col-sm-3 control-label' } } ) }}
+                        <div class="col-sm-8">
+                            <div class="input-group">
+                                {{form_widget(form.projectEnd, { 'attr': {'class': 'form-control'} }) }}
+                                <span class="input-group-addon btn"><span class="glyphicon glyphicon-calendar"></span></span>
+                            </div>
+                            {{form_errors(form.projectEnd) }}
+                        </div>
+                    </div>        
+                    <div class="form-group">
+                        {{form_label(form.authDate,'Dépôt autorisation', { 'label_attr': { 'class':'col-sm-3 control-label' } } ) }}
+                        <div class="col-sm-8">
+                            <div class="input-group">
+                                {{form_widget(form.authDate, { 'attr': {'class': 'form-control'} }) }}
+                                <span class="input-group-addon btn"><span class="glyphicon glyphicon-calendar"></span></span>
+                            </div>
+                            {{form_errors(form.authDate) }}
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        {{form_label(form.workStart,'Début du chantier', { 'label_attr': { 'class':'col-sm-3 control-label' } } ) }}
+                        <div class="col-sm-8">
+                            <div class="input-group">
+                                {{form_widget(form.workStart, { 'attr': {'class': 'form-control'} }) }}
+                                <span class="input-group-addon btn"><span class="glyphicon glyphicon-calendar"></span></span>
+                            </div>
+                            {{form_errors(form.workStart) }}
+                        </div>
+                    </div>        
+                    <div class="form-group">
+                        {{form_label(form.projectType,'Type de Projet', { 'label_attr': { 'class':'col-sm-3 control-label' } } ) }}
+                        <div class="col-sm-8">
+                            {{form_widget(form.projectType, { 'attr': {'class': 'form-control'} }) }}
+                            {{form_errors(form.projectType) }}
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        {{form_label(form.projectStatus,'Etat du Projet', { 'label_attr': { 'class':'col-sm-3 control-label' } } ) }}
+                        <div class="col-sm-8">
+                            {{form_widget(form.projectStatus, { 'attr': {'class': 'form-control'} }) }}
+                            {{form_errors(form.projectStatus) }}
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        {{form_label(form.projectContract,'Contrat', { 'label_attr': { 'class':'col-sm-3 control-label' } } ) }}
+                        <div class="col-sm-8">
+                            {{form_widget(form.projectContract, { 'attr': {'class': 'form-control'} }) }}
+                            {{form_errors(form.projectContract) }}
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">Addresse du chantier</h3>
+                        </div>
+                        <div class="panel-body">
+                            <div class="form-group">
+                                {{form_label(form.addressStreet1,'Adresse', { 'label_attr': { 'class':'col-sm-3 control-label' } } ) }}
+                                <div class="col-sm-8">
+                                    {{form_widget(form.addressStreet1, { 'attr': {'class': 'form-control'} }) }}
+                                    {{form_errors(form.addressStreet1) }}
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                {{form_label(form.addressStreet2,' ', { 'label_attr': { 'class':'col-sm-3 control-label' } } ) }}
+                                <div class="col-sm-offset-3 col-sm-8">
+                                    {{form_widget(form.addressStreet2, { 'attr': {'class': 'form-control'} }) }}
+                                    {{form_errors(form.addressStreet2) }}
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                {{form_label(form.addressCP,'Code Postal', { 'label_attr': { 'class':'col-sm-3 control-label' } } ) }}
+                                <div class="col-sm-8">
+                                    {{form_widget(form.addressCP, { 'attr': {'class': 'form-control'} }) }}
+                                    {{form_errors(form.addressCP) }}
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                {{form_label(form.addressCity,'Ville', { 'label_attr': { 'class':'col-sm-3 control-label' } } ) }}
+                                <div class="col-sm-8">
+                                    {{form_widget(form.addressCity, { 'attr': {'class': 'form-control'} }) }}
+                                    {{form_errors(form.addressCity) }}
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                {{form_label(form.addressCountry,'Pays', { 'label_attr': { 'class':'col-sm-3 control-label' } } ) }}
+                                <div class="col-sm-8">
+                                    {{form_widget(form.addressCountry, { 'attr': {'class': 'form-control'} }) }}
+                                    {{form_errors(form.addressCountry) }}
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                {{form_label(form.cadastre,'Cadastre', { 'label_attr': { 'class':'col-sm-3 control-label' } } ) }}
+                                <div class="col-sm-8">
+                                    {{form_widget(form.cadastre, { 'attr': {'class': 'form-control'} }) }}
+                                    {{form_errors(form.cadastre) }}
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                {{form_label(form.section,'Section', { 'label_attr': { 'class':'col-sm-3 control-label' } } ) }}
+                                <div class="col-sm-8">
+                                    {{form_widget(form.section, { 'attr': {'class': 'form-control'} }) }}
+                                    {{form_errors(form.section) }}
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                {{form_label(form.commune,'Commune', { 'label_attr': { 'class':'col-sm-3 control-label' } } ) }}
+                                <div class="col-sm-8">
+                                    {{form_widget(form.commune, { 'attr': {'class': 'form-control'} }) }}
+                                    {{form_errors(form.commune) }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="form-group">
+                        {{form_label(form.projectNote,'Notes', { 'label_attr': { 'class':'col-sm-1 control-label' } } ) }}
+                        <div class="col-sm-10">
+                            {{form_widget(form.projectNote, { 'attr': {'class': 'cold-md-8 form-control'} }) }}
+                            {{form_errors(form.projectNote) }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="form-group">
+                        <div class="col-sm-offset-1 col-sm-2">
+                            <button type="submit" class="btn btn-primary">Enregistrer</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {{ form_rest(form) }}
+            {{ form_end(form) }}
+        </div>
+    </div>
+{% endblock %}

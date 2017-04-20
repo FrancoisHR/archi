@@ -1,0 +1,55 @@
+<?php
+
+namespace ChatCreeSoftware\BordereauxBundle\Repository;
+
+use ChatCreeSoftware\BordereauxBundle\Entity\Bordereau;
+use ChatCreeSoftware\BordereauxBundle\Entity\Ligne;
+use Doctrine\ORM\EntityRepository;
+
+class LigneRepository extends EntityRepository {
+    
+    public function deepcopy( $web_dir, $bordereaux_dir, Bordereau $newBordereau, Ligne $newLigne, Bordereau $bordereau, Ligne $ligne) {
+        $em = $this->getEntityManager();
+      
+        $newLigne->setNumero($ligne->getNumero());
+        $newLigne->setTitre($ligne->getTitre());
+        $newLigne->setDescription($ligne->getDescription());
+        $newLigne->setQuantite($ligne->getQuantite());
+        $newLigne->setUnite($ligne->getUnite());
+        $newLigne->setPhoto($ligne->getPhoto());
+        $newLigne->setLegende($ligne->getLegende());
+        $newLigne->setOptionel($ligne->getOptionel());
+
+        $newLigne->setPrestation($ligne->getPrestation());
+
+        if( $ligne->getPhoto() ){
+            $sourceFile = "$web_dir/" . $bordereau->getProject()->getProjectPath() . "/$bordereaux_dir/" . $bordereau->getId() . "/" . $ligne->getPhoto();
+            $destinationPath = "$web_dir/" . $newBordereau->getProject()->getProjectPath() . "/$bordereaux_dir/" . $newBordereau->getId();
+            $destinationFile = $destinationPath . "/" . $ligne->getPhoto();
+            if( !file_exists($destinationPath)){
+                mkdir($destinationPath, 0705, true);
+            }
+            copy( $sourceFile, $destinationFile);
+        }
+
+        foreach ($ligne->getParametres() as $parametre) {
+            $newLigne->addParametre($parametre);
+        }
+
+        foreach ($ligne->getFilles() as $fLigne) {
+            $nfLigne = new Ligne();
+            $em->persist($nfLigne);
+            $nfLigne->setSimpleParente($newLigne);
+
+            $this->deepcopy($web_dir, $bordereaux_dir, $newBordereau, $nfLigne, $bordereau, $fLigne);
+        }
+        foreach( $ligne->getAlternatives() as $alternative ) {
+            $naLigne = new Ligne();
+            $em->persist( $naLigne );
+            $naLigne->setAlternativede( $newLigne );
+            $this->deepcopy($web_dir, $bordereaux_dir, $newBordereau, $naLigne, $bordereau, $alternative);
+        }
+
+    }
+
+}

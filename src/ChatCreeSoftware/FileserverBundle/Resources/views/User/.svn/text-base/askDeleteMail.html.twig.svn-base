@@ -1,0 +1,16 @@
+{% extends "CoreBundle::coreLayout.html.twig" %}
+
+{% set menu_selected = '7' %}
+
+{% block content %}
+<div class="formcontainer">
+<ul>
+    <li><a href="{{ path('_project_list') }}">Liste des projets</a></li>
+</ul>
+    <h2>Suppression de l'adresse mail <i>{{mail.mail}}</i> du user <i>{{user}}</i> ?</h2>
+
+    <a href="{{ path('_admin_user_mail_delete_result',{'login':user, 'mail':mail.id } ) }}"><input type="button" name="OK" value="OK" /></a>
+    <a href="{{ path('_admin_user_edit',{'login':user} ) }}"><input type="button" name="cancel" value="Cancel" /></a>
+
+</div>
+{% endblock %}

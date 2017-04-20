@@ -1,0 +1,17 @@
+ChatCreeSoftware\ProjectManagementBundle\Entity\InvoicingData:
+  type: entity
+  table: InvoicingData
+  id:
+    id:
+      type: integer
+      generator:
+         strategy: AUTO  
+  fields:
+    numberingType:      { type: integer, nullable: true }
+    numberingFormat:   { type: string(50), nullable: true }
+    footerFormat:      { type: string(255), nullable: true }
+    invoiceLogo:       { type: string(255), nullable: true }
+    conditions:        { type: text, nullable: true }
+    specialConditions: { type: text, nullable: true }
+    reminderText:      { type: text, nullable: true }
+  lifecycleCallbacks: {  }

@@ -1,0 +1,65 @@
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/repo/!svn/ver/20/ProjectManager/src/ChatCreeSoftware/ProjectManagementBundle/Resources/config/doctrine
+END
+InvoiceNumbering.orm.yml
+K 25
+svn:wc:ra_dav:version-url
+V 128
+/repo/!svn/ver/37/ProjectManager/src/ChatCreeSoftware/ProjectManagementBundle/Resources/config/doctrine/InvoiceNumbering.orm.yml
+END
+Invoicing.orm.yml
+K 25
+svn:wc:ra_dav:version-url
+V 121
+/repo/!svn/ver/14/ProjectManager/src/ChatCreeSoftware/ProjectManagementBundle/Resources/config/doctrine/Invoicing.orm.yml
+END
+Address.orm.yml
+K 25
+svn:wc:ra_dav:version-url
+V 119
+/repo/!svn/ver/14/ProjectManager/src/ChatCreeSoftware/ProjectManagementBundle/Resources/config/doctrine/Address.orm.yml
+END
+BankAccount.orm.yml
+K 25
+svn:wc:ra_dav:version-url
+V 123
+/repo/!svn/ver/14/ProjectManager/src/ChatCreeSoftware/ProjectManagementBundle/Resources/config/doctrine/BankAccount.orm.yml
+END
+InvoiceItem.orm.yml
+K 25
+svn:wc:ra_dav:version-url
+V 123
+/repo/!svn/ver/14/ProjectManager/src/ChatCreeSoftware/ProjectManagementBundle/Resources/config/doctrine/InvoiceItem.orm.yml
+END
+Journey.orm.yml
+K 25
+svn:wc:ra_dav:version-url
+V 119
+/repo/!svn/ver/14/ProjectManager/src/ChatCreeSoftware/ProjectManagementBundle/Resources/config/doctrine/Journey.orm.yml
+END
+Invoice.orm.yml
+K 25
+svn:wc:ra_dav:version-url
+V 119
+/repo/!svn/ver/14/ProjectManager/src/ChatCreeSoftware/ProjectManagementBundle/Resources/config/doctrine/Invoice.orm.yml
+END
+InvoicingData.orm.yml
+K 25
+svn:wc:ra_dav:version-url
+V 125
+/repo/!svn/ver/14/ProjectManager/src/ChatCreeSoftware/ProjectManagementBundle/Resources/config/doctrine/InvoicingData.orm.yml
+END
+TimeLog.orm.yml
+K 25
+svn:wc:ra_dav:version-url
+V 119
+/repo/!svn/ver/14/ProjectManager/src/ChatCreeSoftware/ProjectManagementBundle/Resources/config/doctrine/TimeLog.orm.yml
+END
+Task.orm.yml
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/repo/!svn/ver/14/ProjectManager/src/ChatCreeSoftware/ProjectManagementBundle/Resources/config/doctrine/Task.orm.yml
+END

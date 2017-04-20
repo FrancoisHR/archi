@@ -1,0 +1,34 @@
+ChatCreeSoftware\ProjectManagementBundle\Entity\Invoice:
+  type: entity
+  table: Invoice
+  id:
+    id:
+      type: integer
+      generator:
+         strategy: AUTO  
+  fields:
+    number:                  { type: string(15) }
+    state:                   { type: string(1) }
+    date:                    { type: date }
+    reminder:                { type: date, nullable: true }
+    paid:                    { type: date, nullable: true }    
+    footer:                  { type: text }
+    termsConditions:         { type: text, nullable: true }
+    specialTermsConditions:  { type: text, nullable: true }
+    invoiceRebate:           { type: float, nullable: true }
+    invoiceRebateText:       { type: text, nullable: true }
+    vatExemption:            { type: boolean }
+    vatExemptionText:        { type: text, nullable: true }
+  manyToOne:
+    project:
+      targetEntity: ChatCreeSoftware\CoreBundle\Entity\Project
+      inversedBy: invoices
+    address:
+      targetEntity: ChatCreeSoftware\ProjectManagementBundle\Entity\Address
+      inversedBy: invoices
+  oneToMany:
+    items:
+      targetEntity: InvoiceItem
+      mappedBy: invoice
+      cascade: ["persist", "remove"]
+  lifecycleCallbacks: {  }

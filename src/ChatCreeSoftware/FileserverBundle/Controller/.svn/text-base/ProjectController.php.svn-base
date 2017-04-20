@@ -1,0 +1,449 @@
+<?php
+
+namespace ChatCreeSoftware\FileserverBundle\Controller;
+
+use ChatCreeSoftware\CoreBundle\Entity\LogBook;
+use ChatCreeSoftware\CoreBundle\Entity\Project;
+use ChatCreeSoftware\FileserverBundle\Entity\FileLink;
+use ChatCreeSoftware\FileserverBundle\Forms\Aces,
+    ChatCreeSoftware\FileserverBundle\Forms\AceStorage,
+    ChatCreeSoftware\FileserverBundle\Forms\AceType,
+    ChatCreeSoftware\FileserverBundle\Forms\FileUploadCollection,
+    ChatCreeSoftware\FileserverBundle\Forms\FolderType,
+    ChatCreeSoftware\FileserverBundle\Forms\ProjectAceType;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route,
+    Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller,
+    Symfony\Component\Finder\Finder,
+    Symfony\Component\HttpFoundation\BinaryFileResponse,
+    Symfony\Component\HttpFoundation\File\Exception\FileException,
+    Symfony\Component\HttpFoundation\Request,
+    Symfony\Component\HttpFoundation\Response,
+    Symfony\Component\HttpFoundation\ResponseHeaderBag,
+    Symfony\Component\Security\Acl\Domain\ObjectIdentity,
+    Symfony\Component\Security\Acl\Domain\UserSecurityIdentity,
+    Symfony\Component\Security\Core\User\UserInterface;
+
+class ProjectController extends Controller {
+
+    /**
+     * @Route("/downloads/{name}/{file}", name="_download" )
+     * @Route("/downloads/{name}/{foldername}/{file}", name="_download_folder" )
+     */
+    public function download(Request $request, $name, $foldername = null, $file) {
+        $ip = $request->getClientIp();
+        $em = $this->get('doctrine')->getManager();
+
+        $user = $this->getUser();
+        if ($user === null) {
+            $userRepo = $em->getRepository('CoreBundle:User');
+            $user = $userRepo->findOneByLogin('anonymous');
+        }
+
+        // Get Project object
+        $repo = $em->getRepository('CoreBundle:Project');
+        $project = $repo->findOneByProjectPath("projects/" . $name);
+
+        // Find share document Flag
+        $flagRepo = $em->getRepository('CoreBundle:Flags');
+        $flag = $flagRepo->findOneByFlagExtra( "DOCREAD" );
+
+        $folderpath = "";
+        if ($foldername) {
+            $folderpath = $foldername . "/";
+        }
+
+        $log = new LogBook($project, $flag, $user, true);
+        $log->setIp($ip);
+        $texte = "Accès au fichier " . $folderpath . $file;
+        $log->setTexte($texte);
+
+        $em->persist($log);
+        $em->flush();
+
+        $directory = $this->getParameter('web_dir');
+        $filepath = "$directory/" . $project->getProjectPath() . "/" . $folderpath . $file;
+        $response = new BinaryFileResponse($filepath);
+        $response->setContentDisposition(ResponseHeaderBag::DISPOSITION_INLINE);
+        $response->headers->set('Cache-Control', 'no-store');
+        $response->headers->set('Content-type', mime_content_type($filepath));
+
+        return $response;
+    }
+
+    /**
+     * @Route("/document/{token}", name="_document" )
+     */
+    public function document(Request $request, FileLink $filelink) {
+        $ip = $request->getClientIp();
+
+        // Get FileLink object
+        $em = $this->get('doctrine')->getManager();
+
+        // Find share document Flag
+        $flagRepo = $em->getRepository('CoreBundle:Flags');
+        $flag = $flagRepo->findOneByFlagExtra( "DOCREAD" );
+
+        $log = new LogBook($filelink->getProject(), $flag, $filelink->getUser(), true);
+        $log->setIp($ip);
+        $log->setTexte( "Accès au fichier " . $filelink->getFile() );
+
+        $em->persist($log);
+        $em->flush();
+
+        $directory = $this->getParameter('web_dir');;
+        $file = "$directory/" . $filelink->getProject()->getProjectPath() . $filelink->getFile();
+        $response = new BinaryFileResponse($file);
+        $response->setContentDisposition(ResponseHeaderBag::DISPOSITION_ATTACHMENT);
+        $response->headers->set('Cache-Control', 'no-store');
+        $response->headers->set('Content-type', mime_content_type($file));
+
+        return $response;
+    }
+
+    /**
+     * @Route("/projets/uploaded/{id}/{foldername}", name="_upload_success" )
+     * @Template
+     */
+    public function uploadSuccessAction(Project $project, $foldername = null) {
+        $em = $this->get('doctrine')->getManager();
+        
+        $projectUsers = $this->get("ChatCreeSoftware.Core.fileNotification")->calculateProjectUsers( $project );
+        $logonUser = $this->getUser();
+
+        // Manage foldername
+        $projectRoot = true;
+        if (isset($foldername)) {
+            $foldername = '/' . $foldername;
+            $projectRoot = false;
+        } else {
+            $foldername = '';
+        }
+
+        return array(
+            'project' => $project,
+            'projectRoot' => $projectRoot,
+            'foldername' => $foldername,
+            'users' => $projectUsers,
+            'logonUser' => $logonUser
+        );
+    }
+
+    /**
+     * @Route("/projets/projet/{id}", name="_project")
+     * @Route("/projets/projet/{id}/{foldername}", name="_project_folder" )
+     * @Template
+     */
+    public function projectAction(Request $request, UserInterface $user, Project $project, $foldername = null) {
+        $projectRoot = true;
+
+        // Create directory
+        if (!file_exists($project->getProjectPath())) {
+            mkdir($project->getProjectPath());
+        }
+
+        // Manage foldername
+        if (isset($foldername)) {
+            $folderpath = '/' . $foldername;
+
+            if (!file_exists($project->getProjectPath() . $folderpath)) {
+                mkdir($project->getProjectPath() . $folderpath);
+            }
+
+            $projectRoot = false;
+        } else {
+            $folderpath = '';
+        }
+
+        // Find current folders in the project
+        if ($projectRoot) {
+            $folderIterator = $project->getFolders();
+        } else {
+            $folderIterator = null;
+        }
+
+        // Find current files in the project
+        $fileIterator = $project->getFiles($folderpath);
+
+        $files = new FileUploadCollection();
+        $files->setFiles(array(null));
+
+        // Build File Upload Form        
+        $uploadForm = $this->get('form.factory')
+                ->createBuilder('Symfony\Component\Form\Extension\Core\Type\FormType', $files)
+                ->add('comment', 'Symfony\Component\Form\Extension\Core\Type\TextareaType', array(
+                    'attr' => array('rows' => 4, 'cols' => 60)
+                ))
+                ->add('attachment', 'Symfony\Component\Form\Extension\Core\Type\CheckboxType')
+                ->add('files', 'Symfony\Component\Form\Extension\Core\Type\FileType', array(
+                    'multiple' => true,
+                    'data_class' => null,
+                ))
+                ->getForm();
+
+        // Get the last login date for the user      
+        $loginDates = $user->getLastLogin();
+
+        // Create folder form
+        $folderType = new FolderType();
+        $folderForm = $this->get('form.factory')
+                ->createBuilder('Symfony\Component\Form\Extension\Core\Type\FormType', $folderType)
+                ->add('folderName', 'Symfony\Component\Form\Extension\Core\Type\TextType')
+                ->getForm();
+
+        if ($request->getMethod() == 'POST') {
+            if ($request->get('button') === 'UPLOAD') {
+                $uploadForm->handleRequest($request);
+                if ($uploadForm->isSubmitted() && $uploadForm->isValid()) {
+                    $filesUploaded = 0;
+                    $directory = $this->getParameter('web_dir');
+                    $attachments = [];
+                    $fichiers = [];
+                    $prefixes = ['', 'K', 'M', 'G'];
+
+                    foreach( $files->getFiles() as $file ) {
+                        if( $file ) {
+                            $fichiers[] = $file->getClientOriginalName();
+                            $size = $file->getSize();
+                            $filesize = $size;
+                            $magnitude = 0;
+                            while ($filesize > 1024) {
+                                $magnitude++;
+                                $filesize /= 1024;
+                            }
+
+                            try {
+                                $file->move( "$directory/" . $project->getProjectPath() . $folderpath, $file->getClientOriginalName());
+                            } catch (FileException $e) {
+                                $this->addFlash("error", $e->getMessage());
+                            }
+                            $filesUploaded++;
+                            $this->addFlash('notice', $file->getClientOriginalName() . '|' . round($filesize, 2) . " " . $prefixes[$magnitude] . 'o');
+                            if ($files->getAttachment()) {
+                                $attachments[] = "$directory/" . $project->getProjectPath() . $folderpath . '/' . $file->getClientOriginalName();
+                            }
+                        }
+                    }
+
+                    if ($filesUploaded) {
+                        $this->get("ChatCreeSoftware.Core.fileNotification")->mailFileNotifications( $user, $project, $folderpath, $files, $attachments );
+                    } else {
+                        $this->addFlash("error", "Aucun fichier sélectionné");
+                    }
+                    return $this->redirect($this->generateUrl('_upload_success', array('id' => $project->getid(), 'foldername' => $foldername)));
+                }
+            } elseif ($request->get('button') === 'CREATE_FOLDER') {
+                $folderForm->handleRequest($request);
+
+                if ($folderForm->isSubmitted() && $folderForm->isValid()) {
+
+                    $directory = $this->getParameter('web_dir');
+                    $project->createFolder($directory, $folderpath, $folderType->getFolderName());
+                    
+                    $folderIterator = $project->getFolders();
+                }
+            }
+        }
+
+        return array('project' => $project,
+            'loginDates' => $loginDates,
+            'folders' => $folderIterator,
+            'foldername' => $foldername,
+            'files' => $fileIterator,
+            'projectRoot' => $projectRoot,
+            'folderForm' => $folderForm->createView(),
+            'uploadForm' => $uploadForm->createView(),
+        );
+    }
+
+    /**
+     * @Route("/projets/confirmer_suppression_projet/{id}", name="_project_delete")
+     * @Template
+     */
+    public function confirmDeleteProjectAction( Project $project) {
+        // Find current folders in the project
+        $folderFinder = new Finder();
+        $folderIterator = $folderFinder->directories()
+                ->depth('< 1')
+                ->in($project->getProjectPath());
+
+        // Find current files in the project
+        $fileFinder = new Finder();
+        $fileIterator = $fileFinder->files()
+                ->notName('.*')
+                ->depth('< 1')
+                ->in($project->getProjectPath());
+
+        return array('project' => $project,
+            'folders' => $folderIterator,
+            'files' => $fileIterator,);
+    }
+
+    protected function rrmdir($dir) {
+        if (is_dir($dir)) {
+            $objects = scandir($dir);
+            foreach ($objects as $object) {
+                if ($object != "." && $object != "..") {
+                    if (filetype($dir . "/" . $object) == "dir") {
+                        $this->rrmdir($dir . "/" . $object);
+                    } else {
+                        unlink($dir . "/" . $object);
+                    }
+                }
+            }
+            reset($objects);
+            rmdir($dir);
+        }
+    }
+
+    /**
+     * @Route("/projets/suppression_projet/{id}", name="_project_perform_delete")
+     * @Template
+     */
+    public function deleteProjectAction( Project $project ) {
+        $em = $this->get('doctrine')->getManager();
+
+        // Delete Project ACLs
+        // get the project acl
+        $aclProvider = $this->get('security.acl.provider');
+        $objectIdentity = ObjectIdentity::fromDomainObject($project);
+        $aclProvider->deleteAcl($objectIdentity);
+
+        // Delete Project Entry in DB
+        $em->remove($project);
+        $em->flush();
+
+        // Check if projectPath is set
+        if ($project->getProjectPath()) {
+            $rootDir = $this->getParameter('web_dir');
+            $directory = "$rootDir/" . $project->getProjectPath();
+
+            $this->rrmdir($directory);
+        }
+
+        return( array('project' => $project));
+    }
+
+    /**
+     * @Route("/projets/edition_droits/{id}", name="_project_edit_acls")
+     * @Template
+     */
+    public function editProjectAclsAction(Request $request, Project $project) {
+        // Get users' repository
+        $em = $this->get('doctrine')->getManager();
+        $repository = $em->getRepository('ChatCreeSoftware\CoreBundle\Entity\User');
+        $query = $em->createQuery('SELECT COUNT(u) FROM ChatCreeSoftware\CoreBundle\Entity\User u');
+        $user_count = $query->getResult();
+        $user_count = $user_count[0][1];
+
+        // get the acl
+        $aclProvider = $this->get('security.acl.provider');
+        $objectIdentity = ObjectIdentity::fromDomainObject($project);
+        $acl = $aclProvider->findAcl($objectIdentity);
+
+        $aces = new Aces();
+        $excludedUsers = null;
+        $remainingUsers = $user_count;
+        // Build Ace array
+        foreach ($acl->getObjectAces() as $aceEntry) {
+            $aceStorage = new AceStorage();
+            $login = $aceEntry->getSecurityIdentity()->getUsername();
+            $user = $repository->findOneBy(array('login' => $login));
+            $aceStorage->setUser($user);
+            $aceStorage->setAce($aceEntry->getMask());
+
+            if (isset($excludedUsers)) {
+                $excludedUsers .= ',\'' . $login . '\'';
+            } else {
+                $excludedUsers .= '\'' . $login . '\'';
+            }
+            $remainingUsers--;
+            $aces->aces[] = $aceStorage;
+        }
+
+        // Create form for aces array and edition of current Aces
+        $acesForm = $this->get('form.factory')->createBuilder(ProjectAceType::class, $aces)->getForm();
+
+        // Create form to add new Ace
+        $ace = new AceStorage();
+        $form = $this->get('form.factory')->createBuilder(AceType::class, $ace)->getForm();
+
+        if ($request->getMethod() == 'POST') {
+
+            if ($request->get('button') === 'EDIT') {
+                $acesForm->handleRequest($request);
+
+                if ($acesForm->isSubmitted() && $acesForm->isValid()) {
+
+                    $index = 0;
+                    foreach ($aces->getAces() as $aceStorageEntry) {
+                        if ($aceStorageEntry->getSelect()) {
+                            $acl->updateObjectAce($index, $aceStorageEntry->getAce());
+                            $aclProvider->updateAcl($acl);
+                        }
+                        $index++;
+                    }
+                }
+                return $this->redirect($this->generateUrl('_project_edit_acls', array('id' => $project->getId())));
+            } elseif ($request->get('button') === 'DELETE') {
+                $acesForm->handleRequest($request);
+
+                if ($acesForm->isSubmitted() && $acesForm->isValid()) {
+
+                    $index = 0;
+                    foreach ($aces->getAces() as $aceStorageEntry) {
+                        if ($aceStorageEntry->getSelect()) {
+                            $acl->deleteObjectAce($index);
+                            $aclProvider->updateAcl($acl);
+                        }
+                        $index++;
+                    }
+
+                    return $this->redirect($this->generateUrl('_project_edit_acls', array('id' => $project->getId())));
+                }
+            } elseif ($request->get('button') === 'ADD') {
+                $form->handleRequest($request);
+
+                if ($form->isSubmitted() && $form->isValid()) {
+                    $securityIdentity = UserSecurityIdentity::fromAccount($ace->getUser());
+                    $acl->insertObjectAce($securityIdentity, (int) $ace->getAce());
+                    $aclProvider->updateAcl($acl);
+
+                    return $this->redirect($this->generateUrl('_project_edit_acls', array('id' => $project->getId())));
+                }
+            }
+        }
+
+        // return array( 'project' => $project, 'users' => $user );
+        return array('project' => $project,
+            'acesForm' => $acesForm->createView(),
+            'aceMap' => AceStorage::$ace_map,
+            'form' => $form->createView(),
+            'remainingUsers' => $remainingUsers);
+    }
+
+    /**
+     * @Route("/projets/ajax/progression_upload", name="_upload_progress")
+     */
+    public function uploadProgressAction() {
+        $key = ini_get("session.upload_progress.prefix") . "myForm";
+
+        $progress = 100;
+        if (!empty($_SESSION[$key])) {
+            $current = $_SESSION[$key]["bytes_processed"];
+            $total = $_SESSION[$key]["content_length"];
+            $progress = $current < $total ? ceil($current / $total * 100) : 100;
+        }
+
+        $ajaxResult = array(
+            'progress' => $progress
+        );
+
+        $return = json_encode($ajaxResult);
+
+        return new Response($return, 200);
+    }
+
+}
+
+?>

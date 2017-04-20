@@ -1,0 +1,41 @@
+K 25
+svn:wc:ra_dav:version-url
+V 36
+/repo/!svn/ver/32/ProjectManager/bin
+END
+console
+K 25
+svn:wc:ra_dav:version-url
+V 44
+/repo/!svn/ver/32/ProjectManager/bin/console
+END
+doctrine
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/repo/!svn/ver/18/ProjectManager/bin/doctrine
+END
+doctrine-dbal
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/repo/!svn/ver/18/ProjectManager/bin/doctrine-dbal
+END
+symfony_requirements
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/repo/!svn/ver/32/ProjectManager/bin/symfony_requirements
+END
+security-checker
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/repo/!svn/ver/18/ProjectManager/bin/security-checker
+END
+doctrine.php
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/repo/!svn/ver/18/ProjectManager/bin/doctrine.php
+END

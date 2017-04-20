@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<container xmlns="http://symfony.com/schema/dic/services"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+    <services>
+        <service id="security.access.enabled_voter"
+            class="ChatCreeSoftware\CoreBundle\Security\Authorization\Voter\EnabledVoter"
+            public="false">
+            <tag name="security.voter"/>
+        </service>
+        
+        <service id="login_audit" class="ChatCreeSoftware\CoreBundle\Security\Authorization\LoginAudit" public="false">
+            <argument type="service" id="router"></argument>
+            <argument type="service" id="doctrine.orm.entity_manager"></argument>
+            <argument type="service" id="templating"></argument>
+        </service>
+    </services>
+</container>
+	  
+  
+  

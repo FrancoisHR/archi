@@ -1,0 +1,43 @@
+<div class="row">
+    <div class=" col-sm-12">
+    <div class="panel panel-default">
+        <ul class="nav nav-pills nav-stacked nav-condensed">
+            <li {% if selected == 0 %}class="active"{% endif %}><a href='{{path('_gestion_main')}}'>Accueil</a></li>
+            <li {% if selected == 1 %}class="active"{% endif %}><a href='{{path('_gestion_quotes')}}'>Devis</a></li>
+            <li {% if selected == 2 %}class="active"{% endif %}><a href='{{path('_gestion_factures')}}'>Factures</a></li>
+            <li {% if selected == 3 %}class="active"{% endif %}><a href='{{path('_gestion_suivi')}}'>Heures</a></li>
+            <li {% if selected == 4 %}class="active"{% endif %}><a href='{{path('_gestion_trajets')}}'>Kms</a></li>
+            <li><a href="{{ path('_project_list') }}">Partage Fichiers</a></li>
+            <li {% if selected == 5 %}class="active"{% endif %}><a href='{{path('_gestion_reports')}}'>Rapports</a></li>
+            <li role="presentation"><a href="#" data-toggle="collapse" data-target="#drilldown-1">Configuration<span class="glyphicon glyphicon-chevron-right pull-right"></span></a>
+                <div style="padding-left:10px;">
+                    <ul id="drilldown-1" class="nav nav-pills nav-stacked {% if selected < '6' or selected > 7%}collapse{% endif %}" >
+                        <li {% if selected == 6 %}class="active"{% endif %}><a href='{{ path( "_configuration_invoicing" ) }}'>Facturation</a></li>
+                        <li {% if selected == 7 %}class="active"{% endif %}><a href='{{ path( "_configuration_addressType" ) }}'>Types Adresses</a></li>
+                    </ul>
+                </div>
+            </li>
+        </ul>
+    </div>
+</div>
+</div>
+<div class="row">
+    <div class="panel panel-default" col-sm-12">
+    <div class="nav-scroll">
+        <ul class="list-unstyled">
+        {% for project in projects %}
+            {% if project.projectStatus is defined and project.projectStatus.flagExtra is defined %}
+                {% if project.projectStatus.flagExtra =="PT" %}
+                    {% set style='background-image: -webkit-linear-gradient(bottom,' ~ project.projectType.flagExtra ~ ');' %}
+                {% else %}
+                    {% set style='background-image: -webkit-linear-gradient(bottom,' ~ project.projectStatus.flagExtra ~ ');' %}
+                {% endif %}
+            {% else %}
+                {% set style='' %}
+            {% endif %}
+            <li class="project{% if selected == project.id + 8%} selected"{%else%}" style="{{style}}"{% endif %}><a href='{{path('_gestion_project',{'id':project.id})}}'>{{project.projectName}}</a></li>
+        {% endfor %}
+        </ul>
+    </div>
+</div>
+</div>

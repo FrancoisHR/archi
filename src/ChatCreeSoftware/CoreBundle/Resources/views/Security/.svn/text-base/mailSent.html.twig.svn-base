@@ -1,0 +1,15 @@
+{% extends "CoreBundle::layout.html.twig" %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-sm-4 col-sm-offset-4">
+        <h3>Mot de passe oublié</h3>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-4 col-sm-offset-4">
+        <p class="text-justify">Les instructions pour changer votre mot de passe ont été envoyées à l'adresse {{mail}}.</p>
+        <p class="text-justify">Pour des raisons de sécurité ces instructions ne sont valables que pendant une demi-heure. Si vous ne voyez notre mail dans votre boîte de réception, pensez à vérfier dans vos mails indésirables.</p>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,17 @@
+ChatCreeSoftware\BordereauxBundle\Entity\Parametre:
+  type: entity
+  table: BordereauxParametre
+  id:
+    id:
+      type: integer
+      generator:
+         strategy: AUTO  
+  fields:
+    ordre:      { type: integer }
+    numero:     { type: string(2) }
+    titre:      { type: string(120) }
+  manyToOne:
+    prestation:
+      targetEntity: Prestation
+      inversedBy: parametres    
+  lifecycleCallbacks: {  }

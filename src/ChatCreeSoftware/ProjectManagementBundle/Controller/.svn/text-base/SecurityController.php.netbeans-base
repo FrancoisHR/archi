@@ -1,0 +1,48 @@
+<?php
+
+namespace ChatCreeSoftware\ProjectManagementBundle\Controller;
+
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\Security\Core\Security;
+
+class SecurityController extends Controller
+{
+    /**
+     * @Route("/gestion/login", name="_glogin")
+     * @Template
+     */
+    public function loginAction()
+    {
+        // get the error if any (works with forward and redirect -- see below)
+        if ($this->get('request')->attributes->has(Security::AUTHENTICATION_ERROR)) {
+            $error = $this->get('request')->attributes->get(Security::AUTHENTICATION_ERROR);
+        } else {
+            $error = $this->get('request')->getSession()->get(Security::AUTHENTICATION_ERROR);
+        }
+ 
+        return array(
+            'last_username' => $this->get('request')->getSession()->get(Security::LAST_USERNAME),
+            'error'         => $error,
+        );       
+    }
+    
+    /**
+     * @Route( "/gestion/login_check", name="_gestion_security_check" )
+     */
+    public function loginCheckAction()
+    {
+        
+    }
+    
+    /**
+     * @Route( "/gestion/logout", name="_gestion_logout" )
+     */
+    public function logoutAction()
+    {
+        
+    }
+    
+}
+?>

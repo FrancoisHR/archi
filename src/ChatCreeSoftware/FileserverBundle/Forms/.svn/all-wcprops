@@ -1,0 +1,59 @@
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/repo/!svn/ver/33/ProjectManager/src/ChatCreeSoftware/FileserverBundle/Forms
+END
+EmailType.php
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/repo/!svn/ver/33/ProjectManager/src/ChatCreeSoftware/FileserverBundle/Forms/EmailType.php
+END
+AceType.php
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/repo/!svn/ver/37/ProjectManager/src/ChatCreeSoftware/FileserverBundle/Forms/AceType.php
+END
+Aces.php
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/repo/!svn/ver/2/ProjectManager/src/ChatCreeSoftware/FileserverBundle/Forms/Aces.php
+END
+AceStorage.php
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/repo/!svn/ver/37/ProjectManager/src/ChatCreeSoftware/FileserverBundle/Forms/AceStorage.php
+END
+FolderType.php
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/repo/!svn/ver/14/ProjectManager/src/ChatCreeSoftware/FileserverBundle/Forms/FolderType.php
+END
+FileUploadCollection.php
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/repo/!svn/ver/14/ProjectManager/src/ChatCreeSoftware/FileserverBundle/Forms/FileUploadCollection.php
+END
+FileType.php
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/repo/!svn/ver/14/ProjectManager/src/ChatCreeSoftware/FileserverBundle/Forms/FileType.php
+END
+ProjectAceType.php
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/repo/!svn/ver/37/ProjectManager/src/ChatCreeSoftware/FileserverBundle/Forms/ProjectAceType.php
+END
+FileAttach.php
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/repo/!svn/ver/2/ProjectManager/src/ChatCreeSoftware/FileserverBundle/Forms/FileAttach.php
+END

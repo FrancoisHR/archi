@@ -1,0 +1,239 @@
+<?php
+
+namespace ChatCreeSoftware\CoreBundle\Controller;
+
+use ChatCreeSoftware\CoreBundle\Entity\Log;
+use ChatCreeSoftware\CoreBundle\Entity\Reset;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Core\Security,
+    Symfony\Component\Security\Core\User\UserInterface,
+    Symfony\Component\Security\Acl\Dbal\MutableAclProvider,
+    Symfony\Component\Security\Acl\Domain\ObjectIdentity,
+    Symfony\Component\Security\Acl\Domain\UserSecurityIdentity;
+
+class SecurityController extends Controller {
+
+    /**
+     * @Route("/core/security/user/acls", name="_core_security_user_acls")
+     */
+    public function userAclAction( UserInterface $user, Request $request ){
+        $aclProvider = $this->get("security.acl.provider");
+        $securityIdentity = UserSecurityIdentity::fromAccount($user);
+        
+        
+    }
+    
+    /**
+     * @Route("/login", name="_login")
+     * @Template
+     */
+    public function loginAction(Request $request) {
+        // get the error if any (works with forward and redirect -- see below)
+        if ($request->attributes->has(Security::AUTHENTICATION_ERROR)) {
+            $error = $request->attributes->get(Security::AUTHENTICATION_ERROR);
+        } else {
+            $error = $request->getSession()->get(Security::AUTHENTICATION_ERROR);
+        }
+
+        return array(
+            'last_username' => $request->getSession()->get(Security::LAST_USERNAME),
+            'error' => $error,
+        );
+    }
+
+    /**
+     * @Route("/reset/oubli", name="_forgotten")
+     * @Template
+     */
+    public function forgottenAction() {
+        return array();
+    }
+
+    /**
+     * @Route("/reset/mailsent", name="_recover_mail_sent")
+     * @Template
+     */
+    public function mailSentAction(Request $request) {
+        $mailAddress = $request->get('email');
+        $ip = $request->getClientIp();
+
+        $em = $this->get('doctrine')->getManager();
+        $repo = $em->getRepository('CoreBundle:Email');
+
+        $log = new Log( "Reset Email" );
+        $log->setIp($ip);
+
+        if ($mailAddress) {
+            $mail = $repo->findOneByMail($mailAddress);
+
+            if ($mail) {
+                $user = $mail->getUser();
+                $date = new \DateTime("now");
+                $token = hash("sha512", $date->format("ddmmYYYYH:i:s") . $user->getLogin() . $mailAddress . $ip);
+
+                $reset = new Reset();
+                $reset->setUser($user);
+                $reset->setTimestamp($date);
+                $reset->setIp($ip);
+                $reset->setToken($token);
+                $reset->setMail($mailAddress);
+                $em->persist($reset);
+                $em->flush();
+
+                $log->setUser($user);
+                $log->setDetail("Demande de reset de password pour l'adresse mail : " . $mailAddress);
+
+                $message = \Swift_Message::newInstance()
+                        ->setSubject('Mot de passe oublié')
+                        ->setFrom('info@rl-architecture.lu')
+                        ->setTo($mail->getMail())
+                        ->setContentType('text/html')
+                        ->setBody($this->renderView('CoreBundle:Mails:forgottenPassword.html.twig', array(
+                            'reset' => $reset)));
+
+                $this->get('mailer')->send($message);
+            } else {
+                $repo = $em->getRepository('CoreBundle:User');
+                $anon = $repo->findOneByLogin('anonymous');
+
+                $log->setUser($anon);
+                $log->setDetail("Adresse mail inconnue : " . $mailAddress);
+            }
+        }
+
+        $em->persist($log);
+        $em->flush();        
+        
+        return array('mail' => $mailAddress);
+    }
+
+    /**
+     * @Route("/reset/recover/{token}", name="_recover")
+     * @Template
+     */
+    public function recoverAction(Request $request, Reset $reset) {
+        $ip = $request->getClientIp();
+        $em = $this->get('doctrine')->getManager();
+
+        $log = new Log( "Reset Token" );
+        $log->setIp($ip);
+        
+        if ($reset) {
+            $now = new \DateTime("now");
+
+            $interval = $now->diff($reset->getTimestamp());
+
+            $log->setUser($reset->getUser() );
+            
+            if ($interval->y > 0 || $interval->m > 0 || $interval->d > 0 ||
+                    $interval->h > 0 || $interval->i >= 30) {
+
+                $em->remove($reset);
+                $em->flush();
+                
+                $log->setDetail("Token expiré : " . $interval->format( "%D/%M/%Y %H:%I:%S"));
+                $reset = null;
+            }else {
+                $log->setDetail("Token valide");            
+            }
+        } else {
+            $repo = $em->getRepository('CoreBundle:User');
+            $anon = $repo->findOneByLogin('anonymous');
+            
+            $log->setUser($anon);
+            $log->setDetail("Token inconnu : " . $token);
+            
+            $reset = null;
+        }
+        
+        $em->persist($log);
+        $em->flush();
+
+        return array("reset" => $reset);
+    }
+
+    /**
+     * @Route("/reset/change/{id}", name="_password_change")
+     * @Template
+     */
+    public function changeAction(Request $request, Reset $reset) {
+        $ip = $request->getClientIp();
+        $password1 = $request->get('_password1');
+        $password2 = $request->get('_password2');
+        $success = false;
+        
+        $em = $this->get('doctrine')->getManager();
+
+        $log = new Log( "Reset Password" );
+        $log->setIp($ip);
+
+        if( $reset ) {
+            $user = $reset->getUser();
+            $mail = $reset->getMail();
+            
+            $log->setUser($user);
+        } else {
+            $repo = $em->getRepository('CoreBundle:User');
+            $anon = $repo->findOneByLogin('anonymous');
+
+            $log->setUser($anon);
+            $log->setdetail( "Reset ID invalide : " . $resetid );
+            $user=null;
+        }
+
+        if ($user && $password1 === $password2 ) {
+            // Encode the password with the encoder defined in security.yml
+            $encoder = $this->container->get('security.password_encoder');
+            $encoded = $encoder->encodePassword($user, $password1);
+            $user->setPassword($encoded);
+
+            // Delete all reset tokens for the user...
+            foreach ($user->getResets() as $reset) {
+                $user->removeReset($reset);
+                $em->remove($reset);
+            }
+
+            // Persist user
+            $em->persist($user);
+            $em->flush();
+
+            $message = \Swift_Message::newInstance()
+                    ->setSubject('Mot de passe changé')
+                    ->setFrom('info@rl-architecture.lu')
+                    ->setTo($mail)
+                    ->setContentType('text/html')
+                    ->setBody($this->renderView('CoreBundle:Mails:changedPassword.html.twig', array('user' => $user)));
+
+            $this->get('mailer')->send($message);
+
+            $log->setDetail( "Mot de passe changé avec succès");
+            
+            $success = true;
+        }
+
+        $em->persist($log);
+        $em->flush();
+        
+        return array("success" => $success);
+    }
+
+    /**
+     * @Route( "/login_check", name="_security_check" )
+     */
+    public function loginCheckAction() {
+        
+    }
+
+    /**
+     * @Route( "/logout", name="_logout" )
+     */
+    public function logoutAction() {
+        
+    }
+
+}
+
+?>

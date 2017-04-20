@@ -1,0 +1,89 @@
+/*Reset Style*/
+body {
+    margin:0;
+    padding:0;
+    line-height: 1.4em;
+    word-spacing:1px;
+    letter-spacing:0.2px;
+    font-family: "Helvetica Neue", Arial, sans-serif !important;
+    font: 17px/21px -apple-system-font;
+    font-weight: 100;
+    color: #000;
+}
+
+.headline {
+    color: #FFFFFF;
+    background-color: #4d4d4c;
+}
+
+.value {
+    border: 0.5pt solid black;
+}
+
+div.logo {
+    
+}
+
+div.address {
+    text-align: right;
+    position: absolute;
+    left: 13.5cm;
+    top: 0cm;
+    width: 6cm;
+}
+
+.invoiceNumber {
+    text-align: center;
+    position: absolute;
+    left: 0cm;
+    top: 4cm;
+    width: 5.2cm;
+    height: 0.6cm;
+}
+.invoiceNumberValue {
+    text-align: center;
+    position: absolute;
+    left: 0cm;
+    top: 4.6cm;
+    width: 5.2cm;
+    height: 0.6cm;
+}
+
+.invoicedate {
+    text-align: center;
+    position: absolute;
+    left: 0cm;
+    top: 5.65cm;
+    width: 5.2cm;
+    height: 0.6cm;
+}
+.invoicedateValue {
+    text-align: center;
+    position: absolute;
+    left: 0cm;
+    top: 6.25cm;
+    width: 5.2cm;
+    height: 0.6cm;
+}
+
+.customerVAT {
+    text-align: center;
+    position: absolute;
+    left: 0cm;
+    top: 7.3cm;
+    width: 5.2cm;
+    height: 0.6cm;
+}
+.customerVATValue {
+    text-align: center;
+    position: absolute;
+    left: 0cm;
+    top: 7.9cm;
+    width: 5.2cm;
+    height: 0.6cm;
+}
+
+div.ui-dialog-titlebar {
+    background-color: #4D4D4D;
+    color: #FFFFFF;
+}

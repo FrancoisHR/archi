@@ -1,0 +1,37 @@
+{% extends "CoreBundle::coreLayout.html.twig" %}
+
+{% set menu_selected = '1' %}
+
+{% block content %}
+    <nav class="navbar navbar-inverse">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="#">Mes projets</a>
+        </div>
+    </nav>    
+    
+    <table id="tableProjet" class="table table-striped table-bordered">
+        <thead>
+        </thead>
+        <tbody>
+        {% for project in projects %}
+            <tr>
+                <td>
+                {% if project.mask==128 %}
+                    <a href='{{ path( '_project_delete', {'id': project.id } ) }}'>
+                        <img src="{{ asset('bundles/ChatCreeSoftware/FileServer/images/delete.png') }}" alt="[ACL]" align="absmiddle" /></a>
+                {% endif %}
+                </td>
+                <td>
+                {% if project.mask==128 %}
+                    <a href='{{ path( '_project_edit_acls', {'id': project.id } ) }}'>
+                        <img src="{{ asset('bundles/ChatCreeSoftware/FileServer/images/lock.png') }}" alt="[ACL]" align="absmiddle" /></a>
+                {% endif %}
+                </td>
+                <td>
+                    <a href='{{ path( '_project', {'id': project.id } ) }}'>{{ project.projectName }}</a>
+                </td>
+            </tr>
+        {% endfor %}
+    </tbody>
+    </table>
+{% endblock %}

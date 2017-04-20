@@ -1,0 +1,36 @@
+ChatCreeSoftware\BordereauxBundle\Entity\Prestation:
+  type: entity
+  table: BordereauxPrestation
+  id:
+    id:
+      type: integer
+      generator:
+         strategy: AUTO  
+  fields:
+    numero:             { type: string(3) }
+    numeroComplet:      { type: string(37) }
+    type:               { type: string(1) }
+    indiceRevision:     { type: string(1) }
+    dateRevision:       { type: date, nullable: true }
+    unite:              { type: string(10), nullable: true }
+    titre:              { type: string(120) }
+    description:        { type: text, nullable: true }
+    
+  manyToOne:
+    section:
+      targetEntity: Section
+      inversedBy: prestations
+  oneToMany:
+    parametres:
+      targetEntity: Parametre
+      mappedBy: prestation
+    questions:
+      targetEntity: Question
+      mappedBy: prestation
+    infoSupplementaires:
+      targetEntity: InfoSupplementaire
+      mappedBy: prestation
+    lignes:
+      targetEntity: Ligne
+      mappedBy:     prestation  
+  lifecycleCallbacks: {  }

@@ -1,0 +1,396 @@
+<?php
+
+namespace ChatCreeSoftware\BordereauxBundle\Entity;
+
+/**
+ * Bordereau
+ */
+class Bordereau
+{
+    /**
+     * @var integer
+     */
+    private $id;
+
+    /**
+     * @var string
+     */
+    private $type;
+
+    /**
+     * @var string
+     */
+    private $titre;
+
+    /**
+     * @var integer
+     */
+    private $indice;
+
+    /**
+     * @var string
+     */
+    private $referenceLot;
+
+    /**
+     * @var \DateTime
+     */
+    private $date;
+
+    /**
+     * @var string
+     */
+    private $description;
+
+    /**
+     * @var string
+     */
+    private $logo;
+
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    private $lignes;
+
+    /**
+     * @var \ChatCreeSoftware\CoreBundle\Entity\Project
+     */
+    private $project;
+
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->lignes = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+
+    /**
+     * Get id
+     *
+     * @return integer
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * Set type
+     *
+     * @param string $type
+     *
+     * @return Bordereau
+     */
+    public function setType($type)
+    {
+        $this->type = $type;
+
+        return $this;
+    }
+
+    /**
+     * Get type
+     *
+     * @return string
+     */
+    public function getType()
+    {
+        return $this->type;
+    }
+
+    /**
+     * Set titre
+     *
+     * @param string $titre
+     *
+     * @return Bordereau
+     */
+    public function setTitre($titre)
+    {
+        $this->titre = $titre;
+
+        return $this;
+    }
+
+    /**
+     * Get titre
+     *
+     * @return string
+     */
+    public function getTitre()
+    {
+        return $this->titre;
+    }
+
+    /**
+     * Set indice
+     *
+     * @param integer $indice
+     *
+     * @return Bordereau
+     */
+    public function setIndice($indice)
+    {
+        $this->indice = $indice;
+
+        return $this;
+    }
+
+    /**
+     * Get indice
+     *
+     * @return integer
+     */
+    public function getIndice()
+    {
+        return $this->indice;
+    }
+
+    /**
+     * Set referenceLot
+     *
+     * @param string $referenceLot
+     *
+     * @return Bordereau
+     */
+    public function setReferenceLot($referenceLot)
+    {
+        $this->referenceLot = $referenceLot;
+
+        return $this;
+    }
+
+    /**
+     * Get referenceLot
+     *
+     * @return string
+     */
+    public function getReferenceLot()
+    {
+        return $this->referenceLot;
+    }
+
+    /**
+     * Set date
+     *
+     * @param \DateTime $date
+     *
+     * @return Bordereau
+     */
+    public function setDate($date)
+    {
+        $this->date = $date;
+
+        return $this;
+    }
+
+    /**
+     * Get date
+     *
+     * @return \DateTime
+     */
+    public function getDate()
+    {
+        return $this->date;
+    }
+
+    /**
+     * Set description
+     *
+     * @param string $description
+     *
+     * @return Bordereau
+     */
+    public function setDescription($description)
+    {
+        $this->description = $description;
+
+        return $this;
+    }
+
+    /**
+     * Get description
+     *
+     * @return string
+     */
+    public function getDescription()
+    {
+        return $this->description;
+    }
+
+    /**
+     * Set logo
+     *
+     * @param string $logo
+     *
+     * @return Bordereau
+     */
+    public function setLogo($logo)
+    {
+        $this->logo = $logo;
+
+        return $this;
+    }
+
+    /**
+     * Get logo
+     *
+     * @return string
+     */
+    public function getLogo()
+    {
+        return $this->logo;
+    }
+
+    /**
+     * Add ligne
+     *
+     * @param \ChatCreeSoftware\BordereauxBundle\Entity\Ligne $ligne
+     *
+     * @return Bordereau
+     */
+    public function addLigne(\ChatCreeSoftware\BordereauxBundle\Entity\Ligne $ligne)
+    {
+        $this->lignes[] = $ligne;
+
+        return $this;
+    }
+
+    /**
+     * Remove ligne
+     *
+     * @param \ChatCreeSoftware\BordereauxBundle\Entity\Ligne $ligne
+     */
+    public function removeLigne(\ChatCreeSoftware\BordereauxBundle\Entity\Ligne $ligne)
+    {
+        $this->lignes->removeElement($ligne);
+    }
+
+    /**
+     * Get lignes
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getLignes()
+    {
+        return $this->lignes;
+    }
+
+    /**
+     * Set project
+     *
+     * @param \ChatCreeSoftware\CoreBundle\Entity\Project $project
+     *
+     * @return Bordereau
+     */
+    public function setProject(\ChatCreeSoftware\CoreBundle\Entity\Project $project = null)
+    {
+        $this->project = $project;
+
+        return $this;
+    }
+
+    /**
+     * Get project
+     *
+     * @return \ChatCreeSoftware\CoreBundle\Entity\Project
+     */
+    public function getProject()
+    {
+        return $this->project;
+    }
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    private $fichiers;
+
+
+    /**
+     * Add fichier
+     *
+     * @param \ChatCreeSoftware\BordereauxBundle\Entity\Fichier $fichier
+     *
+     * @return Bordereau
+     */
+    public function addFichier(\ChatCreeSoftware\BordereauxBundle\Entity\Fichier $fichier)
+    {
+        $this->fichiers[] = $fichier;
+
+        return $this;
+    }
+
+    /**
+     * Remove fichier
+     *
+     * @param \ChatCreeSoftware\BordereauxBundle\Entity\Fichier $fichier
+     */
+    public function removeFichier(\ChatCreeSoftware\BordereauxBundle\Entity\Fichier $fichier)
+    {
+        $this->fichiers->removeElement($fichier);
+    }
+
+    /**
+     * Get fichiers
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getFichiers()
+    {
+        return $this->fichiers;
+    }
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    private $devis;
+
+
+    /**
+     * Add devis
+     *
+     * @param \ChatCreeSoftware\BordereauxBundle\Entity\Devis $devis
+     *
+     * @return Bordereau
+     */
+    public function addDevis(\ChatCreeSoftware\BordereauxBundle\Entity\Devis $devis)
+    {
+        $this->devis[] = $devis;
+
+        return $this;
+    }
+
+    /**
+     * Remove devis
+     *
+     * @param \ChatCreeSoftware\BordereauxBundle\Entity\Devis $devis
+     */
+    public function removeDevis(\ChatCreeSoftware\BordereauxBundle\Entity\Devis $devis)
+    {
+        $this->devis->removeElement($devis);
+    }
+
+    /**
+     * Get devis
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getDevis()
+    {
+        return $this->devis;
+    }
+    
+    public function totalDevis(){
+        $total = [];
+        $nb=$this->getDevis()->count();
+        for($n=0; $n < $nb; $n++ ){
+            $total[] = 0;
+        }
+        foreach( $this->getLignes() as $ligne ){
+            $values =  $ligne->totalDevis( true );
+            for($n=0; $n < $nb; $n++ ){                
+                $total[$n] += $values[$n];
+            }            
+        }
+        return $total;
+    }
+}

@@ -1,0 +1,29 @@
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/repo/!svn/ver/2/ProjectManager/src/ChatCreeSoftware/FileserverBundle/Tests/Controller
+END
+SecurityController.php
+K 25
+svn:wc:ra_dav:version-url
+V 109
+/repo/!svn/ver/2/ProjectManager/src/ChatCreeSoftware/FileserverBundle/Tests/Controller/SecurityController.php
+END
+AdminControllerTest.php
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/repo/!svn/ver/2/ProjectManager/src/ChatCreeSoftware/FileserverBundle/Tests/Controller/AdminControllerTest.php
+END
+UserController.php
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/repo/!svn/ver/2/ProjectManager/src/ChatCreeSoftware/FileserverBundle/Tests/Controller/UserController.php
+END
+DefaultControllerTest.php
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/repo/!svn/ver/2/ProjectManager/src/ChatCreeSoftware/FileserverBundle/Tests/Controller/DefaultControllerTest.php
+END

@@ -1,0 +1,31 @@
+ChatCreeSoftware\FileserverBundle\Entity\User:
+  type: entity
+  table: user
+  id:
+    id:
+      type: integer
+      generator:
+         strategy: AUTO  
+  fields:
+    title:     { type: string(50), nullable: true }
+    firstname: { type: string(150), nullable: true }
+    lastname:  { type: string(150) }
+    login:     { type: string(50) } 
+    password:  { type: string(255) }
+    role:      { type: string(50) }
+    enabled:   { type: boolean }
+    actor:     { type: boolean }
+    
+  oneToMany:
+    emails:
+      targetEntity: Email
+      mappedBy: user
+      cascade: ["all"]
+    logs:
+      targetEntity: Log
+      mappedBy: user
+      cascade: ["all"]
+    timeLogs:
+      targetEntity: ChatCreeSoftware\ProjectManagementBundle\Entity\TimeLog
+      mappedBy: user
+  lifecycleCallbacks: {  }

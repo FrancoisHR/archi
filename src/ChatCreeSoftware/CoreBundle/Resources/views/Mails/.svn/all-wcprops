@@ -1,0 +1,17 @@
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/repo/!svn/ver/33/ProjectManager/src/ChatCreeSoftware/CoreBundle/Resources/views/Mails
+END
+forgottenPassword.html.twig
+K 25
+svn:wc:ra_dav:version-url
+V 114
+/repo/!svn/ver/33/ProjectManager/src/ChatCreeSoftware/CoreBundle/Resources/views/Mails/forgottenPassword.html.twig
+END
+changedPassword.html.twig
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/repo/!svn/ver/27/ProjectManager/src/ChatCreeSoftware/CoreBundle/Resources/views/Mails/changedPassword.html.twig
+END

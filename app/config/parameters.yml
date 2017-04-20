@@ -1,0 +1,19 @@
+# This file is auto-generated during the composer install
+parameters:
+    database_driver: pdo_mysql
+    database_host: localhost
+    database_port: null
+    database_name: null
+    database_user: null
+    database_password: null
+    mailer_transport: smtp
+    mailer_host: null
+    mailer_user: null
+    mailer_password: null
+    locale: en
+    secret: secretket
+    default_target: projets/liste
+    web_dir: '%kernel.root_dir%/../web'
+    lib_dir: '%kernel.root_dir%/../web/library'
+    projects_dir: '%kernel.root_dir%/../web/projects'
+    bordereaux_dir: .bordereaux

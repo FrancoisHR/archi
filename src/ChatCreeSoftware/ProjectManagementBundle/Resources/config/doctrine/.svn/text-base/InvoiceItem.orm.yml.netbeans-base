@@ -1,0 +1,24 @@
+ChatCreeSoftware\ProjectManagementBundle\Entity\InvoiceItem:
+  type: entity
+  table: InvoiceItem
+  id:
+    id:
+      type: integer
+      generator:
+         strategy: AUTO  
+  fields:
+    itemCode:           { type: string(10), nullable: true }
+    itemDescription:    { type: string(255) }
+    itemPrice:          { type: float }
+    quantity:           { type: float }
+    itemRebate:         { type: float, nullable: true }
+    itemRebateText:     { type: text, nullable: true }
+  manyToOne:
+    invoice:
+      targetEntity: Invoice
+      inversedBy: items
+  oneToOne:
+    invoicing:
+      targetEntity: Invoicing
+      inversedBy: item
+  lifecycleCallbacks: {  }

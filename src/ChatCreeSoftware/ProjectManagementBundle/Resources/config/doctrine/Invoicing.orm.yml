@@ -1,0 +1,24 @@
+ChatCreeSoftware\ProjectManagementBundle\Entity\Invoicing:
+  type: entity
+  table: Invoicing
+  id:
+    id:
+      type: integer
+      generator:
+         strategy: AUTO  
+  fields:
+    type:        { type: string(1) }
+    etape:       { type: string(128) }
+    amount:      { type: float }
+    invoiced:    { type: date, nullable: true }
+    reminder:    { type: date, nullable: true }
+    paid:        { type: date, nullable: true }
+  manyToOne:
+    project:
+      targetEntity: ChatCreeSoftware\CoreBundle\Entity\Project
+      inversedBy: invoices
+  oneToOne:
+    item:
+      targetEntity: InvoiceItem
+      mappedBy: invoicing      
+  lifecycleCallbacks: {  }

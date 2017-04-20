@@ -1,0 +1,19 @@
+ChatCreeSoftware\CoreBundle\Entity\Country:
+  type: entity
+  table: CoreCountry
+  id:
+    id:
+      type: integer
+      generator:
+         strategy: AUTO  
+  fields:
+    name:           { type: string(255) }
+    languageCode:   { type: string(8) }
+    phoneCode:      { type: string(4) }
+    phoneFormat:    { type: string(32) }    
+  oneToMany:
+    phoneNumbers:
+      targetEntity: ChatCreeSoftware\CoreBundle\Entity\Phone
+      mappedBy: country
+    
+  lifecycleCallbacks: {  }

@@ -1,0 +1,163 @@
+{% extends "ProjectManagementBundle::layout.html.twig" %}
+
+{% block navigation %}
+    {{ render(controller("ProjectManagementBundle:Navigation:navigation",{'selected': 1})) }}
+{% endblock %}
+
+{% block stylesheet %}
+    {{ parent() }}
+{% endblock %}
+
+{% block projectmenu %}
+    <nav class="navbar navbar-inverse">
+    <div class="navbar-header">
+        <a class="navbar-brand" href="#">Devis</a>
+    </div>
+    </nav>
+{% endblock %}
+
+{% block content %}
+    <div id="dialog" title="Confirmation de suppression">
+        Voulez-vous vraiment supprimer cette facture ?
+    </div>
+    
+    
+<div class="row row-side-margin"">
+    <div class="col-sm-12">
+
+    <table id="invoices" class="table table-striped table-bordered">
+        <thead>
+            <tr>
+                <th class="invoice_number">Num&eacute;ro</th>
+                <th class="invoice_date">Date</th>
+                <th class="invoice_projectname">Projet</th>
+                <th class="invoice_amount">Montant</th>
+            </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+    </div>
+</div>
+    {% endblock %}
+
+{% block javascript %}    
+    $(document).ready(function() {
+        oTable = $('#invoices').DataTable( {
+            ajax: 'ajax_quotes',
+            autoWidth: false,
+            buttons: [  {text:'Supprimer', className:'Delete selectionRequired disabled', action: function( ){
+                            var row = this.rows( { selected: true } )
+                            var selected = row.data();
+                            var invoiceId = selected[0][0];
+                            
+                            var deleteDialog = $("#dialog");
+                            $("#dialog").dialog({
+                                autoOpen: false,
+                                modal: true,
+                                buttons: {
+                                    "Confirmer" : {
+                                        text: "Confirmer", 
+                                        class: "btn-primary",
+                                        click: function() {
+                                            deleteDialog.dialog("close");
+                                            var params = "id=" + invoiceId;
+
+                                            var url = "{{path('_invoice_ajax_delete')}}";
+
+                                            $.ajax({
+                                                type: "POST",
+                                                url: url,
+                                                data: params,
+                                                dataType: "json",
+                                                success: function(data) {
+                                                    if (data.response === 200) {
+                                                        oTable.rows( row ).remove().draw(false);
+                                                        $("a.selectionRequired").addClass("disabled");;
+                                                    } else {
+                                                        alert("Erreur lors de la suppression");
+                                                    }
+                                                },
+                                                error: function( jqXHR, textStatus, errorThrown ) {
+                                                    alert( textStatus );
+                                                }
+                                            });
+                                        }
+                                    },
+                                    Annuler: function() {
+                                        deleteDialog.dialog("close");
+                                    }
+                                },
+                                title: "Confirmation de suppression"
+                            });
+
+                            deleteDialog.dialog("open");                            
+                        } }
+            ],
+            columnDefs: [
+                {
+                    render: function ( data, type, row ) {
+                        var invoiceId = row[0];
+                        var url = "{{path('_invoice_quote')}}/" + invoiceId
+                        return "<a href='" + url + "' target='_new'>" + invoiceId + "</a>";
+                    },
+                    targets: [ 0 ]
+                }
+            ],
+            columns: [
+                { width: "140px", className: "invoice_number" },
+                { width: "140px", className: "invoice_date" },
+                { width: "300px", className: "invoice_projectname" },
+                { width: "140px", className: "invoice_amount" }
+            ],
+            dom: 'l<"clear">Bfrtp',
+            language: {
+                "lengthMenu": "Afficher _MENU_ lignes par page",
+                "zeroRecords": "Aucun devis",
+                "info": "Page _PAGE_ de _PAGES_",
+                "infoEmpty": "Aucun devis",
+                "infoFiltered": "(filtr&eacute; de _MAX_ devis)",
+                "loadingRecords": "Chargement...",
+                "search": "Recherche:",
+                "paginate": {
+                    first: " ",
+                    last: " ",
+                    next: " ",
+                    previous: " "
+                }
+            },
+            ordering: true,
+            rowId: 'id',
+            select: {
+                style: 'single'
+            }
+        });
+        
+        $('#invoices tbody').on( 'click', 'tr', function () {
+            if ( $(this).hasClass('selected') ) {
+                $("a.btn.btn-default.selectionRequired").removeClass("disabled");
+            }
+            else {
+                $("a.btn.btn-default.selectionRequired").addClass("disabled");
+            }
+        } );
+        
+        $("#dialog").dialog({
+            autoOpen: false,
+            modal: true,
+            buttons: {
+                "Confirmer" : {
+                    text: "Confirmer", 
+                    class: "btn-primary",
+                    click: function() {
+                        $(this).dialog("close");
+                    }
+                },
+                "Annuler" : function() {
+                    $(this).dialog("close");
+                }
+            },
+            title: "Confirmation de suppression"
+        });
+    });
+{% endblock %}

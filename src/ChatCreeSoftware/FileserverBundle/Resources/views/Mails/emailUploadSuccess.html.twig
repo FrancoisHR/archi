@@ -1,0 +1,78 @@
+<html>
+<head>
+<title>Romain Lambay</title>
+<style type="text/css">
+<!--
+body,td,th {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	color: #4d4d4d;
+}
+body {
+	background-color: #FFF;
+}
+a:link {
+	color: #4d4d4d;
+	text-decoration: none;
+}
+a:visited {
+	text-decoration: none;
+	color: #4d4d4d;
+}
+a:hover {
+	text-decoration: none;
+	color: #AA0010;
+}
+a:active {
+	text-decoration: none;
+	color: #4d4d4d;
+}
+h1 {
+	font-size: 12px;
+}
+h2 {
+	font-size: 10px;
+}
+-->
+</style></head>
+
+<body>
+<p>Bonjour {{user.title}} {{user.firstname}} {{user.lastname}},</p>
+<p>le projet {{ projectName }} a &eacute;t&eacute; mis &agrave; jour par {{logonUser.firstname}} {{logonUser.lastname}}.</p>
+<p>Vous pouvez acc&eacute;der aux documents via l'adresse<a href="http://www.rlambay.lu/html/client.html" target="_blank"> www.rlambay.lu</a></p>
+{% if comment %}
+    <p>{{ comment }}</p>
+{% else %}
+    {% if files|length > 1 %}
+        <p>Les fichiers suivants ont &eacute;t&eacute; ajout&eacute;s :</p>
+    {% else %}
+        <p>Le fichier suivant a &eacute;t&eacute; ajout&eacute;s :</p>
+    {% endif %}
+{% endif %}
+<ul>
+{% for file in files %}
+    {% if file %}
+        <li><a href="{{url('_document',{'token':file.token})}}">{{ file.file }}</a></li>
+    {% endif %}
+{% endfor %}
+</ul>
+<hr align="left" width="300px" color="#4d4d4d" size="1"> 
+<p><a href="http://www.rlambay.lu" target="_blank"><img src="http://www.rlambay.lu/mail.jpg" width="250" border="0" /></a></p>
+<p>Romain Lambay<br /><br />
+  Architecte<br />
+  Coordinateur s&eacute;curit&eacute; sant&eacute; niveau C<br />
+  Membre du CA de l'ACSSL<br/>
+  Energiepass habitation et fonctionnel<br />
+  Cadastre vertical<br/>
+  Conseil en &eacute;nergie<br />
+  Blower door test<br/>
+  <br/>
+  T&eacute;l : +352-27767501<br/>
+  GSM : +352-661-645522<br />
+  Fax : +352-24611157<br />
+  MAIL : <a href="mailto:info@rl-architecture.lu">info@rl-architecture.lu</a><br />
+  SITE : <a href="http://www.rlambay.lu" target="_blank">http://www.rlambay.lu</a><br />
+  Adresse bureau : 52, rue de Koerich - L-8437 Steinfort<br />
+  Adresse postale: 29, rue Jean Schneider  -  L-8272 Mamer</p>
+</body>
+</html>

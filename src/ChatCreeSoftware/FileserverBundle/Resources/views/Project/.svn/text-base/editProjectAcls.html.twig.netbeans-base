@@ -1,0 +1,64 @@
+{% extends "FileserverBundle::layout.html.twig" %}
+
+{% set menu_selected = '1' %}
+
+{% block content %}
+<nav class="navbar navbar-inverse">
+    <div class="navbar-header">
+        <a class="navbar-brand" href="#">Editer les droits du projet {{ project.projectName }}</a>
+    </div>
+</nav>
+
+<div class="formcontainer">
+<form name="editusers" action="#" method="post">
+    <fieldset>
+        <legend>Droits actuels</legend>
+        
+        
+        {% for field in acesForm.aces %}
+        <div class="form-row">
+            {{form_widget(field.select) }}
+            {{form_widget(field.user) }}
+            <span class="form-field-error">
+                {{form_errors(field.user)}}
+            </span>
+            {{ form_widget( field.ace ) }}
+            <span class="form-field-error">
+                {{form_errors(field.ace)}}
+            </span>
+        </div>
+        {% endfor %}
+        {{ form_rest(acesForm) }}
+        <input type="submit" name="button" value="EDIT"/>
+        <input type="submit" name="button" value="DELETE"/>
+    </fieldset> 
+</form>
+    
+<form name="adduser" action="#" method="post">
+    {{ form_errors(form) }}
+    <fieldset>
+        <legend>Ajouter un nouvel utilisateur</legend>
+        {% if remainingUsers == 0 %}
+        Tous les utilisateurs ont d&eacute;j&agrave; &eacute;t&eacute; ajout&eacute;s
+        {% else %}
+        <div class="form-row">
+            {{form_label(form.user,'Utilisateur' ) }}
+            {{form_widget(form.user) }}
+            <span class="form-field-error">
+                {{form_errors(form.user)}}
+            </span>
+            {{ form_widget( form.ace ) }}
+            <span class="form-field-error">
+                {{form_errors(form.ace)}}
+            </span>
+        </div>
+        {{ form_rest(form) }}
+        <input type="submit" name="button" value="ADD">Add</input>
+        {% endif %}
+    </fieldset>
+</form>
+</div>
+{% endblock %}
+
+{% block appfooter %}
+{% endblock %}

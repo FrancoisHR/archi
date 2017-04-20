@@ -1,0 +1,77 @@
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/repo/!svn/ver/27/ProjectManager/src/ChatCreeSoftware/BordereauxBundle/Entity
+END
+InfoSupplementaire.php
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/repo/!svn/ver/27/ProjectManager/src/ChatCreeSoftware/BordereauxBundle/Entity/InfoSupplementaire.php
+END
+Fichier.php
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/repo/!svn/ver/48/ProjectManager/src/ChatCreeSoftware/BordereauxBundle/Entity/Fichier.php
+END
+LigneDevis.php
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/repo/!svn/ver/52/ProjectManager/src/ChatCreeSoftware/BordereauxBundle/Entity/LigneDevis.php
+END
+Devis.php
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/repo/!svn/ver/52/ProjectManager/src/ChatCreeSoftware/BordereauxBundle/Entity/Devis.php
+END
+CorpsMetier.php
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/repo/!svn/ver/27/ProjectManager/src/ChatCreeSoftware/BordereauxBundle/Entity/CorpsMetier.php
+END
+Ligne.php
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/repo/!svn/ver/52/ProjectManager/src/ChatCreeSoftware/BordereauxBundle/Entity/Ligne.php
+END
+Parametre.php
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/repo/!svn/ver/27/ProjectManager/src/ChatCreeSoftware/BordereauxBundle/Entity/Parametre.php
+END
+Librairie.php
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/repo/!svn/ver/48/ProjectManager/src/ChatCreeSoftware/BordereauxBundle/Entity/Librairie.php
+END
+Section.php
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/repo/!svn/ver/27/ProjectManager/src/ChatCreeSoftware/BordereauxBundle/Entity/Section.php
+END
+Question.php
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/repo/!svn/ver/27/ProjectManager/src/ChatCreeSoftware/BordereauxBundle/Entity/Question.php
+END
+Prestation.php
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/repo/!svn/ver/35/ProjectManager/src/ChatCreeSoftware/BordereauxBundle/Entity/Prestation.php
+END
+Bordereau.php
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/repo/!svn/ver/52/ProjectManager/src/ChatCreeSoftware/BordereauxBundle/Entity/Bordereau.php
+END

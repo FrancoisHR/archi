@@ -1,0 +1,16 @@
+ChatCreeSoftware\FileserverBundle\Entity\Email:
+  type: entity
+  table: email
+  id:
+    id:
+      type: integer
+      generator:
+         strategy: AUTO  
+  fields:
+    mail:      { type: string(255)}
+    primaire:  { type: boolean }
+  manyToOne:
+    user:
+      targetEntity: User
+      inversedBy: emails
+  lifecycleCallbacks: {  }

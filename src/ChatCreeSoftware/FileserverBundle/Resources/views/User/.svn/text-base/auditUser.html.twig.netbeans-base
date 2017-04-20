@@ -1,0 +1,33 @@
+{% extends "FileserverBundle::layout.html.twig" %}
+
+{% block content %}
+<div class="formcontainer">
+<ul>
+    <li><a href="{{ path('_project_list') }}">Liste des projets</a></li>
+</ul>
+    <h2>Audit de l'utilisateur <i>{{user.login}}</i></h2>
+
+    <table>
+        <tr>
+        <th>Date</th>
+        <th>Action</th>
+        </tr>
+    {% set count = 0 %}
+    {% for log in user.logs %}
+        {% if count is even %}
+            {% set class="even" %}
+        {% else %}
+            {% set class="odd" %}
+        {% endif %}
+        <tr class="{{ class }}">
+            <td>{{log.timestamp|date("d/m/Y H:i:s")}}</td>
+            <td>{{log.action}}</td>    
+        </tr>
+        {% set count = count + 1 %}
+        
+    {% else %}
+        <tr><td colspan="2">L'utilisateur ne s'est jamais connect&eacute;</td></tr>
+    {% endfor %}
+        </table>
+</div>
+{% endblock %}

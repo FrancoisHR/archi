@@ -1,0 +1,87 @@
+imports:
+    - { resource: parameters.yml }
+    - { resource: security.yml }
+    - { resource: services.yml }
+    - { resource: "@CoreBundle/Resources/config/services.yml" }
+    - { resource: "@BordereauxBundle/Resources/config/services.yml" }
+    - { resource: "@FileserverBundle/Resources/config/services.yml" }
+    - { resource: "@ProjectManagementBundle/Resources/config/services.yml" }
+
+framework:
+    #esi:             ~
+    assets:          ~
+    translator:      { fallback: "%locale%" }
+    secret:          "%secret%"
+    router:
+        resource:   "%kernel.root_dir%/config/routing.yml"
+        strict_requirements: "%kernel.debug%"
+    form:            true
+    csrf_protection: true
+    validation:      { enable_annotations: true }
+    templating:      { engines: ['twig'] } #assets_version: SomeVersionScheme
+    default_locale:  "%locale%"
+    trusted_proxies: ~
+    session:         ~
+
+assetic:
+    debug:          "%kernel.debug%"
+    use_controller: "%kernel.debug%"
+    node: /usr/local/bin/node
+    filters:
+        cssrewrite: ~
+        uglifycss:
+            bin: /usr/local/bin/uglifycss
+        uglifyjs2:
+            bin: /usr/local/bin/uglifyjs
+    assets:
+        jquery_and_ui:
+            inputs:
+                - 'bundles/ChatCreeSoftware/Core/js/jquery-3.1.1.min.js'
+                - 'bundles/ChatCreeSoftware/Core/js/jquery-migrate-3.0.0.min.js'
+                - 'bundles/ChatCreeSoftware/Core/js/jquery-ui.min.js'
+        bootstrap_and_datatables:
+            inputs:
+            - 'bundles/ChatCreeSoftware/Core/js/jquery.autocomplete.js'
+            - 'bundles/ChatCreeSoftware/Core/js/jquery.ui.datepicker-fr.js'
+            - 'bundles/ChatCreeSoftware/Core/bootstrap/js/bootstrap.min.js'
+            - 'bundles/ChatCreeSoftware/Core/js/jquery.bootstrap.min.js'            
+            - 'bundles/ChatCreeSoftware/Core/js/datatables.min.js'
+            - 'bundles/ChatCreeSoftware/Core/js/dataTables.bootstrap.min.js'
+            - 'bundles/ChatCreeSoftware/Core/js/buttons.bootstrap.min.js'
+            - 'bundles/ChatCreeSoftware/Core/js/datatables.date-euro.js'       
+            - 'bundles/ChatCreeSoftware/Core/js/datatables.num-list.js'
+            - 'bundles/ChatCreeSoftware/Core/js/sprintf.js'
+                
+                
+# Doctrine Configuration
+doctrine:
+    dbal:
+        driver:   "%database_driver%"
+        host:     "%database_host%"
+        port:     "%database_port%"
+        dbname:   "%database_name%"
+        user:     "%database_user%"
+        password: "%database_password%"
+        charset:  UTF8
+
+    orm:
+        auto_generate_proxy_classes: "%kernel.debug%"
+        auto_mapping: true
+
+# Swiftmailer Configuration
+swiftmailer:
+    transport: "%mailer_transport%"
+    host:      "%mailer_host%"
+    username:  "%mailer_user%"
+    password:  "%mailer_password%"
+    spool:     { type: memory }
+
+# Twig Configuration
+twig:
+    debug:            "%kernel.debug%"
+    strict_variables: "%kernel.debug%"
+    globals:
+        web_dir:        "%web_dir%"
+        lib_dir:        "%lib_dir%"
+        projects_dir:    "%projects_dir%"
+        bordereaux_dir:  "%bordereaux_dir%"

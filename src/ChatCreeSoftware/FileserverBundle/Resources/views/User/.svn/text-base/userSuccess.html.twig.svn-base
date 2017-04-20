@@ -1,0 +1,20 @@
+{% extends "CoreBundle::coreLayout.html.twig" %}
+
+{% set menu_selected = '8' %}
+
+{% block content %}
+<nav class="navbar navbar-inverse">
+    <div class="navbar-header">
+        {% if action=="modifie" %}
+            <a class="navbar-brand" href="#">Modification d'utilisateur</a>
+        {% else %}
+            <a class="navbar-brand" href="#">Cr&eacute;ation d'utilisateur</a>
+        {% endif %}
+    </div>
+</nav>
+
+
+<h4>Utilisateur {{login}} {{action}} !!</h4>
+    <a href="{{ path('_admin_list_users') }}"><input class="btn btn-primary" type="button" name="OK" value="OK" /></a>
+
+{% endblock %}

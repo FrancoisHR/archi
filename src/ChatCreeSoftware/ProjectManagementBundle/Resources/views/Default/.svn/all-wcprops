@@ -1,0 +1,77 @@
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/repo/!svn/ver/33/ProjectManager/src/ChatCreeSoftware/ProjectManagementBundle/Resources/views/Default
+END
+projectTrajets.html.twig
+K 25
+svn:wc:ra_dav:version-url
+V 126
+/repo/!svn/ver/48/ProjectManager/src/ChatCreeSoftware/ProjectManagementBundle/Resources/views/Default/projectTrajets.html.twig
+END
+projectQuote.html.twig
+K 25
+svn:wc:ra_dav:version-url
+V 124
+/repo/!svn/ver/48/ProjectManager/src/ChatCreeSoftware/ProjectManagementBundle/Resources/views/Default/projectQuote.html.twig
+END
+project.html.twig
+K 25
+svn:wc:ra_dav:version-url
+V 119
+/repo/!svn/ver/39/ProjectManager/src/ChatCreeSoftware/ProjectManagementBundle/Resources/views/Default/project.html.twig
+END
+projectFacturation.html.twig
+K 25
+svn:wc:ra_dav:version-url
+V 130
+/repo/!svn/ver/49/ProjectManager/src/ChatCreeSoftware/ProjectManagementBundle/Resources/views/Default/projectFacturation.html.twig
+END
+projectSuivi.html.twig
+K 25
+svn:wc:ra_dav:version-url
+V 124
+/repo/!svn/ver/48/ProjectManager/src/ChatCreeSoftware/ProjectManagementBundle/Resources/views/Default/projectSuivi.html.twig
+END
+index.html.twig
+K 25
+svn:wc:ra_dav:version-url
+V 117
+/repo/!svn/ver/39/ProjectManager/src/ChatCreeSoftware/ProjectManagementBundle/Resources/views/Default/index.html.twig
+END
+projectTasks.html.twig
+K 25
+svn:wc:ra_dav:version-url
+V 124
+/repo/!svn/ver/48/ProjectManager/src/ChatCreeSoftware/ProjectManagementBundle/Resources/views/Default/projectTasks.html.twig
+END
+factures.html.twig
+K 25
+svn:wc:ra_dav:version-url
+V 120
+/repo/!svn/ver/49/ProjectManager/src/ChatCreeSoftware/ProjectManagementBundle/Resources/views/Default/factures.html.twig
+END
+trajets.html.twig
+K 25
+svn:wc:ra_dav:version-url
+V 119
+/repo/!svn/ver/50/ProjectManager/src/ChatCreeSoftware/ProjectManagementBundle/Resources/views/Default/trajets.html.twig
+END
+suivi.html.twig
+K 25
+svn:wc:ra_dav:version-url
+V 117
+/repo/!svn/ver/50/ProjectManager/src/ChatCreeSoftware/ProjectManagementBundle/Resources/views/Default/suivi.html.twig
+END
+quotes.html.twig
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/repo/!svn/ver/49/ProjectManager/src/ChatCreeSoftware/ProjectManagementBundle/Resources/views/Default/quotes.html.twig
+END
+projectJournal.html.twig
+K 25
+svn:wc:ra_dav:version-url
+V 126
+/repo/!svn/ver/48/ProjectManager/src/ChatCreeSoftware/ProjectManagementBundle/Resources/views/Default/projectJournal.html.twig
+END

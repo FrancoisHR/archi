@@ -1,0 +1,15 @@
+{% extends "FileserverBundle::layout.html.twig" %}
+
+{% set menu_selected = '5' %}
+
+{% block content %}
+<div class="formcontainer">
+<ul>
+    <li><a href="{{ path('_project_list') }}">Liste des projets</a></li>
+</ul>
+    <h2>Utilisateur <i>{{login}}</i> supprim&eacute;</h2>
+
+    <a href="{{ path('_admin_list_users') }}"><input type="button" name="OK" value="OK" /></a>
+
+</div>
+{% endblock %}

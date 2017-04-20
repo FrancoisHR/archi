@@ -1,0 +1,18 @@
+ChatCreeSoftware\FileserverBundle\Entity\Log:
+  type: entity
+  table: log
+  id:
+    id:
+      type: integer
+      generator:
+         strategy: AUTO  
+  fields:
+    timestamp:   { type: datetime }
+    action:      { type: string(255) }
+    ip:          { type: string(64), nullable: true }
+    detail:      { type: string(255), nullable: true }
+  manyToOne:
+    user:
+      targetEntity: User
+      inversedBy: logs
+  lifecycleCallbacks: {  }

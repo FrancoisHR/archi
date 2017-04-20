@@ -1,0 +1,22 @@
+{% extends "ProjectManagementBundle::layout.html.twig" %}
+
+{% block navigation %}
+    {{ render(controller("ProjectManagementBundle:Navigation:navigation",{'selected': 5 })) }}
+{% endblock %}
+
+{% block content %}
+    
+<nav class="navbar navbar-inverse">
+    <div class="navbar-header">
+        <a class="navbar-brand" href="#">Rapports</a>
+    </div>
+    <ul class='nav navbar-nav'>
+            <li><a href='{{ path('_gestion_annual_km') }}'>Kilom&eacute;trage annuel</a></li>
+        </ul>
+    </nav>
+
+{% endblock %}
+    
+{% block javascript %}
+    {{ parent() }}
+{% endblock %}

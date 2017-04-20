@@ -1,0 +1,19 @@
+services:
+    core.security.login_audit:
+        class: ChatCreeSoftware\CoreBundle\Security\Authorization\LoginAudit
+        arguments: ["@doctrine.orm.entity_manager","@templating","@router", "%default_target%"]
+    core.services.interfaceListener:
+        class: ChatCreeSoftware\CoreBundle\Listener\InterfaceListener
+        arguments: ["@doctrine.orm.entity_manager","@security.acl.provider","@security.authorization_checker","@router"]        
+        tags:
+            - { name: kernel.event_subscriber }
+    core.services.userListener:
+        class: ChatCreeSoftware\CoreBundle\Listener\UserListener
+        arguments: ["@security.acl.provider"]
+        tags:
+            - { name: doctrine.orm.entity_listener, lazy: true }
+    core.services.projectListener:
+        class: ChatCreeSoftware\CoreBundle\Listener\ProjectListener
+        arguments: ["@security.acl.provider","@security.token_storage"]
+        tags:
+            - { name: doctrine.orm.entity_listener, lazy: true }                  

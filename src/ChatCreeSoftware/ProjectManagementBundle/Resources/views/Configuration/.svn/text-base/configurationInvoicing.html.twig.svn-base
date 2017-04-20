@@ -1,0 +1,68 @@
+{% extends "ProjectManagementBundle::layout.html.twig" %}
+
+{% block stylesheet %}
+    {{ parent() }}
+{% endblock %}
+
+{% block includes %}
+    {{ parent() }}
+{% endblock %}
+
+{% block navigation %}
+    {{ render(controller("ProjectManagementBundle:Navigation:navigation",{'selected': 6})) }}
+{% endblock %}    
+    
+{% block content %}
+    {{ form_start(form, { 'action': path('_configuration_invoicing') } ) }}
+    <fieldset>
+        <legend>Parametres de facturation</legend>
+           <div class="form-row">
+            {{form_label(form.numberingType,'Mode de numérotation' ) }}
+            {{form_widget(form.numberingType) }}
+            {{form_errors(form.numberingType) }}
+           </div>
+           <div class="form-row">
+            {{form_label(form.numberingFormat,'Formattage' ) }}
+            {{form_widget(form.numberingFormat) }}
+            {{form_errors(form.numberingFormat) }}
+           </div>
+           <div class="form-row">
+            {{form_label(form.invoiceNumber,'N° facture' ) }}
+            {{form_widget(form.invoiceNumber) }}
+            {{form_errors(form.invoiceNumber) }}
+           </div>
+           <div class="form-row">
+            {{form_label(form.footerFormat,'Format du pied de facture' ) }}
+            {{form_widget(form.footerFormat) }}
+            {{form_errors(form.footerFormat) }}
+           </div>
+           <div class="form-row">
+            {{form_label(form.invoiceLogo,'Logo' ) }}
+            {{form_widget(form.invoiceLogo) }}
+            {{form_errors(form.invoiceLogo) }}
+           </div>
+           <div class="form-row">
+            {{form_label(form.conditions,'Conditions de vente' ) }}
+            {{form_widget(form.conditions) }}
+            {{form_errors(form.conditions) }}
+           </div>
+           <div class="form-row">
+            {{form_label(form.specialConditions,'Conditions particulière' ) }}
+            {{form_widget(form.specialConditions) }}
+            {{form_errors(form.specialConditions) }}
+           </div>
+           <div class="form-row">
+            {{form_label(form.reminderText,'Texte de relance' ) }}
+            {{form_widget(form.reminderText) }}
+            {{form_errors(form.reminderText) }}
+           </div>
+           {{ form_rest(form) }}
+            <input type="submit" />
+    </fieldset>
+    {{ form_end(form) }}
+{% endblock %}
+
+{% block javascript %}
+    {{ parent() }}
+{% endblock %}
+    

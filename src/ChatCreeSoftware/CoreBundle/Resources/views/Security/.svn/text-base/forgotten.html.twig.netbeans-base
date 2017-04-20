@@ -1,0 +1,21 @@
+{% extends "CoreBundle::layout.html.twig" %}
+
+{% block includes %}
+    {{ parent() }}
+{% endblock %}
+    
+{% block javascript %}   
+    $(document).ready(function () {
+        
+    });
+{% endblock %}
+
+{% block content %}
+    <form id="mailform" class="form-login" action="{{ path('_recover_mail_sent') }}" method="post">
+            <h3>Mot de passe oublié</h3>
+            <p>Saisissez l'adresse e-mail associé à votre compte.</p>
+            <label class="sr-only" for="email">E-mail:</label>
+            <input class="form-control" type="email" id="email" name="email" placeholder="E-mail" />
+            <button class="btn btn-lg btn-login btn-block" type="submit">&nbsp;Continuer&nbsp;</button>
+    </form>
+{% endblock %}

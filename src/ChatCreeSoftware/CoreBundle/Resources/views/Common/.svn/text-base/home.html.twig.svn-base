@@ -1,0 +1,3 @@
+{% extends "CoreBundle::coreLayout.html.twig" %}
+
+{% set menu_selected = '1' %}

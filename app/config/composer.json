@@ -1,0 +1,9 @@
+{
+    "require": {
+        "symfony/assetic-bundle": "^2.8",
+        "symfony/twig-bundle": "^3.0",
+        "symfony/form": "^3.0",
+        "symfony/security": "^3.0",
+        "symfony/var-dumper": "^3.0"
+    }
+}

@@ -1,0 +1,89 @@
+10
+
+dir
+33
+http://svn@clairvaux.local/repo/ProjectManager/src/ChatCreeSoftware/CoreBundle
+http://svn@clairvaux.local/repo
+
+
+
+2017-02-11T10:42:10.773090Z
+33
+svn
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+455bf1c5-d7f4-45b9-b08c-de1e00ab3d8f
+
+Repository
+dir
+
+DependencyInjection
+dir
+
+Tests
+dir
+
+Controller
+dir
+
+Services
+dir
+
+Listener
+dir
+
+Security
+dir
+
+CoreBundle.php
+file
+
+
+
+
+2014-05-04T19:31:06.000000Z
+334973b2d226451c0d6bef62d7e7f38f
+2016-12-03T13:52:13.844696Z
+14
+svn
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+132
+
+Resources
+dir
+
+Entity
+dir
+

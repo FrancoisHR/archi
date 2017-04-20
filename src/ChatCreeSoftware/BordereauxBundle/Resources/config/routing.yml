@@ -1,0 +1,3 @@
+bordereaux_homepage:
+    path:     /
+    defaults: { _controller: BordereauxBundle:Default:index }

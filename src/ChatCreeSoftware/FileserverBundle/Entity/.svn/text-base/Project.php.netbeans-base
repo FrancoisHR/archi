@@ -1,0 +1,756 @@
+<?php
+
+namespace ChatCreeSoftware\FileserverBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+
+/**
+ * @ORM\Entity
+ * @ORM\Table(name="project")
+ */
+class Project {
+
+     private static $PROJECT_ROOT = "projects/";
+    /**
+     * @ORM\Id
+     * @ORM\Column(type="integer")
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+    private $id;
+
+    /**
+     * @ORM\Column(type="string", length="255")
+     * @Assert\NotBlank( message="Remplissez le nom du projet")
+     */
+    private $projectName;
+    
+    /**
+     * @var ChatCreeSoftware\ProjectManagementBundle\Entity\Flags
+     */
+    private $projectType;
+
+    /**
+     * @var ChatCreeSoftware\ProjectManagementBundle\Entity\Flags
+     */
+    private $projectStatus;
+
+    /**
+     * @var ChatCreeSoftware\ProjectManagementBundle\Entity\Flags
+     */
+    private $projectContract;  
+
+    /**
+     * @var date $projectStart
+     */
+    private $projectStart;
+
+    /**
+     * @var date $projectEnd
+     */
+    private $projectEnd;
+
+    /**
+     * @var float $projectPrice
+     */
+    private $projectPrice;
+
+    /**
+     * @var string $projectDesc
+     */
+    private $projectDesc;
+
+    /**
+     * @var text $projectNote
+     */
+    private $projectNote;
+
+    /**
+     * @var date $authDate
+     */
+    private $authDate;
+
+    /**
+     * @var date $workStart
+     */
+    private $workStart;
+
+    /**
+     * @var ChatCreeSoftware\ProjectManagementBundle\Entity\Invoicing
+     */
+    private $invoices;
+
+    /**
+     * @var string $cadastre
+     */
+    private $cadastre;
+
+    /**
+     * @var string $section
+     */
+    private $section;
+
+    /**
+     * @var string $commune
+     */
+    private $commune;
+
+    /**
+     * Get id
+     *
+     * @return integer $id
+     */
+    public function getId() {
+        return $this->id;
+    }
+
+    /**
+     * @ORM\Column(type="string", length="255")
+     */
+    private $projectPath;
+
+    /**
+     * Set projectName
+     *
+     * @param string $projectName
+     */
+    public function setProjectName($projectName) {
+        $this->projectName = $projectName;
+    }
+
+    /**
+     * Get projectName
+     *
+     * @return string $projectName
+     */
+    public function getProjectName() {
+        return $this->projectName;
+    }
+
+    /**
+     * Set projectPath
+     *
+     * @param string $projectPath
+     */
+    public function setProjectPath($projectPath) {
+        $this->projectPath = $projectPath;
+    }
+
+    /**
+     * Get projectPath
+     *
+     * @return string $projectPath
+     */
+    public function getProjectPath() {
+        return $this->projectPath;
+    }
+
+    function createPath($str, $encoding = 'utf-8') {
+        mb_regex_encoding($encoding); // jeu de caractères courant pour les expressions rationnelles. 
+        // Tableau des corespondance
+        $str_ascii = array(
+            'A' => 'ÀÁÂÃÄÅĀĂǍẠẢẤẦẨẪẬẮẰẲẴẶǺĄ',
+            'a' => 'àáâãäåāăǎạảấầẩẫậắằẳẵặǻą',
+            'C' => 'ÇĆĈĊČ',
+            'c' => 'çćĉċč',
+            'D' => 'ÐĎĐ',
+            'd' => 'ďđ',
+            'E' => 'ÈÉÊËĒĔĖĘĚẸẺẼẾỀỂỄỆ',
+            'e' => 'èéêëēĕėęěẹẻẽếềểễệ',
+            'G' => 'ĜĞĠĢ',
+            'g' => 'ĝğġģ',
+            'H' => 'ĤĦ',
+            'h' => 'ĥħ',
+            'I' => 'ÌÍÎÏĨĪĬĮİǏỈỊ',
+            'J' => 'Ĵ',
+            'j' => 'ĵ',
+            'K' => 'Ķ',
+            'k' => 'ķ',
+            'L' => 'ĹĻĽĿŁ',
+            'l' => 'ĺļľŀł',
+            'N' => 'ÑŃŅŇ',
+            'n' => 'ñńņňŉ',
+            'O' => 'ÒÓÔÕÖØŌŎŐƠǑǾỌỎỐỒỔỖỘỚỜỞỠỢ',
+            'o' => 'òóôõöøōŏőơǒǿọỏốồổỗộớờởỡợð',
+            'R' => 'ŔŖŘ',
+            'r' => 'ŕŗř',
+            'S' => 'ŚŜŞŠ',
+            's' => 'śŝşš',
+            'T' => 'ŢŤŦ',
+            't' => 'ţťŧ',
+            'U' => 'ÙÚÛÜŨŪŬŮŰŲƯǓǕǗǙǛỤỦỨỪỬỮỰ',
+            'u' => 'ùúûüũūŭůűųưǔǖǘǚǜụủứừửữự',
+            'W' => 'ŴẀẂẄ',
+            'w' => 'ŵẁẃẅ',
+            'Y' => 'ÝŶŸỲỸỶỴ',
+            'y' => 'ýÿŷỹỵỷỳ',
+            'Z' => 'ŹŻŽ',
+            'z' => 'źżž',
+            // Ligatures
+            'AE' => 'Æ',
+            'ae' => 'æ',
+            'OE' => 'Œ',
+            'oe' => 'œ',
+        );
+
+        // Convertion
+        foreach ($str_ascii as $k => $v) {
+            $str = mb_ereg_replace('[' . $v . ']', $k, $str);
+        }
+
+        // replace space by '_'
+        $str = str_replace(' ', '_', $str);
+        // remove all specials
+        $specials = array( '@', '#', '&','"','\'','(','§','!',')','-','$','*','€','%','£','`','<','>',',','?',';','.',':','/','=','+');
+        $str = str_replace($specials, '', $str);
+
+        
+        $this->setProjectPath(Project::$PROJECT_ROOT . $str);
+    }
+
+    /**
+     * @var ChatCreeSoftware\ProjectManagementBundle\Entity\TimeLog
+     */
+    private $timeLogs;
+
+    public function __construct()
+    {
+        $this->timeLogs = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+    
+    /**
+     * Add timeLogs
+     *
+     * @param ChatCreeSoftware\ProjectManagementBundle\Entity\Project $timeLogs
+     */
+    public function addTimeLogs(\ChatCreeSoftware\ProjectManagementBundle\Entity\TimeLog $timeLogs)
+    {
+        $this->timeLogs[] = $timeLogs;
+    }
+
+    /**
+     * Get timeLogs
+     *
+     * @return Doctrine\Common\Collections\Collection 
+     */
+    public function getTimeLogs()
+    {
+        return $this->timeLogs;
+    }
+
+    /**
+     * Set projectStart
+     *
+     * @param date $projectStart
+     */
+    public function setProjectStart($projectStart)
+    {
+        $this->projectStart = $projectStart;
+    }
+
+    /**
+     * Get projectStart
+     *
+     * @return date 
+     */
+    public function getProjectStart()
+    {
+        return $this->projectStart;
+    }
+
+    /**
+     * Set projectEnd
+     *
+     * @param date $projectEnd
+     */
+    public function setProjectEnd($projectEnd)
+    {
+        $this->projectEnd = $projectEnd;
+    }
+
+    /**
+     * Get projectEnd
+     *
+     * @return date 
+     */
+    public function getProjectEnd()
+    {
+        return $this->projectEnd;
+    }
+
+    /**
+     * Set projectPrice
+     *
+     * @param float $projectPrice
+     */
+    public function setProjectPrice($projectPrice)
+    {
+        $this->projectPrice = $projectPrice;
+    }
+
+    /**
+     * Get projectPrice
+     *
+     * @return float 
+     */
+    public function getProjectPrice()
+    {
+        return $this->projectPrice;
+    }
+
+    /**
+     * Set projectDesc
+     *
+     * @param string $projectDesc
+     */
+    public function setProjectDesc($projectDesc)
+    {
+        $this->projectDesc = $projectDesc;
+    }
+
+    /**
+     * Get projectDesc
+     *
+     * @return string 
+     */
+    public function getProjectDesc()
+    {
+        return $this->projectDesc;
+    }
+
+    /**
+     * Set projectNote
+     *
+     * @param text $projectNote
+     */
+    public function setProjectNote($projectNote)
+    {
+        $this->projectNote = $projectNote;
+    }
+
+    /**
+     * Get projectNote
+     *
+     * @return text 
+     */
+    public function getProjectNote()
+    {
+        return $this->projectNote;
+    }
+
+    /**
+     * Set projectType
+     *
+     * @param ChatCreeSoftware\ProjectManagementBundle\Entity\Flags $projectType
+     */
+    public function setProjectType(\ChatCreeSoftware\ProjectManagementBundle\Entity\Flags $projectType)
+    {
+        $this->projectType = $projectType;
+    }
+
+    /**
+     * Get projectType
+     *
+     * @return ChatCreeSoftware\ProjectManagementBundle\Entity\Flags 
+     */
+    public function getProjectType()
+    {
+        return $this->projectType;
+    }
+
+    /**
+     * Set projectStatus
+     *
+     * @param ChatCreeSoftware\ProjectManagementBundle\Entity\Flags $projectStatus
+     */
+    public function setProjectStatus(\ChatCreeSoftware\ProjectManagementBundle\Entity\Flags $projectStatus)
+    {
+        $this->projectStatus = $projectStatus;
+    }
+
+    /**
+     * Get projectStatus
+     *
+     * @return ChatCreeSoftware\ProjectManagementBundle\Entity\Flags 
+     */
+    public function getProjectStatus()
+    {
+        return $this->projectStatus;
+    }
+
+    /**
+     * Set projectContract
+     *
+     * @param ChatCreeSoftware\ProjectManagementBundle\Entity\Flags $projectContract
+     */
+    public function setProjectContract(\ChatCreeSoftware\ProjectManagementBundle\Entity\Flags $projectContract)
+    {
+        $this->projectContract = $projectContract;
+    }
+
+    /**
+     * Get projectContract
+     *
+     * @return ChatCreeSoftware\ProjectManagementBundle\Entity\Flags 
+     */
+    public function getProjectContract()
+    {
+        return $this->projectContract;
+    }
+
+    /**
+     * Set authDate
+     *
+     * @param date $authDate
+     */
+    public function setAuthDate($authDate)
+    {
+        $this->authDate = $authDate;
+    }
+
+    /**
+     * Get authDate
+     *
+     * @return date 
+     */
+    public function getAuthDate()
+    {
+        return $this->authDate;
+    }
+
+    /**
+     * Set workStart
+     *
+     * @param date $workStart
+     */
+    public function setWorkStart($workStart)
+    {
+        $this->workStart = $workStart;
+    }
+
+    /**
+     * Get workStart
+     *
+     * @return date 
+     */
+    public function getWorkStart()
+    {
+        return $this->workStart;
+    }
+
+    /**
+     * Add invoices
+     *
+     * @param ChatCreeSoftware\ProjectManagementBundle\Entity\Invoicing $invoices
+     */
+    public function addInvoices(\ChatCreeSoftware\ProjectManagementBundle\Entity\Invoicing $invoices)
+    {
+        $this->invoices[] = $invoices;
+    }
+
+    /**
+     * Get invoices
+     *
+     * @return Doctrine\Common\Collections\Collection 
+     */
+    public function getInvoices()
+    {
+        return $this->invoices;
+    }
+    
+    /**
+     * @var string $addressStreet1
+     */
+    private $addressStreet1;
+
+    /**
+     * @var string $addressStreet2
+     */
+    private $addressStreet2;
+
+    /**
+     * @var string $addressCity
+     */
+    private $addressCity;
+
+    /**
+     * @var string $addressCP
+     */
+    private $addressCP;
+
+    /**
+     * @var string $addressCountry
+     */
+    private $addressCountry;
+
+
+    /**
+     * Set addressStreet1
+     *
+     * @param string $addressStreet1
+     */
+    public function setAddressStreet1($addressStreet1)
+    {
+        $this->addressStreet1 = $addressStreet1;
+    }
+
+    /**
+     * Get addressStreet1
+     *
+     * @return string 
+     */
+    public function getAddressStreet1()
+    {
+        return $this->addressStreet1;
+    }
+
+    /**
+     * Set addressStreet2
+     *
+     * @param string $addressStreet2
+     */
+    public function setAddressStreet2($addressStreet2)
+    {
+        $this->addressStreet2 = $addressStreet2;
+    }
+
+    /**
+     * Get addressStreet2
+     *
+     * @return string 
+     */
+    public function getAddressStreet2()
+    {
+        return $this->addressStreet2;
+    }
+
+    /**
+     * Set addressCity
+     *
+     * @param string $addressCity
+     */
+    public function setAddressCity($addressCity)
+    {
+        $this->addressCity = $addressCity;
+    }
+
+    /**
+     * Get addressCity
+     *
+     * @return string 
+     */
+    public function getAddressCity()
+    {
+        return $this->addressCity;
+    }
+
+    /**
+     * Set addressCP
+     *
+     * @param string $addressCP
+     */
+    public function setAddressCP($addressCP)
+    {
+        $this->addressCP = $addressCP;
+    }
+
+    /**
+     * Get addressCP
+     *
+     * @return string 
+     */
+    public function getAddressCP()
+    {
+        return $this->addressCP;
+    }
+
+    /**
+     * Set addressCountry
+     *
+     * @param string $addressCountry
+     */
+    public function setAddressCountry($addressCountry)
+    {
+        $this->addressCountry = $addressCountry;
+    }
+
+    /**
+     * Get addressCountry
+     *
+     * @return string 
+     */
+    public function getAddressCountry()
+    {
+        return $this->addressCountry;
+    }
+
+    /**
+     * Add timeLogs
+     *
+     * @param ChatCreeSoftware\ProjectManagementBundle\Entity\TimeLog $timeLogs
+     */
+    public function addTimeLog(\ChatCreeSoftware\ProjectManagementBundle\Entity\TimeLog $timeLogs)
+    {
+        $this->timeLogs[] = $timeLogs;
+    }
+
+    /**
+     * Set cadastre
+     *
+     * @param string $cadastre
+     */
+    public function setCadastre($cadastre)
+    {
+        $this->cadastre = $cadastre;
+    }
+
+    /**
+     * Get cadastre
+     *
+     * @return string 
+     */
+    public function getCadastre()
+    {
+        return $this->cadastre;
+    }
+
+    /**
+     * Set section
+     *
+     * @param string $section
+     */
+    public function setSection($section)
+    {
+        $this->section = $section;
+    }
+
+    /**
+     * Get section
+     *
+     * @return string 
+     */
+    public function getSection()
+    {
+        return $this->section;
+    }
+
+    /**
+     * Set commune
+     *
+     * @param string $commune
+     */
+    public function setCommune($commune)
+    {
+        $this->commune = $commune;
+    }
+
+    /**
+     * Get commune
+     *
+     * @return string 
+     */
+    public function getCommune()
+    {
+        return $this->commune;
+    }
+    /**
+     * @var string $ecadastre
+     */
+    private $ecadastre;
+
+    /**
+     * @var string $esection
+     */
+    private $esection;
+
+    /**
+     * @var string $ecommune
+     */
+    private $ecommune;
+
+
+    /**
+     * Set ecadastre
+     *
+     * @param string $ecadastre
+     */
+    public function setEcadastre($ecadastre)
+    {
+        $this->ecadastre = $ecadastre;
+    }
+
+    /**
+     * Get ecadastre
+     *
+     * @return string 
+     */
+    public function getEcadastre()
+    {
+        return $this->ecadastre;
+    }
+
+    /**
+     * Set esection
+     *
+     * @param string $esection
+     */
+    public function setEsection($esection)
+    {
+        $this->esection = $esection;
+    }
+
+    /**
+     * Get esection
+     *
+     * @return string 
+     */
+    public function getEsection()
+    {
+        return $this->esection;
+    }
+
+    /**
+     * Set ecommune
+     *
+     * @param string $ecommune
+     */
+    public function setEcommune($ecommune)
+    {
+        $this->ecommune = $ecommune;
+    }
+
+    /**
+     * Get ecommune
+     *
+     * @return string 
+     */
+    public function getEcommune()
+    {
+        return $this->ecommune;
+    }
+    /**
+     * @var ChatCreeSoftware\ProjectManagementBundle\Entity\Task
+     */
+    private $tasks;
+
+
+    /**
+     * Add tasks
+     *
+     * @param ChatCreeSoftware\ProjectManagementBundle\Entity\Task $tasks
+     */
+    public function addTask(\ChatCreeSoftware\ProjectManagementBundle\Entity\Task $tasks)
+    {
+        $this->tasks[] = $tasks;
+    }
+
+    /**
+     * Get tasks
+     *
+     * @return Doctrine\Common\Collections\Collection 
+     */
+    public function getTasks()
+    {
+        return $this->tasks;
+    }
+}

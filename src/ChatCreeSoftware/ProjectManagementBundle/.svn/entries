@@ -1,0 +1,107 @@
+10
+
+dir
+33
+http://svn@clairvaux.local/repo/ProjectManager/src/ChatCreeSoftware/ProjectManagementBundle
+http://svn@clairvaux.local/repo
+
+
+
+2017-02-11T10:42:10.773090Z
+33
+svn
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+455bf1c5-d7f4-45b9-b08c-de1e00ab3d8f
+
+Repository
+dir
+
+DependencyInjection
+dir
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+deleted
+
+Tests
+dir
+
+Controller
+dir
+
+ProjectManagementBundle.php
+file
+
+
+
+
+2012-01-29T18:37:01.000000Z
+489b04315a41c2005bcd593be9ba28f1
+2013-04-02T00:37:28.497469Z
+2
+svn
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+158
+
+Listener
+dir
+
+Forms
+dir
+
+Resources
+dir
+
+Entity
+dir
+

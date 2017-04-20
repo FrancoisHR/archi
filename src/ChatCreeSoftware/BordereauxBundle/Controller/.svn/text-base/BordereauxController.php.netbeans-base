@@ -1,0 +1,936 @@
+<?php
+namespace ChatCreeSoftware\BordereauxBundle\Controller;
+
+use ChatCreeSoftware\CoreBundle\Entity\Project;
+use ChatCreeSoftware\BordereauxBundle\Entity\CorpsMetier;
+use ChatCreeSoftware\BordereauxBundle\Entity\InfoSupplementaire;
+use ChatCreeSoftware\BordereauxBundle\Entity\Librairie;
+use ChatCreeSoftware\BordereauxBundle\Entity\Parametre,
+    ChatCreeSoftware\BordereauxBundle\Entity\Prestation,
+    ChatCreeSoftware\BordereauxBundle\Entity\Question,
+    ChatCreeSoftware\BordereauxBundle\Entity\Section,
+    ChatCreeSoftware\BordereauxBundle\Entity\Bordereau,
+    ChatCreeSoftware\BordereauxBundle\Entity\Ligne,
+    ChatCreeSoftware\BordereauxBundle\Entity\Devis,
+    Sensio\Bundle\FrameworkExtraBundle\Configuration\Route,
+    Sensio\Bundle\FrameworkExtraBundle\Configuration\Template,
+    Symfony\Bundle\FrameworkBundle\Controller\Controller,
+    Symfony\Component\HttpFoundation\Request,
+    Symfony\Component\HttpFoundation\Response;      
+
+class BordereauxController extends Controller {
+
+    /**
+     * @Route("/bordereaux/load", name="_bordereaux_load")
+     * @Template
+     */
+    public function loadAction() {
+        if (file_exists('catalogue_crtib_22juin2012.xml')) {
+            $xml = simplexml_load_file('catalogue_crtib_22juin2012.xml');
+
+            $this->xmlLoad($xml);
+        } else {
+            exit('Echec lors de l\'ouverture du fichier catalogue_crtib_22juin2012.xml.');
+        }
+
+        return array();
+    }
+    
+    /**
+     * 
+     * @Route( "/bordereaux/liste", name="_bordereaux_liste")
+     * @Template
+     */
+    public function listeBordereauxAction(){
+          return array();
+    }
+
+    /**
+     * 
+     * @Route( "/bordereaux/projet/liste/{id}", name="_bordereaux_project_liste")
+     * @Template
+     */
+    public function listeProjectBordereauxAction( Request $request, Project $project ){
+        $em = $this->get('doctrine')->getManager();
+        $userRepo = $em->getRepository("CoreBundle:User");
+        $users = $userRepo->findByRole("ROLE_PROVIDER");
+        
+        $statusRepo = $em->getRepository("CoreBundle:Flags");
+        $status = $statusRepo->findByFlagType("QS");
+        
+        $defaultStatus = $statusRepo->findOneByFlagExtra("QUOTE_INITIAL");
+        
+        return array( "project" => $project,
+                      "providers" => $users,
+                      "status" => $status,
+                      "defaultStatus" => $defaultStatus );
+    }
+
+    /**
+     * 
+     * @Route( "/bordereaux/projet/bordereau/{id}", name="_bordereaux_project_bordereau", defaults={ "id"=0 })
+     * @Template
+     */
+    public function projectBordereauAction( Request $request, Bordereau $bordereau ){
+        $em = $this->get('doctrine')->getManager();
+
+        $fileRepo = $em->getRepository("BordereauxBundle:Fichier");
+        $files = $fileRepo->findAll();
+
+        return array( "bordereau" => $bordereau,
+                      "files" => $files  );
+    }
+   
+    /**
+     * @Route( "/bordereaux/ajax/bordereau/fichiers/{id}", name="_ajax_bordereau_fichiers", defaults={ "id"=0 }  )
+     */
+    public function bordereauFichiersAction( Bordereau $bordereau ){
+        $assignedFiles = array();
+        
+        foreach( $bordereau->getFichiers() as $fichier ){
+            $assignedFiles[] = $fichier->getId();
+        }
+        
+        $ajaxResult["data"] = $assignedFiles;
+        $return = json_encode($ajaxResult);
+        return new Response($return, 200);        
+    }
+    
+    /**
+     * @Route( "/bordereaux/ajax/bordereau/update/fichiers/{id}", name="_ajax_bordereau_update_fichiers", defaults={ "id"=0 }  )
+     */
+    public function bordereauUpdateFichiersAction( Request $request, Bordereau $bordereau ){
+        $em = $this->get('doctrine')->getManager();
+        $selected = $request->get("fichiers");
+        $fichierRepo = $em->getRepository("BordereauxBundle:Fichier");
+        
+        $fichiersId = explode("-", $selected );
+        
+        $actualIds = array();
+        foreach( $bordereau->getFichiers() as $fichier ){
+            if( !in_array($fichier->getId(), $fichiersId ) ){
+                $bordereau->removeFichier($fichier);
+            } else {
+                $actualIds[] = $fichier->getId();
+            }
+        }
+        foreach( $fichiersId as $id ){
+            if( !in_array( $id, $actualIds) ) {
+                $fichier = $fichierRepo->findOneById( $id );
+                $bordereau->addFichier($fichier);
+            }
+        }
+        
+        $em->flush();
+        $returnArray = array("response" => 200);
+        $return = json_encode($returnArray);
+        return new Response($return, 200);
+    }
+    
+    /**
+     * 
+     * @Route( "/bordereaux/ajax/projet/liste/{id}", name="_ajax_list_project_bordereaux", defaults={ "id"=0 }  )
+     * 
+     */
+    public function ajaxListeProjectBordereauxAction( Project $project ){
+        $ajaxResult = array();
+        $data = array();
+                
+        if ($project->getBordereaux()) {
+            foreach ($project->getBordereaux() as $bordereau) {
+                $bordereauObject = array(
+                    "id" => $bordereau->getId(),
+                    "date" => $bordereau->getDate()->format("d/m/Y"),
+                    "type" => $bordereau->getType(),
+                    "titre" => $bordereau->getTitre(),
+                    "lot" => $bordereau->getReferenceLot(),
+                    "indice" => $bordereau->getIndice(),
+                    "description" => $bordereau->getDescription(),
+                    "devis" => count( $bordereau->getDevis()) );
+
+                $data[] = $bordereauObject;
+            }
+        }    
+        
+        $ajaxResult["data"] = $data;
+        $return = json_encode($ajaxResult);
+        return new Response($return, 200);
+    }
+    
+    /**
+     * @Route( "/bordereaux/ajax/bordereau/delete/{id}", name="_ajax_bordereau_delete", defaults={ "id"=0 } )
+     */
+    public function ajaxBordereauDeleteAction( Bordereau $bordereau ){
+        $em = $this->get('doctrine')->getManager();
+        $directory = $this->getParameter('web_dir');
+        
+        if( $bordereau ){
+            $bordereau->getProject()->deletePath($directory, "Bordereau", "", $bordereau->getId() );
+            
+            $em->remove( $bordereau );
+            $em->flush();
+        }
+        
+        $returnArray = array("response" => 200);
+        $return = json_encode($returnArray);
+        return new Response($return, 200);        
+    }
+    
+    /**
+     * @Route( "/bordereaux/ajax/bordereau/update/{id}", name="_ajax_bordereau_update", defaults={ "id"=0 } )
+     */
+    public function ajaxBordereauUpdateAction( Request $request, Bordereau $bordereau = null ){
+        $em = $this->get('doctrine')->getManager();
+
+        $projectId = $request->get('pid');
+        $date = $request->get('date');
+        $type = $request->get('type');
+        $titre = $request->get('titre');
+        $lot = $request->get('lot');
+        $indice = $request->get('indice');
+        $description = $request->get('description');
+        
+        if( $bordereau === null ){
+            $bordereau = new Bordereau();
+            $em->persist( $bordereau );
+            
+            $projectRepo = $em->getRepository( 'CoreBundle:Project' );
+            $project = $projectRepo->findOneById( $projectId );
+            if( $project ){
+                $bordereau->setProject($project);
+            }
+        }
+        if ($date) {
+            $date = \DateTime::createFromFormat('d/m/Y', $date);
+            $bordereau->setDate($date);
+        } else {
+            $bordereau->setDate(NULL);
+        }
+        $bordereau->setType($type);
+        $bordereau->setTitre($titre);
+        $bordereau->setReferenceLot($lot);
+        $bordereau->setIndice($indice);
+        $bordereau->setDescription($description);
+        
+        
+        $em->flush();
+        
+        $returnArray = array("response" => 200);
+        $return = json_encode($returnArray);
+        return new Response($return, 200);         
+    }
+    
+    /**
+     * @Route( "/bordereaux/ajax/devis/update/{id}", name="_ajax_devis_update", defaults={ "id"=0 } )
+     */
+    public function ajaxDevisUpdateAction( Request $request, Devis $devis = null ){
+        $em = $this->get('doctrine')->getManager();
+
+        $bordereauId = $request->get('bid');
+        $providerId = $request->get('providerId');
+        $statusId = $request->get('statusId');
+        $ouverture = $request->get('ouverture');
+        $depot = $request->get('depot');
+        $cloture = $request->get('cloture');
+        $commentaire = $request->get('commentaire');
+        
+        if( $devis === null ){
+            $devis = new Devis();
+            $devis->setVersion( 1 );
+            $em->persist( $devis );
+            
+            $projectRepo = $em->getRepository( 'BordereauxBundle:Bordereau' );
+            $bordereau = $projectRepo->findOneById( $bordereauId );
+            if( $bordereau ){
+                $devis->setBordereau($bordereau);
+            }
+        }
+        if( $providerId ){
+            $userRepo = $em->getRepository("CoreBundle:User");
+            $provider = $userRepo->findOneById( $providerId );
+            $devis->setSoumissionnaire($provider);
+        }
+        if( $statusId ){
+            $flagRepository = $em->getRepository( "CoreBundle:Flags");
+            $status = $flagRepository->findOneById( $statusId );
+            $devis->setEtat( $status );
+        }
+        if ($ouverture) {
+            $date = \DateTime::createFromFormat('d/m/Y', $ouverture);
+            $devis->setOuverture($date);
+        } else {
+            $devis->setOuverture(NULL);
+        }
+        if ($cloture) {
+            $date = \DateTime::createFromFormat('d/m/Y', $cloture);
+            $devis->setCloture($date);
+        } else {
+            $devis->setCloture(NULL);
+        }
+        if ($depot) {
+            $date = \DateTime::createFromFormat('d/m/Y', $depot);
+            $devis->setDepot($date);
+        } else {
+            $devis->setDepot(NULL);
+        }
+
+        $devis->setCommentaire($commentaire);
+        $em->flush();
+        
+        $returnArray = array( "response" => 200, "id" => $devis->getId() );
+        $return = json_encode($returnArray);
+        return new Response($return, 200);         
+    }    
+    
+    /**
+     * @Route( "/bordereaux/ajax/bordereau/ligne/{id}", name="_ajax_bordereaux_ligne", defaults={ "id"=0 } )
+     */
+    public function ajaxBordereauLigne( Ligne $ligne = null ) {
+        $ajaxResult = array();
+        $data = array();
+                
+        $ligneObject = array(
+            "id" => $ligne->getId(),
+            "titre" => $ligne->getTitre(),
+            "description" => $ligne->getDescription(),
+            "quantite" => $ligne->getQuantite(),
+            "unite" => $ligne->getUnite(),
+            "photo" => $ligne->getPhoto(),
+            "rapportPhoto" => $ligne->getRapportPhoto()*100,
+            "legende" => $ligne->getLegende(),
+            "optionel" => $ligne->getOptionel() );
+        
+        if( $ligne->getParente() ){
+            $ligneObject["parenteId"] = $ligne->getParente()->getId();
+        } else {
+            $ligneObject["parenteId"] = null;
+        }
+        if( $ligne->getBordereau() ){
+            $ligneObject["bordereauId"] = $ligne->getBordereau()->getId();
+        } else {
+            $ligneObject["bordereauId"] = null;
+        }
+        if( $ligne->getPrestation() ){
+            $prestation = $ligne->getPrestation();
+            $ligneObject["mode"]=1;
+            $ligneObject["prestationId"] = $prestation->getId();
+            $section = $prestation->getSection();
+            $ligneObject["sectionId"] = $section->getId();
+            $corps = $section->getCorpsMetier();
+            $ligneObject["corpsId"] = $corps->getId();
+            $librairie = $corps->getLibrairie();
+            $ligneObject["librairie"] = $librairie->getId();
+        } else {
+            $ligneObject["mode"]=2;
+            $ligneObject["prestationId"] = null;
+        }
+        
+        $n=0;
+        foreach($ligne->getParametres() as $parametre ){
+            $ligneObject["parametre_".$n++]=$parametre->getId();
+        }
+        
+        $ajaxResult["data"] = $ligneObject;
+        $return = json_encode($ajaxResult);
+        return new Response($return, 200);
+    }
+    
+    
+    /**
+     * @Route( "/bordereaux/ajax/bordereau/copy/{id}", name="_ajax_bordereau_copy", defaults={ "id"=0 } )
+     */
+    public function ajaxBordereauCopyAction( Request $request, Bordereau $bordereau = null ){
+        $em = $this->get('doctrine')->getManager();
+
+        $newBordereau = new Bordereau();
+        $newBordereau->setType($bordereau->getType()); 
+        $newBordereau->setDate($bordereau->getDate()); 
+        $em->persist( $newBordereau );
+        $em->flush();   // Flush now to generate the new Bordereau ID
+
+        $projectId = $request->get('projectId');
+        if( $projectId ){
+            $projectRepo = $em->getRepository("CoreBundle:Project");
+            $project = $projectRepo->findOneById( $projectId );
+            $newBordereau->setProject( $project );
+        } else {
+            $newBordereau->setProject( $bordereau->getProject() );
+        }
+
+        $titre = $request->get('titre');
+        if( $titre ){
+            $newBordereau->setTitre($titre);
+        } else {
+            $newBordereau->setTitre($bordereau->getTitre());            
+        }
+        $lot = $request->get('lot');
+        if( $lot ){
+            $newBordereau->setReferenceLot($lot);
+        } else {
+            $newBordereau->setReferenceLot($bordereau->getReferenceLot());            
+        }
+        $indice = $request->get('indice');
+        if( $indice ){
+            $newBordereau->setIndice($indice);
+        } else {
+            $newBordereau->setIndice($bordereau->getIndice()+1);       
+        }        
+        $description = $request->get('description');
+        if( $description ){
+            $newBordereau->setDescription($description);
+        } else {
+            $newBordereau->setDescription($bordereau->getDescription());
+        }
+                
+        $ligneRepo = $em->getRepository( "BordereauxBundle:Ligne" );
+        foreach( $bordereau->getLignes() as $ligne ) {
+            $newLigne = new Ligne();
+            $newLigne->setBordereau( $newBordereau );
+            $em->persist( $newLigne );
+            
+            $ligneRepo->deepcopy( $this->getParameter('web_dir'), $this->getParameter('bordereaux_dir'), $newBordereau, $newLigne, $bordereau, $ligne );
+        }
+        
+        $em->flush();
+        
+        $returnArray = array("response" => 200);
+        $return = json_encode($returnArray);
+        return new Response($return, 200);   
+    }
+    
+    /**
+     * 
+     * @Route( "/bordereaux/ajax/lignes/bordereau/{id}", name="_ajax_lignes_bordereau", defaults={ "id"=0 }  )
+     * 
+     */
+    public function ajaxListeLignesBordereauAction( Bordereau $bordereau ){
+        $ajaxResult = array();
+        $data = array();
+                
+        if ($bordereau->getLignes()) {
+            foreach ($bordereau->getLignes() as $ligne) {
+                $data = array_merge( $data, $ligne->getLigneAndChildAsArray() );
+            }
+        }    
+        
+        $ajaxResult["data"] = $data;
+        $return = json_encode($ajaxResult);
+        return new Response($return, 200);
+    }
+
+    /**
+     * 
+     * @Route( "/bordereaux/ajax/lignes/devis/{id}", name="_ajax_lignes_devis", defaults={ "id"=0 }  )
+     * 
+     */
+    public function ajaxListeLignesDevisAction( Devis $devis ){
+        $ajaxResult = array();
+        $data = array();
+        
+        $bordereau = $devis->getBordereau();
+        
+        if ($bordereau->getLignes()) {
+            foreach ($bordereau->getLignes() as $ligne) {
+                $data = array_merge( $data, $ligne->getLigneAndChildAsArray( $devis ) );
+            }
+        }    
+        
+        $ajaxResult["data"] = $data;
+        $return = json_encode($ajaxResult);
+        return new Response($return, 200);
+    }    
+    
+    /**
+     * 
+     * @Route( "/bordereaux/ajax/libraries", name="_ajax_bordereaux_librairies" )
+     */
+    public function ajaxListeLibrairies(){
+        $ajaxResult = array();
+        $data = array();
+        
+        $em = $this->get('doctrine')->getManager();
+        $libRepo = $em->getRepository('BordereauxBundle:Librairie');
+        $librairies = $libRepo->findAll();
+        
+        foreach( $librairies as $librairie ){
+            $libObject = array(
+                "id" => $librairie->getId(),
+                "titre" => $librairie->getTitre() . " (" . $librairie->getVersionDtd() . ")" );
+            $data[] = $libObject;            
+        }
+        
+        $ajaxResult["data"] = $data;
+        $return = json_encode($ajaxResult);
+        return new Response($return, 200);
+    }
+
+    /**
+     * 
+     * @Route( "/bordereaux/ajax/corpsmetiers/{id}", name="_ajax_bordereaux_corps_metiers", defaults={ "id"=0 } )
+     */
+    public function ajaxListeCorpsMetiers( $id ){
+        $em = $this->get('doctrine')->getManager();
+        $libRepo = $em->getRepository('BordereauxBundle:Librairie');
+        
+        $ajaxResult = array();
+        $data = array();
+        
+        $data[] = array( "id" => 0, "numero" => "", "titre" => "" );
+        if( $id != 0 ){
+            $lib = $libRepo->findOneById( $id  );
+            foreach( $lib->getCorpsMetiers() as $corps ){
+                $corpsObject = array(
+                    "id" => $corps->getId(),
+                    "numero" => $corps->getNumero(),
+                    "titre" => $corps->getTitre() );
+                $data[] = $corpsObject;            
+            }
+        }
+        $ajaxResult["data"] = $data;
+        $return = json_encode($ajaxResult);
+        return new Response($return, 200);
+    }
+    
+    /**
+     * 
+     * @Route( "/bordereaux/ajax/sections/{id}", name="_ajax_bordereaux_sections", defaults={ "id"=0 } )
+     */
+    public function ajaxListeSection( $id ){
+        $em = $this->get('doctrine')->getManager();
+        $corpsRepo = $em->getRepository('BordereauxBundle:CorpsMetier');
+        
+        $ajaxResult = array();
+        $data = array();
+                
+        $data[] = array( "id" => 0, "numero" => "", "titre" => "" );
+        if( $id != 0 ){
+            $corps = $corpsRepo->findOneById( $id );
+            foreach( $corps->getSections() as $section ){
+                $sectionObject = array(
+                    "id" => $section->getId(),
+                    "numero" => $section->getNumero(),
+                    "titre" => $section->getTitre() );
+                $data[] = $sectionObject;            
+            }
+        }
+        
+        $ajaxResult["data"] = $data;
+        $return = json_encode($ajaxResult);
+        return new Response($return, 200);
+    }
+    
+    /**
+     * 
+     * @Route( "/bordereaux/ajax/prestations/{id}", name="_ajax_bordereaux_prestations", defaults={ "id"=0 } )
+     */
+    public function ajaxListePrestation( $id ){
+        $em = $this->get('doctrine')->getManager();
+        $sectionRepo = $em->getRepository('BordereauxBundle:Section');
+        
+        $ajaxResult = array();
+        $data = array();
+                
+        $data[] = array( "id" => 0, "numero" => "", "titre" => "" );
+        if( $id != 0 ){
+            $section = $sectionRepo->findOneById( $id );
+            foreach( $section->getPrestations() as $prestation ){
+                $prestationObject = array(
+                    "id"        => $prestation->getId(),
+                    "numero"    => $prestation->getNumero(),
+                    "titre"     => $prestation->getTitre() );
+                $data[] = $prestationObject;            
+            }
+        }
+        
+        $ajaxResult["data"] = $data;
+        $return = json_encode($ajaxResult);
+        return new Response($return, 200);
+    }
+    
+    /**
+     * 
+     * @Route( "/bordereaux/ajax/prestation/{id}", name="_ajax_bordereaux_prestation", defaults={ "id"=0 } )
+     */
+    public function ajaxPrestation( $id ){
+        $em = $this->get('doctrine')->getManager();
+        $prestationRepo = $em->getRepository('BordereauxBundle:Prestation');
+
+        $ajaxResult = array();
+        $data = array();
+        
+        $data[] = array( "id" => 0, "numero" => "", "description" => "", "titre" => "", "unite" => "" );
+        if( $id != 0 ){
+            $prestation = $prestationRepo->findOneById( $id );
+            $prestationObject = array(
+                "id"          => $prestation->getId(),
+                "numero"      => $prestation->getNumero(),
+                "description" => $prestation->getDescription(),
+                "titre"       => $prestation->getTitre(),
+                "unite"       => $prestation->getUnite() );
+            if( $prestation->getParametres() ) {
+                $paramArray = array();
+                
+                foreach( $prestation->getParametres() as $param ){
+                    
+                    $paramObject = array(
+                        "id" => $param->getId(),
+                        "numero" => $param->getNumero(),
+                        "titre" => $param->getTitre() );
+                    
+                    $paramArray[ $param->getOrdre()][] = $paramObject;                    
+                }
+                
+                $prestationObject[ "parametres" ]= $paramArray;
+            }
+            $data = $prestationObject;            
+        }
+        
+        $ajaxResult["data"] = $data;
+        $return = json_encode($ajaxResult);
+        return new Response($return, 200);
+    }
+    
+    /**
+     * 
+     * @Route( "/bordereaux/ajax/ligne/update/{id}", name="_ajax_bordereaux_line_update", defaults={ "id"=0 } )
+     */
+    public function ajaxBordereauLigneUpdate( Request $request, Bordereau $bordereau ) {
+        $em = $this->get('doctrine')->getManager();
+        $update = $request->get('update');
+        $mode = $request->get('mode');
+        $ligneId = $request->get('ligneId');
+        $siblingId = $request->get('sibling');
+        $addHierarchy = $request->get('addHierarchy');
+        $option = $request->get('option');
+        $file = $request->get('file');
+        $rapportPhoto = (float)$request->get('rapport');
+        
+        $ligneRepo = $em->getRepository( 'BordereauxBundle:Ligne' );
+        $sibling = $ligneRepo->findOneById( $siblingId );
+        
+        $ligne = null;
+
+        if( $update == "U" ){
+            $ligne = $ligneRepo->findOneById( $ligneId );        
+        } else {
+            $ligne = new Ligne();
+            $em->persist( $ligne );
+
+            if( $sibling ) {
+                if( $addHierarchy==="next") {                    
+                    $ligne->setNumero( $sibling->getNumero() + 1 );
+                    if( $sibling->getParente() ) {
+                        $ligne->setParente( $sibling->getParente() );
+                    } else {
+                        $ligne->setBordereau($bordereau);
+                    }
+                } else if ( $addHierarchy==="below") {
+                    $ligne->setParente( $sibling );
+                } else if ( $addHierarchy==="alternate"){
+                    $ligne->setAlternativede($sibling);
+                    $ligne->setNumero( $sibling->getNumero() );
+                }
+            } else {
+                $ligne->setBordereau($bordereau);
+            }
+        }
+        
+        if( $mode == "1" ){
+            $prestationId = $request->get('prestation');
+            if( $prestationId != "0" ) {
+                $prestaRepo = $em->getRepository( 'BordereauxBundle:Prestation');
+                $prestation = $prestaRepo->findOneById( $prestationId );
+            
+                if( $prestation ){
+                    $ligne->setPrestation($prestation);
+                }
+            }
+
+            foreach( $ligne->getParametres() as $param ) {
+                $ligne->removeParametre($param);
+            }
+            
+            $n = 0;
+            $paramRepo = $em->getRepository( 'BordereauxBundle:Parametre');
+            while( $request->get('param' . $n) !== null ){
+                $paramId = $request->get('param' . $n );
+                $param = $paramRepo->findOneById( $paramId );
+                if( $param ) {
+                    $ligne->addParametre($param);
+                }
+                $n++;
+            }
+        }
+        
+        if( $mode == "2" ){
+            $titre = $request->get('titre');
+            $ligne->setTitre($titre);
+            $unite = $request->get('unite');
+            $ligne->setUnite($unite);
+            $description = $request->get('description');
+            $ligne->setDescription($description);
+        }
+        
+        $quantite = $request->get('quantite');
+        $ligne->setQuantite($quantite);
+        $ligne->setOptionel( $option );
+        if( $file ){
+            $ligne->setPhoto( $file );
+            $ligne->setRapportPhoto( $rapportPhoto / 100.0 );
+        } else {
+            $ligne->setPhoto( null );
+            $ligne->setRapportPhoto( 1.0 );
+        }
+
+        $em->flush();
+        
+        $returnArray = array("response" => 200);
+        $return = json_encode($returnArray);
+        return new Response($return, 200);
+    }
+
+    /**
+     * 
+     * @Route( "/bordereaux/ajax/ligne/delete/{id}", name="_ajax_ligne_delete", defaults={ "id"=0 } )
+     */
+    public function ajaxLigneDelete( Ligne $ligne ) {
+        $em = $this->get('doctrine')->getManager();
+        $directory = $this->getParameter('web_dir');
+        
+        if( $ligne->getParente() ){
+            foreach( $ligne->getParente()->getFilles() as $mLigne){
+                if( $mLigne->getNumero() > $ligne->getNumero() ) {
+                    $mLigne->setNumero( $mLigne->getNumero() - 1 );
+                }
+            }
+        } else if( $ligne->getBordereau() ){
+            foreach( $ligne->getBordereau()->getLignes() as $mLigne){
+                if( $mLigne->getNumero() > $ligne->getNumero() ) {
+                    $mLigne->setNumero( $mLigne->getNumero() - 1 );
+                }
+            }
+        }
+        if( $ligne->getPhoto() ){
+            $bordereau = $ligne->getParentBordereau();
+            $path = $bordereau->getProject()->calculatePath(  $directory, "Bordereau", "", $bordereau->getId() );
+            if( \file_exists( "$path/" . $ligne->getPhoto() ) ){
+                unlink( "$path/" . $ligne->getPhoto() );
+            }
+        }
+        $em->remove( $ligne );
+        $em->flush();
+        
+        $returnArray = array("response" => 200);
+        $return = json_encode($returnArray);
+        return new Response($return, 200);
+    }
+    
+    
+    public function xmlLoad($xml, $parent=null, $offset="") {
+        $em = $this->get('doctrine')->getManager();   
+
+        $name = $xml->getName();
+        switch ($name) {
+            case "cat_prestations":
+                $repo = $em->getRepository('BordereauxBundle:Librairie');
+                $lib = $repo->findOneByTitre( $name );
+                
+                if( ! $lib ){
+                    echo "Creating new library <br>";
+                    $lib = new Librairie();
+                
+                    $lib->setTitre( $name );
+                    foreach ($xml->attributes() as $name => $value) {
+                        $reflector = new \ReflectionClass($lib);
+                        $method = $reflector->getMethod( "set" . ucfirst(str_replace('_','',$name) ) );
+                        if( $name == "date"){
+                            $date = \DateTime::createFromFormat("d/m/Y", $value->__toString() );
+                            $method->invoke($lib, $date);
+                        } else {
+                            $method->invoke($lib, $value->__toString() );
+                        }
+                    }
+                    $em->persist( $lib );
+                    $em->flush();
+                    echo "New library created<br>";
+                }
+                $parent = $lib;
+                break;
+            case "corps_de_metier":
+                $repo = $em->getRepository('BordereauxBundle:CorpsMetier');
+                $metier = $repo->findOneByTitre( $xml['titre'] );
+                
+                if( ! $metier ) {
+                    echo "Creating new Corps de Metier " . $xml['titre'] . "<br>";
+                    $metier = new CorpsMetier();
+                
+                    $metier->setTitre( $name );
+                    foreach ($xml->attributes() as $name => $value) {
+                        $reflector = new \ReflectionClass($metier);
+                        $method = $reflector->getMethod( "set" . ucfirst(str_replace('_','',$name) ) );
+                        $method->invoke($metier, $value->__toString() ); 
+                    }
+                    $metier->setLibrairie( $parent );
+                    $em->persist( $metier );
+                    $em->flush();
+                    
+                    echo "New corps de metier created<br>";
+                }
+                $parent = $metier;
+                break;
+            case "section":
+                $repo = $em->getRepository('BordereauxBundle:Section');
+                $section = $repo->findOneByTitre( $xml['titre'] );
+                
+                if( ! $section ) {
+                    echo "Creating new Section " . $xml['titre'] . "<br>";
+                    $section = new Section();
+                
+                    $section->setTitre( $name );
+                    foreach ($xml->attributes() as $name => $value) {
+                        $reflector = new \ReflectionClass($section);
+                        $method = $reflector->getMethod( "set" . ucfirst(str_replace('_','',$name) ) );
+                        $method->invoke($section, $value->__toString() ); 
+                    }
+                    $section->setCorpsMetier( $parent );
+                    $em->persist( $section );
+                    $em->flush();
+                    
+                    echo "New Section created<br>";
+                }
+                $parent = $section;
+                break;
+            case "prestation_normale":
+                $repo = $em->getRepository('BordereauxBundle:Prestation');
+                $prestation = $repo->findOneByNumeroComplet( $xml['numero_complet'] );
+                
+                if( ! $prestation ) {
+                    echo "Creating new Prestation " . $xml['titre'] . "<br>";
+                    $prestation = new Prestation();
+                
+                    $prestation->setTitre( $name );
+                    foreach ($xml->attributes() as $name => $value) {
+                        $reflector = new \ReflectionClass($prestation);
+                        $method = $reflector->getMethod( "set" . str_replace('_','', ucwords($name," _") ) );
+                        $method->invoke($prestation, $value->__toString() ); 
+                    }
+                    $prestation->setSection( $parent );
+                    $prestation->setType( 'N' );
+                    
+                    $em->persist( $prestation );
+                    $em->flush();
+                    
+                    echo "New Prestation created<br>";
+                }
+                $parent = $prestation;
+                break;
+            case "prestation_texte":
+                $repo = $em->getRepository('BordereauxBundle:Prestation');
+                $prestation = $repo->findOneByNumeroComplet( $xml['numero_complet'] );
+                
+                if( ! $prestation ) {
+                    echo "Creating new Prestation " . $xml['titre'] . "<br>";
+                    $prestation = new Prestation();
+                
+                    $prestation->setTitre( $name );
+                    foreach ($xml->attributes() as $name => $value) {
+                        $reflector = new \ReflectionClass($prestation);
+                        $method = $reflector->getMethod( "set" . str_replace('_','', ucwords($name," _") ) );
+                        $method->invoke($prestation, $value->__toString() ); 
+                    }
+                    $prestation->setSection( $parent );
+                    $prestation->setType( 'T' );
+                    $em->persist( $prestation );
+                    $em->flush();
+                    
+                    echo "New Prestation created<br>";
+                }
+                $parent = $prestation;
+                break;
+            case "description":
+                $repo = $em->getRepository('BordereauxBundle:Prestation');
+                if( $parent->getDescription() == null ){
+                    echo "Adding description<br>";
+                    $parent->setDescription( $xml[0]);
+                    $em->flush();
+                }
+                break;
+            case "parametre":
+                $repo = $em->getRepository('BordereauxBundle:Prestation');
+
+                // Build a new Parametre
+                $parametre = new Parametre();
+                foreach ($xml->attributes() as $name => $value) {
+                    $reflector = new \ReflectionClass($parametre);
+                    $method = $reflector->getMethod( "set" . str_replace('_','', ucwords($name," _") ) );
+                    $method->invoke($parametre, $value->__toString() ); 
+                }
+                
+                // Check if the current Prestation already own an equal parameter
+                // If not, link both and persist the new Parametre
+                if( ! $parent->hasParametre($parametre) ){
+                    echo $offset . "Creating Parametre: " . $xml["ordre"] . " - " . $xml["numero"] . " - " . $xml["titre"] . "<br>";
+                    $parametre->setPrestation( $parent );
+                    $em->persist( $parametre );
+                    $em->flush();
+                    echo "New Parametre created<br>";                    
+                }
+                break;
+            case "question_au_soumissionnaire":
+                $repo = $em->getRepository('BordereauxBundle:Question');
+                
+                // Build a new Question
+                $question = new Question();
+                foreach ($xml->attributes() as $name => $value) {
+                    $reflector = new \ReflectionClass($question);
+                    $method = $reflector->getMethod( "set" . str_replace('_','', ucwords($name," _") ) );
+                    $method->invoke($question, $value->__toString() ); 
+                }
+                
+                // Check if the current Prestation already own an equal Question
+                // If not, link both and persist the new Question
+                if( ! $parent->hasQuestion($question) ){
+                    echo $offset . "Creating Question: " . $xml["identifiant"] . " - " . $xml["question"] . "<br>";
+                    $question->setPrestation( $parent );
+                    $em->persist( $question );
+                    $em->flush();
+                    echo "New Question created<br>";                    
+                }
+                break;
+            case "info_supplementaire": 
+                $repo = $em->getRepository('BordereauxBundle:InfoSupplementaire');
+                
+                // Build a new Question
+                $info = new InfoSupplementaire();
+                foreach ($xml->attributes() as $name => $value) {
+                    $reflector = new \ReflectionClass($info);
+                    $method = $reflector->getMethod( "set" . str_replace('_','', ucwords($name," _") ) );
+                    $method->invoke($info, $value->__toString() ); 
+                }
+                
+                // Check if the current Prestation already own an equal Question
+                // If not, link both and persist the new Question
+                if( ! $parent->hasInfoSupplementaire($info) ){
+                    echo $offset . "Creating InfoSupplementaire: " . $xml["information"] . " - " . $xml["valeur"] . "<br>";
+                    $info->setPrestation( $parent );
+                    $em->persist( $info );
+                    $em->flush();
+                    echo "New InfoSupplementaire created<br>";                    
+                }
+                break;
+            default:
+                echo $offset . "Element: " . $name . "<br>";
+        }
+
+        // if ($xml->attributes()->count())
+        //     echo $offset . "Attributes : <br>";
+        // foreach ($xml->attributes() as $name => $value) {
+        //     echo $offset . "&nbsp;&nbsp;Name: " . $name . " - Value: " . $value . "<br>";
+        // }
+        foreach ($xml->children() as $child) {
+            $this->xmlLoad($child, $parent, "&nbsp;&nbsp;&nbsp;&nbsp;" . $offset);
+        }
+    }
+
+    
+}

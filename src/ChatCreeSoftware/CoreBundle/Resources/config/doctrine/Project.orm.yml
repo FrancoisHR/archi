@@ -1,0 +1,61 @@
+ChatCreeSoftware\CoreBundle\Entity\Project:
+  type: entity
+  table: CoreProject
+  repositoryClass: ChatCreeSoftware\CoreBundle\Repository\ProjectRepository  
+  entityListeners:
+    ChatCreeSoftware\CoreBundle\Listener\ProjectListener:
+  id:
+    id:
+      type: integer
+      generator:
+         strategy: AUTO  
+  fields:
+    projectName:    { type: string(255) }
+    projectPath:    { type: string(255) }
+    projectStart:   { type: date, nullable: true }
+    projectEnd:     { type: date, nullable: true }
+    authDate:       { type: date, nullable: true }
+    workStart:      { type: date, nullable: true }
+    projectBudget:   { type: float, nullable: true }
+    projectPrice:   { type: float, nullable: true }
+    projectDesc:    { type: string(255), nullable: true }
+    projectNote:    { type: text, nullable: true }
+    addressStreet1: { type: string(255), nullable: true }
+    addressStreet2: { type: string(255), nullable: true }
+    addressCity:    { type: string(255), nullable: true }
+    addressCP:      { type: string(255), nullable: true }
+    addressCountry: { type: string(255), nullable: true }
+    cadastre:       { type: string(255), nullable: true }
+    section:        { type: string(255), nullable: true }
+    commune:        { type: string(255), nullable: true }
+    
+  oneToMany:
+    addresses:
+      targetEntity: ChatCreeSoftware\ProjectManagementBundle\Entity\Address
+      mappedBy: project
+    timeLogs:
+      targetEntity: ChatCreeSoftware\ProjectManagementBundle\Entity\TimeLog
+      mappedBy: project
+    invoices:
+      targetEntity: ChatCreeSoftware\ProjectManagementBundle\Entity\Invoicing
+      mappedBy: project
+    tasks:
+      targetEntity: ChatCreeSoftware\ProjectManagementBundle\Entity\Task
+      mappedBy: project
+    journeys:
+      targetEntity: ChatCreeSoftware\ProjectManagementBundle\Entity\Journey
+      mappedBy: project
+    logbook:
+      targetEntity: ChatCreeSoftware\CoreBundle\Entity\LogBook
+      mappedBy: project
+    bordereaux:
+      targetEntity: ChatCreeSoftware\BordereauxBundle\Entity\Bordereau
+      mappedBy: project
+  manyToOne:
+    projectType:
+      targetEntity: ChatCreeSoftware\CoreBundle\Entity\Flags
+    projectStatus:
+      targetEntity: ChatCreeSoftware\CoreBundle\Entity\Flags
+    projectContract:
+      targetEntity: ChatCreeSoftware\CoreBundle\Entity\Flags      
+  lifecycleCallbacks: {  }

@@ -1,0 +1,66 @@
+{% extends "CoreBundle::coreLayout.html.twig" %}
+
+{% set menu_selected = '1' %}
+
+{% block content %}
+{% set foldername = foldername|replace({'/': ''}) %}
+<ul class="breadcrumb">
+    <li><a href="{{ path('_project_list') }}">Liste des projets</a></li>
+    <li {% if projectRoot == true %}class="active"{%endif%}>{% if projectRoot == true %}{{ project.projectName }}{% else %}<a class="projectlist" href='{{ path( '_project', {'id': project.id } ) }}'>{{ project.projectName }}</a>{% endif %}{% if is_granted('ROLE_EMPLOYEE') %}&nbsp;<a class="badge" href="{{path('_gestion_project',{'id':project.id})}}">Gestion</a>{% endif %}</li>
+    {% if foldername %}<li class="active"><span class="glyphicon glyphicon-folder-open"></span>{{ foldername }}</li>{% endif %}
+</ul>
+{% set error = app.session.flashBag.get('error') %}
+{% for message in error %}
+    <h2 class="error">Erreur : {{message}}</h2>
+{% endfor %}
+{% if( error|length == 0 ) %}
+<h2>Fichier(s) téléversé(s) :</h2>
+<table class="table table-striped table-bordered">
+    <thead>
+        <td>Nom</td>
+        <td>Taille</td>
+    </thead>
+    <tbody>
+        {% for flash_message in app.session.flashBag.get('notice') %}
+            <tr>
+                {% set fileinfo = flash_message|split('|') %}
+                <td>{{ fileinfo[0] }}</td>
+                <td>{{ fileinfo[1] }}</td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<h2>Email de notification envoyé aux personnes suivantes :</h2>
+
+<table class="table table-striped table-bordered">
+    <thead>
+        <td>Nom</td>
+        <td>Prénom</td>
+        <td>Email</td>
+    </thead>
+    <tbody>
+{% for user in users %}
+    {% if( logonUser.login != user.login ) %}
+    <tr>
+        <td>{{user.firstname}}</td>
+        <td>{{user.lastname}}</td>
+        <td>
+            {% for email in user.emails %}
+                {{ email.mail }}<br/>
+            {% endfor %}
+        </td>
+
+    </tr>
+    {% endif %}
+{% endfor %}
+{% endif %}
+</tbody>
+</table>
+
+{% if foldername %}
+    <a href="{{path('_project_folder', { 'id': project.id, 'foldername': foldername } ) }}">
+{% else %}
+    <a href="{{ path('_project',{"id":project.id}) }}">
+{% endif %}<input type="button" class="btn btn-primary" name="OK" value="OK" /></a>
+{% endblock %}

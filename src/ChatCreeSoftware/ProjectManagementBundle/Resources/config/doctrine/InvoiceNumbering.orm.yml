@@ -1,0 +1,14 @@
+ChatCreeSoftware\ProjectManagementBundle\Entity\InvoiceNumbering:
+  type: entity
+  table: InvoiceNumbering
+  repositoryClass: ChatCreeSoftware\ProjectManagementBundle\Repository\InvoiceNumberingRepository
+  id:
+    id:
+      type: integer
+      generator:
+         strategy: AUTO  
+  fields:
+    type:      { type: integer }
+    year:      { type: string(4)}
+    number:    { type: integer }
+  lifecycleCallbacks: {  }

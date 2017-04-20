@@ -1,0 +1,114 @@
+    Renommer un projet
+    Masquer un projet
+    Supprimer un projet
+    Pagination de la liste des projets (20 projets)
+    Template de projets (folders)
+    
+    Supprimer un folder
+    Renommer un folder
+    Déplacer un fichier dans un folder
+    Corriger gestion des droits
+    Suppression de fichiers
+    Selection et Zipper
+
+    Bouton pour ajouter un dossier
+    Bouton pour uploader un/des fichiers
+    Accepter drag'n'drop de fichiers ?
+    ## Retour la la liste de fichiers d'un projet vers le projet (si droits)
+    ## Titre sur les colonnes
+    Colonne "lu le" ?
+    Pastille sur le projet avec le nombre de nouveaux fichiers non lus
+
+    Barre de Menu
+        End-User
+
+    Formulaire HTML5 ? (Multi upload)
+    Icones pour types de fichiers
+    Progress bar
+    Upload de gros fichiers (perl ?)
+    Pagination de la liste des folders et fichiers (20 items)
+
+    - filtre sur type de projets pour la liste
+
+
+    Mail à la création du user (avec login/mdp)
+    Suppression de user
+    
+    Change password ( end-user)
+    Lost password
+    Change mail addresses (end-user)
+    
+    Listes des ACL d'un user
+
+    Templates de mail
+    Accusé de réception de mail
+
+    Formatage général
+    Formatage formulaires
+
+Contacts
+- pagination (25 adresses) + recherche
+## ajout
+## ajouter n° tva pour société
+## type de contact
+## gestion des types de contact en parametres
+- suppression (! en cas d'usage sur une facture)
+## modification
+## formatter proprement le dialogue de saisie
+- import/export vcard
+
+Facturation
+## adresses multiples
+## prise en compte changement d'adresse (Ajax)
+## formattage des adresses dans la selection
+- warning si pas d'adresse sur le projet (+ ajout d'une addresse ?)
+- utilisation des parametres de facturation
+- gestion des remises (par item)
+- gestion des remises (globale)
+## Liste facture : lien sur le n° de facture (ou sur la ligne entière)
+- Edition échéance et condition particulières
+- Edition conditions de vente
+- gestion TVA !!!
+## pagination de l'écran de factures
+
+Kilométrage
+## page de trajet
+	## ajouter un trajet (date, lieu départ, lieu arrivée, distance)
+	## modifier un trajet
+	## supprimer un trajet
+## trajets par projet
+	## - ajouter un trajet (date, lieu départ, lieu arrivée, distance)
+	## modifier un trajet
+	## supprimer un trajet
+## total kilométrique pour le projet
+- Total global par collaborateur et par an
+
+
+Journal
+- enregistrer chaque changement dans le projet
+- ajout manuel (avec type via parametres : Mail, téléphone, courrier, suivi, réunion, visite, divers )
+- enregistrer les envois de documents (date,document, destinataire)
+- publication iCal
+
+Paramétrage
+## Saisie type addresse
+- Saisie type d'évenement journal
+
+TO-FIX
+## ajout de nouvel élément de facturation : manque la case à cocher pour facturer
+
+    Langues
+
+    JQuery
+        Drag'n'drop pour le déplacement de fichiers
+
+
+    Check navigation
+    Tests IE
+    Tests FF
+    Tests Chrome
+
+    Refactoring
+    Clean-up
+    Doc
+    Tests PHPUnit
