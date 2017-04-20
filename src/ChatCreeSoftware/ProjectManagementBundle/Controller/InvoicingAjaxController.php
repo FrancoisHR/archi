@@ -41,8 +41,8 @@ class InvoicingAjaxController extends Controller{
             $InvoiceArray[] = $invoiceObject;
         }
                 
-        $return =array( "data" => $InvoiceArray );        
-        $return = json_encode( $return );
+        $returnArray =array( "data" => $InvoiceArray );        
+        $return = json_encode( $returnArray );
         return new Response( $return, 200);        
     }
 
@@ -74,8 +74,8 @@ class InvoicingAjaxController extends Controller{
             $quoteArray[] = $quoteObject;
         }
                 
-        $return =array( "data" => $quoteArray );        
-        $return = json_encode( $return );
+        $returnArray =array( "data" => $quoteArray );        
+        $return = json_encode( $returnArray );
         return new Response( $return, 200);        
     }
 
@@ -83,9 +83,7 @@ class InvoicingAjaxController extends Controller{
     /**
      * @Route( "/gestion/project/ajax/facturation/list/{id}", name="_ajax_project_invoices" )
      */
-    public function listProjectInvoicingAction( Project $project ){
-        $em = $this->get('doctrine')->getManager();    
-        
+    public function listProjectInvoicingAction( Project $project ){        
         $InvoiceArray = array();
         
         foreach ($project->getInvoices() as $invoice ) {
@@ -99,8 +97,8 @@ class InvoicingAjaxController extends Controller{
             $InvoiceArray[] = $invoiceObject;
         }
                 
-        $return =array( "data" => $InvoiceArray );
-        $return = json_encode( $return );
+        $returnArray =array( "data" => $InvoiceArray );
+        $return = json_encode( $returnArray );
         return new Response( $return, 200);        
     }
 
@@ -335,5 +333,3 @@ class InvoicingAjaxController extends Controller{
         return new Response( $return, 200);        
     }
 }
-
-?>

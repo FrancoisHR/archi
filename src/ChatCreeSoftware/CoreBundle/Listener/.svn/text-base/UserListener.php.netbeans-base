@@ -4,7 +4,8 @@ namespace ChatCreeSoftware\CoreBundle\Listener;
 
 use Symfony\Component\Security\Acl\Dbal\MutableAclProvider,
     Symfony\Component\Security\Acl\Domain\UserSecurityIdentity;
-use Doctrine\ORM\Event\PreUpdateEventArgs;
+use Doctrine\ORM\Event\LifecycleEventArgs,
+    Doctrine\ORM\Event\PreUpdateEventArgs;
 
 use ChatCreeSoftware\CoreBundle\Entity\User;
 
@@ -23,7 +24,7 @@ class UserListener
         }
     }
 
-    public function postRemove( User $user ) {     
+    public function postRemove( User $user, LifecycleEventArgs $event ) {     
         $securityId = UserSecurityIdentity::fromAccount($user);
         $this->aclProvider->deleteSecurityIdentity( $securityId );
     }

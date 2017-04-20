@@ -100,7 +100,6 @@ class ComparatifPdf extends \FPDI {
     }
 
     public function concat() {
-        $headFoot = $this->headerFooter;
         $this->headerFooter = false;
         foreach ($this->files AS $file) {
             $pageCount = $this->setSourceFile($file);

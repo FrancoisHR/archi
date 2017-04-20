@@ -29,8 +29,6 @@ class BordereauxController extends Controller {
             $xml = simplexml_load_file('catalogue_crtib_22juin2012.xml');
 
             $this->xmlLoad($xml);
-        } else {
-            exit('Echec lors de l\'ouverture du fichier catalogue_crtib_22juin2012.xml.');
         }
 
         return array();

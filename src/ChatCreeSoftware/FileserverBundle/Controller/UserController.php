@@ -3,18 +3,15 @@
 namespace ChatCreeSoftware\FileserverBundle\Controller;
 
 use ChatCreeSoftware\CoreBundle\Entity\Email;
-use ChatCreeSoftware\CoreBundle\Entity\Log;
 use ChatCreeSoftware\CoreBundle\Entity\User;
 use ChatCreeSoftware\FileserverBundle\Forms\AceStorage;
 use ChatCreeSoftware\FileserverBundle\Forms\EmailType;
-use Doctrine\ORM\Query;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Acl\Domain\ObjectIdentity;
-use Symfony\Component\Security\Acl\Domain\UserSecurityIdentity;
 use Symfony\Component\Security\Acl\Exception\AclNotFoundException;
 
 /**
@@ -319,7 +316,7 @@ class UserController extends Controller
             try {
                 $acl = $aclProvider->findAcl($objectIdentity);
             }
-            catch( Symfony\Component\Security\Acl\Exception\AclNotFoundException $e ) {
+            catch( AclNotFoundException $e ) {
                 echo $e->message();
             }
             

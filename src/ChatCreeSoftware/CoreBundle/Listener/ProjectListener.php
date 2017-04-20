@@ -8,8 +8,6 @@ use Symfony\Component\Security\Acl\Dbal\MutableAclProvider,
     Symfony\Component\Security\Acl\Permission\MaskBuilder,
     Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
 
-use Doctrine\ORM\Event\LifecycleEventArgs;
-
 use ChatCreeSoftware\CoreBundle\Entity\Project;
 
 class ProjectListener 
@@ -21,7 +19,7 @@ class ProjectListener
         $this->tokenStorage = $tokenStorage;
     }
     
-    public function postPersist( Project $project, LifecycleEventArgs $event ) {
+    public function postPersist( Project $project ) {
         $objectId = ObjectIdentity::fromDomainObject( $project );
         $acl = $this->aclProvider->createAcl( $objectId );
         
@@ -32,7 +30,7 @@ class ProjectListener
         $this->aclProvider->updateAcl($acl);
 
     }    
-    public function postRemove( Project $project, LifecycleEventArgs $event ) {
+    public function postRemove( Project $project ) {
         $objectId = ObjectIdentity::fromDomainObject( $project );
         $this->aclProvider->deleteAcl( $objectId );
     }
