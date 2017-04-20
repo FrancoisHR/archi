@@ -9,7 +9,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\User\UserInterface;
 
-class SecurityController extends Controller {
+class aclController extends Controller {
     
     /**
      * @Route('/security/acl', '_security_acl')

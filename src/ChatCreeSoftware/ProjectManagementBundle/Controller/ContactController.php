@@ -69,13 +69,13 @@ class ContactController extends Controller {
      *  @Route( "/gestion/project/contacts/contactList/{id}", name="_gestion_project_contactList" )
      */
     public function projectContactListAction( Project $project ){
-        $em = $this->get('doctrine')->getManager();    
         
         $contactArray = array();
         foreach ($project->getAddresses() as $contact ) {
             $type ="";
-            if( $contact->getAddressType() )
+            if( $contact->getAddressType() ) {
                 $type= $contact->getAddressType()->getFlagLabel();
+            }
             
             $contactObject = array(
                 "id" => $contact->getId(),
@@ -95,8 +95,8 @@ class ContactController extends Controller {
             $contactArray[] = $contactObject;
         }
         
-        $return =array( "data" => $contactArray );
-        $return = json_encode( $return );
+        $returnArray =array( "data" => $contactArray );
+        $return = json_encode( $returnArray );
         return new Response( $return, 200);            
     }
 
@@ -171,8 +171,8 @@ class ContactController extends Controller {
         $em->remove( $log );
         $em->flush();
         
-        $return = array("response"=>200);
-        $return = json_encode( $return );
+        $returnArray = array("response"=>200);
+        $return = json_encode( $returnArray );
         return new Response( $return, 200);
     }    
     
