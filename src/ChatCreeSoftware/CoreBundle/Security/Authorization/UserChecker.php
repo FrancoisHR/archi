@@ -14,10 +14,6 @@ class UserChecker implements UserCheckerInterface
             return;
         }
 
-        // user is deleted, show a generic Account Not Found message.
-        /* if ($user->isDeleted()) {
-            throw new AccountDeletedException('...');
-        } */
     }
 
     public function checkPostAuth(UserInterface $user)

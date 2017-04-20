@@ -2,7 +2,6 @@
 
 namespace ChatCreeSoftware\FileserverBundle\Controller;
 
-use ChatCreeSoftware\CoreBundle\Entity\User;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route,
     Sensio\Bundle\FrameworkExtraBundle\Configuration\Template,
     Symfony\Component\Security\Core\User\UserInterface,

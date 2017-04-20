@@ -101,7 +101,6 @@ class BordereauPdf extends \FPDI {
                 $this->useTemplate($tplIdx);
             }
         }
-        // $this->headerFooter = $headFoot;
     }
 
     private function adresse($adresse) {
@@ -367,8 +366,8 @@ class BordereauPdf extends \FPDI {
         }
         
 
-        
-        for ($i = 0; $i < count($data); $i++) {
+        $dataCount = count($data);
+        for ($i = 0; $i < $dataCount; $i++) {
             $data[$i] = iconv("UTF-8", "ISO-8859-1//TRANSLIT", $data[$i]);
             if( $image && $i == 1 ){
                 $nb = max($nb, $this->NbLines($this->widths[$this->pageType][$i], $data[$i]) + $imageBoxHeight / $this->multilineHeight );
@@ -379,7 +378,7 @@ class BordereauPdf extends \FPDI {
        
         while ($nb) {
             $nb = 0;
-            for ($i = 0; $i < count($data); $i++) {
+            for ($i = 0; $i < $dataCount; $i++) {
                 if( $image && $i == 1 ){
                     $nb = max($nb, $this->NbLines($this->widths[$this->pageType][$i], $data[$i]) + $imageBoxHeight / $this->multilineHeight );
                 } else {
@@ -398,7 +397,7 @@ class BordereauPdf extends \FPDI {
             $h = $this->multilineHeight * $linesToPrint;
 
             $remainingText = array();
-            for ($i = 0; $i < count($data); $i++) {
+            for ($i = 0; $i < $dataCount; $i++) {
                 $w = $this->widths[$this->pageType][$i];
                 $a = isset($this->aligns[$this->pageType][$i]) ? $this->aligns[$this->pageType][$i] : 'L';
                 //Sauve la position courante
@@ -440,7 +439,7 @@ class BordereauPdf extends \FPDI {
         $wmax = ($w - 2 * $this->cMargin) * 1000 / $this->FontSize;
         $s = str_replace("\r", '', $txt);
         $nb = strlen($s);
-        if ($nb > 0 and $s[$nb - 1] == "\n")
+        if ($nb > 0 && $s[$nb - 1] == "\n")
             $nb--;
         $sep = -1;
         $i = 0;

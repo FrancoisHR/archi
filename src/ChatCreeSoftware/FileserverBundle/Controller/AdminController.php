@@ -7,12 +7,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller,
-    Symfony\Component\HttpFoundation\Request,
-    Symfony\Component\Security\Acl\Domain\ObjectIdentity,
-    Symfony\Component\Security\Acl\Domain\UserSecurityIdentity,
-    Symfony\Component\Security\Core\User\UserInterface;
-
-use Symfony\Component\Security\Acl\Permission\MaskBuilder;
+    Symfony\Component\HttpFoundation\Request;
 
 class AdminController extends Controller
 {

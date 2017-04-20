@@ -22,6 +22,7 @@ class ConfigurationController extends Controller
     public function configurationInvoicingAction( Request $request)
     {
         $em = $this->get('doctrine')->getManager();    
+        $numberingRepo = $em->getRepository("ProjectManagementBundle:InvoiceNumbering");
         $repo = $em->getRepository('ProjectManagementBundle:InvoicingData');
         $invoicingData=$repo->find( 1 );
         
@@ -36,9 +37,10 @@ class ConfigurationController extends Controller
             $invoicingData->setReminderText("Rappel");
         }
         
+        
         $data = array( 'numberingType' => $invoicingData->getNumberingType(),
                 'numberingFormat' => $invoicingData->getNumberingFormat(),
-                'invoiceNumber' => InvoiceNumberingRepository::getNewInvoiceNumber($em),
+                'invoiceNumber' => $numberingRepo->getNewInvoiceNumber(),
                 'footerFormat' => $invoicingData->getFooterFormat(),
                 'invoiceLogo' => $invoicingData->getInvoiceLogo(),
                 'conditions' => $invoicingData->getConditions(),
@@ -77,7 +79,7 @@ class ConfigurationController extends Controller
                 $em->persist( $invoicingData );
                 $em->flush();
                 
-                InvoiceNumberingRepository::setNewInvoiceNumber($em, $form->get('invoiceNumber')->getData());
+                $numberingRepo->setNewInvoiceNumber( $form->get('invoiceNumber')->getData());
                 
             }
         }

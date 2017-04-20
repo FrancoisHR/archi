@@ -2,11 +2,8 @@
 
 namespace ChatCreeSoftware\ProjectManagementBundle\Controller;
 
-use ChatCreeSoftware\CoreBundle\Entity\Flags,
-    ChatCreeSoftware\CoreBundle\Entity\Project,
+use ChatCreeSoftware\CoreBundle\Entity\Project,
     ChatCreeSoftware\ProjectManagementBundle\Entity\Address;
-use ChatCreeSoftware\ProjectManagementBundle\Entity\Invoicing;
-use ChatCreeSoftware\ProjectManagementBundle\Entity\TimeLog;
 use Doctrine\ORM\EntityRepository;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route,
     Sensio\Bundle\FrameworkExtraBundle\Configuration\Template,
@@ -234,7 +231,7 @@ class ContactController extends Controller {
     /**
      * @Route( "/gestion/contacts/get_contact", name="_project_contact_ajax_get")
      */
-    public function projectGetAddress( Request $request ) {
+    public function projectGetAddressAction( Request $request ) {
         $addressId = $request->get('addressId');
 
         $em = $this->get('doctrine')->getManager();
@@ -273,7 +270,7 @@ class ContactController extends Controller {
     /**
      * @Route( "/gestion/project/invoice/update_address", name="_project_invoice_ajax_update_address")
      */
-    public function projectUpdateInvoiceAddress( Request $request ) {
+    public function projectUpdateInvoiceAddressAction( Request $request ) {
         $invoiceId = $request->get('invoiceId');
         $addressId = $request->get('addressId');
 

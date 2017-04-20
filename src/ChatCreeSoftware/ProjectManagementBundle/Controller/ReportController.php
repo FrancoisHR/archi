@@ -2,16 +2,9 @@
 
 namespace ChatCreeSoftware\ProjectManagementBundle\Controller;
 
-use ChatCreeSoftware\CoreBundle\Entity\Flags,
-    ChatCreeSoftware\ProjectManagementBundle\Entity\Address,
-    ChatCreeSoftware\ProjectManagementBundle\Entity\Invoicing;
-use ChatCreeSoftware\ProjectManagementBundle\Entity\Journey;
-use ChatCreeSoftware\ProjectManagementBundle\Entity\TimeLog;
-use Doctrine\ORM\EntityRepository;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route,
     Sensio\Bundle\FrameworkExtraBundle\Configuration\Template,
     Symfony\Bundle\FrameworkBundle\Controller\Controller,
-    Symfony\Component\HttpFoundation\Request,
     Symfony\Component\HttpFoundation\Response;
 
 class ReportController extends Controller
@@ -22,7 +15,6 @@ class ReportController extends Controller
      */
     public function reportsAction()
     {
-        $em = $this->get('doctrine')->getManager();
         
         return array();
     }

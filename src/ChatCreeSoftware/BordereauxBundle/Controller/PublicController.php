@@ -1,23 +1,11 @@
 <?php
 namespace ChatCreeSoftware\BordereauxBundle\Controller;
 
-use ChatCreeSoftware\CoreBundle\Entity\Project;
-use ChatCreeSoftware\BordereauxBundle\Entity\CorpsMetier;
-use ChatCreeSoftware\BordereauxBundle\Entity\InfoSupplementaire;
-use ChatCreeSoftware\BordereauxBundle\Entity\Librairie;
-use ChatCreeSoftware\BordereauxBundle\Entity\Parametre,
-    ChatCreeSoftware\BordereauxBundle\Entity\Prestation,
-    ChatCreeSoftware\BordereauxBundle\Entity\Question,
-    ChatCreeSoftware\BordereauxBundle\Entity\Section,
-    ChatCreeSoftware\BordereauxBundle\Entity\Bordereau,
-    ChatCreeSoftware\BordereauxBundle\Entity\Ligne,
-    ChatCreeSoftware\BordereauxBundle\Entity\Devis,
+use ChatCreeSoftware\BordereauxBundle\Entity\Devis,
     Sensio\Bundle\FrameworkExtraBundle\Configuration\Route,
     Sensio\Bundle\FrameworkExtraBundle\Configuration\Template,
     Symfony\Bundle\FrameworkBundle\Controller\Controller,
-    Symfony\Component\Security\Core\User\UserInterface,        
-    Symfony\Component\HttpFoundation\Request,
-    Symfony\Component\HttpFoundation\Response;      
+    Symfony\Component\Security\Core\User\UserInterface;      
 
 class PublicController extends Controller {
 

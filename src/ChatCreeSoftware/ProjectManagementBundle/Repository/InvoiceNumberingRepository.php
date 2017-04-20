@@ -2,8 +2,7 @@
 namespace ChatCreeSoftware\ProjectManagementBundle\Repository;
 
 use ChatCreeSoftware\ProjectManagementBundle\Entity\InvoiceNumbering;
-use ChatCreeSoftware\ProjectManagementBundle\Entity\InvoicingData,
-    Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\EntityRepository;
 
 class InvoiceNumberingRepository  extends EntityRepository
 {

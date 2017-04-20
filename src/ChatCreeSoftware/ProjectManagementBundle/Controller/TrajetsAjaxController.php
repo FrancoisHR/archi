@@ -101,7 +101,7 @@ class TrajetsAjaxController extends Controller {
     /**
      * @Route( "/gestion/project/ajax/delete_user_trajet", name="_ajax_delete_user_trajets")
      */
-    public function deleteUserTrajet( Request $request ){
+    public function deleteUserTrajetAction( Request $request ){
         $journeyId = $request->get('id');
         
         // Get the log
@@ -120,7 +120,7 @@ class TrajetsAjaxController extends Controller {
     /**
      * @Route( "/gestion/project/ajax/suivi/delete", name="_ajax_delete_projet_trajets")
      */
-    public function deleteUserLog( Request $request ){
+    public function deleteUserLogAction( Request $request ){
         $journeyId = $request->get('id');
         
         // Get the log
@@ -140,7 +140,7 @@ class TrajetsAjaxController extends Controller {
     /**
      * @Route( "/gestion/project/ajax/trajets/update_user_trajet", name="_ajax_update_user_trajet" )
      */
-    public function updateUserTrajet( Request $request, UserInterface $user ) {        
+    public function updateUserTrajetAction( Request $request, UserInterface $user ) {        
         $id = $request->get('id');
         $pname = $request->get('pname');
         $action = $request->get('action');
@@ -208,7 +208,7 @@ class TrajetsAjaxController extends Controller {
     /**
      * @Route( "/gestion/project/ajax/trajet/project/update", name="_ajax_update_project_trajet" )
      */
-    public function updateProjectJourney( Request $request ){
+    public function updateProjectJourneyAction( Request $request ){
         $id = $request->get('id');
         $pid = $request->get('pid');
         $action = $request->get('action');

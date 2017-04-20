@@ -66,7 +66,6 @@ class FileNotification {
                     $fichiers = $file->getClientOriginalName();
                 }
             }
-            $this->entityManager->flush();
 
             foreach ($sendUser->getEmails() as $mail) {
                 $message = \Swift_Message::newInstance()
@@ -96,8 +95,8 @@ class FileNotification {
                 $logEntry->setTexte($texte . $sendUser->getFirstname() . " " . $sendUser->getLastname() . " sur l'adresse " . $mail->getMail());
 
                 $this->entityManager->persist($logEntry);
-                $this->entityManager->flush();
             }
         }
-    }    
+        $this->entityManager->flush();
+    }
 }

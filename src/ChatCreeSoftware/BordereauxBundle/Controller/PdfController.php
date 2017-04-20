@@ -1,18 +1,14 @@
 <?php
 namespace ChatCreeSoftware\BordereauxBundle\Controller;
 
-use ChatCreeSoftware\CoreBundle\Entity\Project;
 use ChatCreeSoftware\FileserverBundle\Forms\FileUploadCollection;
 use ChatCreeSoftware\BordereauxBundle\Entity\Bordereau,
-    ChatCreeSoftware\BordereauxBundle\Entity\Ligne,    
     Sensio\Bundle\FrameworkExtraBundle\Configuration\Route,
     Symfony\Bundle\FrameworkBundle\Controller\Controller,
     Symfony\Component\HttpFoundation\Request,
     Symfony\Component\HttpFoundation\Response,
-    Symfony\Component\HttpFoundation\UploadedFile,
     Symfony\Component\Security\Core\User\UserInterface;
-use ChatCreeSoftware\BordereauxBundle\Pdf\BordereauPdf,
-    ChatCreeSoftware\BordereauxBundle\Pdf\ComparatifPdf;      
+use ChatCreeSoftware\BordereauxBundle\Pdf\ComparatifPdf;      
 
 class PdfController extends Controller {
     
@@ -21,9 +17,7 @@ class PdfController extends Controller {
      * @Route("/bordereaux/pdf/{id}", name="_ajax_bordereau_pdf", defaults={ "id"=0 })
      */
     public function indexAction( Request $request, UserInterface $user, Bordereau $bordereau )
-    {
-        $em = $this->get('doctrine')->getManager();
-        
+    {        
         $pdf = $this->get("bordereaux.services.pdfGenerator")->renderBordereau( $bordereau );
         
         if( $request->isMethod("POST")) {

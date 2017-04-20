@@ -2,11 +2,8 @@
 
 namespace ChatCreeSoftware\CoreBundle\Services;
 
-use Symfony\Component\Security\Acl\Domain\ObjectIdentity;
-use ChatCreeSoftware\CoreBundle\Entity\LogBook,
-    ChatCreeSoftware\CoreBundle\Entity\Project,
-    ChatCreeSoftware\CoreBundle\Entity\User,
-    ChatCreeSoftware\FileserverBundle\Entity\FileLink;
+use ChatCreeSoftware\CoreBundle\Entity\Project,
+    ChatCreeSoftware\CoreBundle\Entity\User;
 
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\Security\Acl\Dbal\MutableAclProvider;

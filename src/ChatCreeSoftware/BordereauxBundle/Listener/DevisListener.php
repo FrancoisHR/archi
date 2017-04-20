@@ -7,9 +7,7 @@ use Symfony\Component\Security\Acl\Dbal\MutableAclProvider,
     Symfony\Component\Security\Acl\Permission\MaskBuilder,
     Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
 
-use Doctrine\ORM\Event\LifecycleEventArgs,
-    Doctrine\ORM\Event\PreUpdateEventArgs;
-
+use Doctrine\ORM\Event\LifecycleEventArgs;
 use ChatCreeSoftware\BordereauxBundle\Entity\Devis,
     ChatCreeSoftware\BordereauxBundle\Entity\Ligne,
     ChatCreeSoftware\BordereauxBundle\Entity\LigneDevis;

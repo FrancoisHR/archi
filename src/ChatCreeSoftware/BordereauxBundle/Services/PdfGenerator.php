@@ -2,21 +2,10 @@
 
 namespace ChatCreeSoftware\BordereauxBundle\Services;
 
-use ChatCreeSoftware\CoreBundle\Entity\Project;
-use ChatCreeSoftware\FileserverBundle\Forms\FileUploadCollection;
-use ChatCreeSoftware\BordereauxBundle\Entity\Bordereau,
-    ChatCreeSoftware\BordereauxBundle\Entity\Ligne,    
-    Sensio\Bundle\FrameworkExtraBundle\Configuration\Route,
-    Symfony\Bundle\FrameworkBundle\Controller\Controller,
-    Symfony\Component\HttpFoundation\Request,
-    Symfony\Component\HttpFoundation\Response,
-    Symfony\Component\HttpFoundation\UploadedFile,
-    Symfony\Component\Security\Core\User\UserInterface;
-use ChatCreeSoftware\BordereauxBundle\Pdf\BordereauPdf,
-    ChatCreeSoftware\BordereauxBundle\Pdf\ComparatifPdf;  
+use ChatCreeSoftware\BordereauxBundle\Entity\Bordereau;
+use ChatCreeSoftware\BordereauxBundle\Pdf\BordereauPdf;  
 
 use Doctrine\ORM\EntityManager;
-use Symfony\Component\Security\Acl\Dbal\MutableAclProvider;
 
 class PdfGenerator {
     

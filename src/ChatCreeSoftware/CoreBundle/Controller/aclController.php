@@ -2,21 +2,22 @@
 
 namespace ChatCreeSoftware\CoreBundle\Controller;
 
-use ChatCreeSoftware\CoreBundle\Entity\Log;
-use ChatCreeSoftware\CoreBundle\Entity\Reset;
+
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Security\Core\Security,
-    Symfony\Component\Security\Core\User\UserInterface,
-    Symfony\Component\Security\Acl\Dbal\MutableAclProvider,
-    Symfony\Component\Security\Acl\Domain\ObjectIdentity,
-    Symfony\Component\Security\Acl\Domain\UserSecurityIdentity;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 class SecurityController extends Controller {
     
-    public function listAcl(){
-        
+    /**
+     * @Route('/security/acl', '_security_acl')
+     * @Template
+     * @param Request $request
+     * @param UserInterface $user
+     */
+    public function listAclAction( Request $request, UserInterface $user ){
+        return( [] );
     }
 }

@@ -168,7 +168,7 @@ class SuiviAjaxController extends Controller
     /**
      * @Route( "/gestion/project/ajax/suivi/new_user_log", name="_ajax_new_user_log"  )
      */
-    public function newUserLog( Request $request, UserInterface $user ) {        
+    public function newUserLogAction( Request $request, UserInterface $user ) {        
         $id = $request->get('id');
         $pname = $request->get('pname');
         $action = $request->get('action');
@@ -234,7 +234,7 @@ class SuiviAjaxController extends Controller
     /**
      * @Route( "/gestion/project/ajax/suivi/user/delete", name="_project_user_log_ajax_delete")
      */
-    public function deleteUserLog( Request $request ){
+    public function deleteUserLogAction( Request $request ){
         $logId = $request->get('id');
         
         // Get the log
@@ -253,7 +253,7 @@ class SuiviAjaxController extends Controller
     /**
      * @Route( "/gestion/project/ajax/suivi/user/update", name="_project_user_log_ajax_update" )
      */
-    public function newProjectLog( Request $request ){
+    public function newProjectLogAction( Request $request ){
         $id = $request->get('id');
         $pid = $request->get('pid');
         $action = $request->get('action');

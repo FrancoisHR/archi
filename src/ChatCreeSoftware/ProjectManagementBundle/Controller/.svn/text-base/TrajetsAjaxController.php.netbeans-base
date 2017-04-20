@@ -39,6 +39,7 @@ class TrajetsAjaxController extends Controller {
         foreach ($journeys as $journey) {
             $journeyObject = array(
                 "id" => $journey->getId(),
+                "projectId" => $journey->getProject()->getId(),
                 $journey->getProject()->getProjectName(),
                 $journey->getStart(),
                 $journey->getEnd(),

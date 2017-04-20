@@ -44,7 +44,7 @@ class LogbookAjaxController extends Controller {
     /**
      * @Route( "/gestion/project/ajax/logbook/delete", name="_project_logbook_ajax_delete" )
      */
-    public function deleteProjectLogbook( Request $request ) {
+    public function deleteProjectLogbookAction( Request $request ) {
         $iId = $request->get('id');
 
         if ($iId) {
@@ -68,7 +68,7 @@ class LogbookAjaxController extends Controller {
     /**
      * @Route( "/gestion/project/ajax/logbook/update", name="_project_logbook_ajax_update"  )
      */
-    public function newProjectLogBook( Request $request ) {
+    public function newProjectLogBookAction( Request $request ) {
         $id = $request->get('id');
         $pid = $request->get('pid');
         $logtypeId = $request->get('logtype');

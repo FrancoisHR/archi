@@ -30,7 +30,7 @@ class ProjectController extends Controller {
      * @Route("/downloads/{name}/{file}", name="_download" )
      * @Route("/downloads/{name}/{foldername}/{file}", name="_download_folder" )
      */
-    public function download(Request $request, $name, $foldername = null, $file) {
+    public function downloadAction(Request $request, $name, $foldername = null, $file) {
         $ip = $request->getClientIp();
         $em = $this->get('doctrine')->getManager();
 
@@ -74,7 +74,7 @@ class ProjectController extends Controller {
     /**
      * @Route("/document/{token}", name="_document" )
      */
-    public function document(Request $request, FileLink $filelink) {
+    public function documentAction(Request $request, FileLink $filelink) {
         $ip = $request->getClientIp();
 
         // Get FileLink object
@@ -421,29 +421,6 @@ class ProjectController extends Controller {
             'form' => $form->createView(),
             'remainingUsers' => $remainingUsers);
     }
-
-    /**
-     * @Route("/projets/ajax/progression_upload", name="_upload_progress")
-     */
-    public function uploadProgressAction() {
-        $key = ini_get("session.upload_progress.prefix") . "myForm";
-
-        $progress = 100;
-        if (!empty($_SESSION[$key])) {
-            $current = $_SESSION[$key]["bytes_processed"];
-            $total = $_SESSION[$key]["content_length"];
-            $progress = $current < $total ? ceil($current / $total * 100) : 100;
-        }
-
-        $ajaxResult = array(
-            'progress' => $progress
-        );
-
-        $return = json_encode($ajaxResult);
-
-        return new Response($return, 200);
-    }
-
 }
 
 ?>

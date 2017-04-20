@@ -1,12 +1,11 @@
 <?php
-
 namespace ChatCreeSoftware\ProjectManagementBundle\Repository;
 
 use ChatCreeSoftware\ProjectManagementBundle\Entity\InvoiceNumbering;
 use ChatCreeSoftware\ProjectManagementBundle\Entity\InvoicingData,
     Doctrine\ORM\EntityRepository;
 
-class InvoiceNumberingRepository
+class InvoiceNumberingRepository  extends EntityRepository
 {
     const INVOICING_MODE_CONTINUOUS = 0;
     const INVOICING_MODE_YEARLY = 1;
@@ -14,8 +13,9 @@ class InvoiceNumberingRepository
     const INVOICING_INVOICE_DATA = 1;
     const INVOICING_QUOTE_DATA = 2;
     
-    static function getNewInvoiceNumber( $em, $type=1 )
+    function getNewInvoiceNumber( $type=1 )
     {
+        $em = $this->getEntityManager();
         $repo = $em->getRepository('ProjectManagementBundle:InvoicingData');
         $invoicingData=$repo->find( $type );
         
@@ -40,8 +40,9 @@ class InvoiceNumberingRepository
         }
     }
     
-    static function setNewInvoiceNumber( $em, $number, $type=1 )
+    function setNewInvoiceNumber( $number, $type=1 )
     {
+        $em = $this->getEntityManager();
         $repo = $em->getRepository('ProjectManagementBundle:InvoicingData');
         $invoicingData=$repo->find( $type );
 
@@ -70,7 +71,4 @@ class InvoiceNumberingRepository
         
         $em->flush();
     }
-    
 }
-
-?>

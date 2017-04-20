@@ -235,7 +235,7 @@ class BordereauxController extends Controller {
     /**
      * @Route( "/bordereaux/ajax/bordereau/ligne/{id}", name="_ajax_bordereaux_ligne", defaults={ "id"=0 } )
      */
-    public function ajaxBordereauLigne( Ligne $ligne = null ) {
+    public function ajaxBordereauLigneAction( Ligne $ligne = null ) {
         $ajaxResult = array();
         $data = array();
                 
@@ -394,7 +394,7 @@ class BordereauxController extends Controller {
      * 
      * @Route( "/bordereaux/ajax/libraries", name="_ajax_bordereaux_librairies" )
      */
-    public function ajaxListeLibrairies(){
+    public function ajaxListeLibrairiesAction(){
         $ajaxResult = array();
         $data = array();
         
@@ -418,7 +418,7 @@ class BordereauxController extends Controller {
      * 
      * @Route( "/bordereaux/ajax/corpsmetiers/{id}", name="_ajax_bordereaux_corps_metiers", defaults={ "id"=0 } )
      */
-    public function ajaxListeCorpsMetiers( $id ){
+    public function ajaxListeCorpsMetiersAction( $id ){
         $em = $this->get('doctrine')->getManager();
         $libRepo = $em->getRepository('BordereauxBundle:Librairie');
         
@@ -445,7 +445,7 @@ class BordereauxController extends Controller {
      * 
      * @Route( "/bordereaux/ajax/sections/{id}", name="_ajax_bordereaux_sections", defaults={ "id"=0 } )
      */
-    public function ajaxListeSection( $id ){
+    public function ajaxListeSectionAction( $id ){
         $em = $this->get('doctrine')->getManager();
         $corpsRepo = $em->getRepository('BordereauxBundle:CorpsMetier');
         
@@ -473,7 +473,7 @@ class BordereauxController extends Controller {
      * 
      * @Route( "/bordereaux/ajax/prestations/{id}", name="_ajax_bordereaux_prestations", defaults={ "id"=0 } )
      */
-    public function ajaxListePrestation( $id ){
+    public function ajaxListePrestationAction( $id ){
         $em = $this->get('doctrine')->getManager();
         $sectionRepo = $em->getRepository('BordereauxBundle:Section');
         
@@ -501,7 +501,7 @@ class BordereauxController extends Controller {
      * 
      * @Route( "/bordereaux/ajax/prestation/{id}", name="_ajax_bordereaux_prestation", defaults={ "id"=0 } )
      */
-    public function ajaxPrestation( $id ){
+    public function ajaxPrestationAction( $id ){
         $em = $this->get('doctrine')->getManager();
         $prestationRepo = $em->getRepository('BordereauxBundle:Prestation');
 
@@ -544,7 +544,7 @@ class BordereauxController extends Controller {
      * 
      * @Route( "/bordereaux/ajax/ligne/update/{id}", name="_ajax_bordereaux_line_update", defaults={ "id"=0 } )
      */
-    public function ajaxBordereauLigneUpdate( Request $request, Bordereau $bordereau ) {
+    public function ajaxBordereauLigneUpdateAction( Request $request, Bordereau $bordereau ) {
         $em = $this->get('doctrine')->getManager();
         $update = $request->get('update');
         $mode = $request->get('mode');
@@ -643,7 +643,7 @@ class BordereauxController extends Controller {
      * 
      * @Route( "/bordereaux/ajax/ligne/delete/{id}", name="_ajax_ligne_delete", defaults={ "id"=0 } )
      */
-    public function ajaxLigneDelete( Ligne $ligne ) {
+    public function ajaxLigneDeleteAction( Ligne $ligne ) {
         $em = $this->get('doctrine')->getManager();
         $directory = $this->getParameter('web_dir');
         
@@ -676,7 +676,7 @@ class BordereauxController extends Controller {
     }
     
     
-    public function xmlLoad($xml, $parent=null, $offset="") {
+    public function xmlLoadAction($xml, $parent=null, $offset="") {
         $em = $this->get('doctrine')->getManager();   
 
         $name = $xml->getName();

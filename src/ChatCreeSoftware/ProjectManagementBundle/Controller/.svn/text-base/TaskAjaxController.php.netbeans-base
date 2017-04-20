@@ -47,9 +47,8 @@ class TaskAjaxController  extends Controller{
     /**
      * @Route( "/gestion/project/ajax/task/delete", name="_project_task_ajax_delete" )
      */
-    public function deleteProjectTask() {
-        $hRequest = $this->get('request')->request;
-        $iId = $hRequest->get('id');
+    public function deleteProjectTask( Request $request ) {
+        $iId = $request->get('id');
         
         if( $iId ) {
             $em = $this->get('doctrine')->getManager();
@@ -72,14 +71,13 @@ class TaskAjaxController  extends Controller{
     /**
      * @Route( "/gestion/project/ajax/task/update", name="_project_task_ajax_update"  )
      */
-    public function newProjectTask( ){
-        $hRequest = $this->get('request')->request;
-        $id = $hRequest->get('id');
-        $pid = $hRequest->get('pid');
-        $action = $hRequest->get('action');       
-        $taskName = $hRequest->get('taskName');
-        $targetDate = $hRequest->get('targetDate');
-        $finalizeDate = $hRequest->get('finalizeDate');
+    public function newProjectTask( Request $request  ){
+        $id = $request->get('id');
+        $pid = $request->get('pid');
+        $action = $request->get('action');       
+        $taskName = $request->get('taskName');
+        $targetDate = $request->get('targetDate');
+        $finalizeDate = $request->get('finalizeDate');
                 
         
         $em = $this->get('doctrine')->getManager();

@@ -2,17 +2,17 @@
 
 namespace ChatCreeSoftware\CoreBundle\Controller;
 
-use ChatCreeSoftware\CoreBundle\Entity\Project;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route,
     Symfony\Bundle\FrameworkBundle\Controller\Controller,
     Symfony\Component\HttpFoundation\Request,
-    Symfony\Component\HttpFoundation\Response;
+    Symfony\Component\HttpFoundation\Response,
+    Symfony\Component\HttpFoundation\File\Exception\FileException;
 
 class fileUploadController extends Controller {
 
     private $entity;
 
-    public function initialize( $request ){
+    public function initializeAction( $request ){
         $em = $this->get('doctrine')->getManager();
         $directory = $this->getParameter('web_dir');
 
@@ -33,7 +33,7 @@ class fileUploadController extends Controller {
      * @Route( "/fileUpload/upload", name="_core_file_upload" )
      */
     public function uploadAction( Request $request ){       
-        $path = $this->initialize($request);
+        $path = $this->initializeAction($request);
         
         if( $this->entity == "Bordereau" ){
             $uploadedFile = $request->files->get("file_data");
@@ -60,7 +60,7 @@ class fileUploadController extends Controller {
      * @Route( "/fileUpload/delete", name="_core_file_delete" )
      */
     public function deleteAction( Request $request ){
-        $path = $this->initialize($request);
+        $path = $this->initializeAction($request);
         $filename = $request->get('key');
         
         $ajaxResult = [];

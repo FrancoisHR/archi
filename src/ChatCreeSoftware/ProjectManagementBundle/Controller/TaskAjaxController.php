@@ -47,7 +47,7 @@ class TaskAjaxController  extends Controller{
     /**
      * @Route( "/gestion/project/ajax/task/delete", name="_project_task_ajax_delete" )
      */
-    public function deleteProjectTask( Request $request ) {
+    public function deleteProjectTaskAction( Request $request ) {
         $iId = $request->get('id');
         
         if( $iId ) {
@@ -71,7 +71,7 @@ class TaskAjaxController  extends Controller{
     /**
      * @Route( "/gestion/project/ajax/task/update", name="_project_task_ajax_update"  )
      */
-    public function newProjectTask( Request $request  ){
+    public function newProjectTaskAction( Request $request  ){
         $id = $request->get('id');
         $pid = $request->get('pid');
         $action = $request->get('action');       

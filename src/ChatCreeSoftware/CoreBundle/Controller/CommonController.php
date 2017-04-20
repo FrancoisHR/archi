@@ -3,9 +3,7 @@ namespace ChatCreeSoftware\CoreBundle\Controller;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route,
     Sensio\Bundle\FrameworkExtraBundle\Configuration\Template,
-    Symfony\Bundle\FrameworkBundle\Controller\Controller,
-    Symfony\Component\HttpFoundation\Request,
-    Symfony\Component\HttpFoundation\Response;
+    Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use ChatCreeSoftware\CoreBundle\Listener\InterfaceEvent;
 
 class CommonController extends Controller {

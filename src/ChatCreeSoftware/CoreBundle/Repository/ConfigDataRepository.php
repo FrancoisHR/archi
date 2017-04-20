@@ -10,4 +10,12 @@ namespace ChatCreeSoftware\CoreBundle\Repository;
  */
 class ConfigDataRepository extends \Doctrine\ORM\EntityRepository
 {
+    public function findVatForDate( $date ) {
+        $vatQuery = $em->createQuery( "select c from CoreBundle:ConfigData c where c.name='TVA' and c.date in (select MAX(d.date) from CoreBundle:ConfigData d where d.name='TVA' and d.date <= ?1)" );
+        $vatQuery->setParameter(1,$date );
+        $vatData =  $vatQuery->getResult();        
+        $vat = floatval($vatData[0]->getValue());
+        
+        return $vat;
+    }
 }

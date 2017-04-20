@@ -2,10 +2,7 @@
 
 namespace ChatCreeSoftware\ProjectManagementBundle\Controller;
 
-use ChatCreeSoftware\ProjectManagementBundle\Entity\Address,
-    ChatCreeSoftware\ProjectManagementBundle\Entity\InvoiceItem,
-    ChatCreeSoftware\ProjectManagementBundle\Entity\Invoicing;
-use Doctrine\ORM\EntityRepository;
+use ChatCreeSoftware\ProjectManagementBundle\Entity\Invoice;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller,
@@ -18,29 +15,24 @@ class InvoiceController  extends Controller{
      * @Route("/gestion/project/ajax/facturation/invoice/{id}", name="_invoice_invoice")
      * @Template
      */
-    public function invoiceAction( $id=0 )
+    public function invoiceAction( Invoice $invoice )
     {
         $em = $this->get('doctrine')->getManager();
-        $repo = $em->getRepository('ProjectManagementBundle:Invoice');
-        $invoice=$repo->findOneByNumber( $id );
-
-        $vatQuery = $em->createQuery( "select c from CoreBundle:ConfigData c where c.name='TVA' and c.date in (select MAX(d.date) from CoreBundle:ConfigData d where d.name='TVA' and d.date <= ?1)" );
-        $vatQuery->setParameter(1,$invoice->getDate());
-        $vatData =  $vatQuery->getResult();        
-        $vat = floatval($vatData[0]->getValue());
+        $configReporitory = $em->getRepository( "CoreBundle:ConfigData" );
+        $vat = $configReporitory->findVatForDate( $invoice->getDate() );
         
         $dueDate = clone $invoice->getDate();
         $dueDate->modify("+30 days");
         
         if( is_null( $invoice->getAddress() ) ) {
             $addresses = $invoice->getProject()->getAddresses();
-                foreach( $addresses as $address ){
+            foreach( $addresses as $address ){
                 if( $address->getType() == "Facturation") {
                     $invoice->setAddress( $address );
                     $em->persist( $invoice );
-                    $em->flush();
                 }
             }
+            $em->flush();
         }
         
         return array( "invoice" => $invoice,
@@ -52,29 +44,24 @@ class InvoiceController  extends Controller{
      * @Route("/gestion/project/ajax/facturation/quote/{id}", name="_invoice_quote")
      * @Template
      */
-    public function quoteAction( $id=0 )
+    public function quoteAction( Invoice $invoice )
     {
         $em = $this->get('doctrine')->getManager();
-        $repo = $em->getRepository('ProjectManagementBundle:Invoice');
-        $invoice=$repo->findOneByNumber( $id );
-
-        $vatQuery = $em->createQuery( "select c from CoreBundle:ConfigData c where c.name='TVA' and c.date in (select MAX(d.date) from CoreBundle:ConfigData d where d.name='TVA' and d.date <= ?1)" );
-        $vatQuery->setParameter(1,$invoice->getDate());
-        $vatData =  $vatQuery->getResult();        
-        $vat = floatval($vatData[0]->getValue());
+        $configReporitory = $em->getRepository( "CoreBundle:ConfigData" );
+        $vat = $configReporitory->findVatForDate( $invoice->getDate() );
         
         $dueDate = clone $invoice->getDate();
         $dueDate->modify("+30 days");
         
         if( is_null( $invoice->getAddress() ) ) {
             $addresses = $invoice->getProject()->getAddresses();
-                foreach( $addresses as $address ){
+            foreach( $addresses as $address ){
                 if( $address->getType() == "Facturation") {
                     $invoice->setAddress( $address );
                     $em->persist( $invoice );
-                    $em->flush();
                 }
             }
+            $em->flush();
         }
         
         return array( "invoice" => $invoice,
